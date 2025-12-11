@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Speaking Rock Poker | Player Registration</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --gold: #D4A532;
+      --gold-light: #E8C45A;
+      --gold-dark: #B8860B;
+      --black: #000000;
+      --charcoal: #0A0A0A;
+      --dark-gray: #111111;
+      --medium-gray: #1a1a1a;
+      --light-gray: #E5E5E5;
+      --green: #22c55e;
+      --green-dark: #16a34a;
+      --red: #ef4444;
+      --blue: #3b82f6;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: var(--black);
+      color: var(--light-gray);
+      min-height: 100vh;
+    }
+
+    /* Header */
+    header {
+      background: var(--black);
+      border-bottom: 1px solid rgba(212, 165, 50, 0.3);
+      padding: 1rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      height: 50px;
+      width: auto;
+    }
+
+    .header-nav {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+    }
+
+    .header-nav a {
+      color: var(--light-gray);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .header-nav a:hover {
+      color: var(--gold);
+    }
+
+    .btn {
+      padding: 0.6rem 1.25rem;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+      color: var(--black);
+    }
+
+    .btn-primary:hover {
+      box-shadow: 0 4px 15px rgba(212, 165, 50, 0.3);
+    }
+
+    .btn-secondary {
+      background: var(--dark-gray);
+      color: var(--light-gray);
+      border: 1px solid var(--gold);
+    }
+
+    .btn-secondary:hover {
+      background: var(--gold);
+      color: var(--black);
+    }
+
+    .btn-success {
+      background: var(--green);
+      color: white;
+    }
+
+    .btn-success:hover {
+      background: var(--green-dark);
+    }
+
+    /* Main Content */
+    .main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .page-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .page-title {
+      font-family: 'Cinzel', serif;
+      font-size: 2.5rem;
+      color: var(--gold);
+      margin-bottom: 0.5rem;
+      letter-spacing: 2px;
+    }
+
+    .page-subtitle {
+      color: var(--light-gray);
+      font-size: 1rem;
+      opacity: 0.8;
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .tab {
+      padding: 0.875rem 1.5rem;
+      background: var(--dark-gray);
+      border: 1px solid var(--medium-gray);
+      border-radius: 4px;
+      color: var(--light-gray);
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .tab:hover {
+      border-color: var(--gold);
+    }
+
+    .tab.active {
+      background: var(--gold);
+      color: var(--black);
+      border-color: var(--gold);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* Cards */
+    .card {
+      background: var(--dark-gray);
+      border: 1px solid var(--medium-gray);
+      border-radius: 8px;
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .card-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.25rem;
+      color: var(--gold);
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--medium-gray);
+    }
+
+    /* Form Styles */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+
+    .form-group.full-width {
+      grid-column: span 2;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.8rem;
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 0.875rem 1rem;
+      background: var(--black);
+      border: 1px solid var(--medium-gray);
+      border-radius: 4px;
+      color: var(--light-gray);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.95rem;
+      transition: border-color 0.2s;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--gold);
+    }
+
+    .form-group select option {
+      background: var(--black);
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .form-hint {
+      font-size: 0.75rem;
+      color: var(--light-gray);
+      opacity: 0.6;
+      margin-top: 0.4rem;
+    }
+
+    /* Tournament Selection */
+    .tournament-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .tournament-option {
+      background: var(--black);
+      border: 2px solid var(--medium-gray);
+      border-radius: 8px;
+      padding: 1.25rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+    }
+
+    .tournament-option:hover {
+      border-color: var(--gold);
+    }
+
+    .tournament-option.selected {
+      border-color: var(--gold);
+      background: rgba(212, 165, 50, 0.05);
+    }
+
+    .tournament-option input[type="radio"] {
+      display: none;
+    }
+
+    .tournament-option-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.75rem;
+    }
+
+    .tournament-option-name {
+      font-weight: 600;
+      font-size: 1.1rem;
+      color: var(--light-gray);
+    }
+
+    .tournament-option-date {
+      font-size: 0.8rem;
+      color: var(--gold);
+      background: rgba(212, 165, 50, 0.15);
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+    }
+
+    .tournament-option-details {
+      display: flex;
+      gap: 2rem;
+      font-size: 0.85rem;
+      color: var(--light-gray);
+      opacity: 0.8;
+    }
+
+    .tournament-option-detail span {
+      color: var(--gold);
+      font-weight: 500;
+    }
+
+    .tournament-option-check {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      width: 24px;
+      height: 24px;
+      border: 2px solid var(--medium-gray);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: transparent;
+      transition: all 0.2s;
+    }
+
+    .tournament-option.selected .tournament-option-check {
+      background: var(--gold);
+      border-color: var(--gold);
+      color: var(--black);
+    }
+
+    /* Game Type Selection */
+    .game-options {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+
+    .game-option {
+      background: var(--black);
+      border: 2px solid var(--medium-gray);
+      border-radius: 8px;
+      padding: 1.25rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .game-option:hover {
+      border-color: var(--gold);
+    }
+
+    .game-option.selected {
+      border-color: var(--gold);
+      background: rgba(212, 165, 50, 0.05);
+    }
+
+    .game-option input[type="radio"] {
+      display: none;
+    }
+
+    .game-option-icon {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .game-option-name {
+      font-weight: 600;
+      color: var(--light-gray);
+      margin-bottom: 0.25rem;
+    }
+
+    .game-option-stakes {
+      font-size: 0.85rem;
+      color: var(--gold);
+    }
+
+    /* Summary Box */
+    .summary-box {
+      background: var(--black);
+      border: 1px solid var(--gold);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .summary-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1rem;
+      color: var(--gold);
+      margin-bottom: 1rem;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid var(--medium-gray);
+      font-size: 0.9rem;
+    }
+
+    .summary-row:last-child {
+      border-bottom: none;
+      padding-top: 1rem;
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+
+    .summary-row:last-child .summary-value {
+      color: var(--gold);
+    }
+
+    .summary-label {
+      color: var(--light-gray);
+      opacity: 0.8;
+    }
+
+    .summary-value {
+      color: var(--light-gray);
+    }
+
+    /* Success Message */
+    .success-message {
+      display: none;
+      text-align: center;
+      padding: 3rem 2rem;
+    }
+
+    .success-message.show {
+      display: block;
+    }
+
+    .success-icon {
+      width: 80px;
+      height: 80px;
+      background: var(--green);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      margin: 0 auto 1.5rem;
+      animation: scaleIn 0.5s ease;
+    }
+
+    .success-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.75rem;
+      color: var(--gold);
+      margin-bottom: 0.75rem;
+    }
+
+    .success-text {
+      color: var(--light-gray);
+      font-size: 1rem;
+      margin-bottom: 2rem;
+      opacity: 0.9;
+    }
+
+    .confirmation-number {
+      background: var(--dark-gray);
+      border: 1px solid var(--gold);
+      border-radius: 8px;
+      padding: 1.25rem;
+      display: inline-block;
+      margin-bottom: 2rem;
+    }
+
+    .confirmation-label {
+      font-size: 0.75rem;
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 0.5rem;
+    }
+
+    .confirmation-code {
+      font-family: monospace;
+      font-size: 1.5rem;
+      color: var(--light-gray);
+      letter-spacing: 2px;
+    }
+
+    @keyframes scaleIn {
+      0% {
+        transform: scale(0);
+        opacity: 0;
+      }
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    /* Live Status */
+    .live-status {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(34, 197, 94, 0.1);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+    }
+
+    .live-dot {
+      width: 10px;
+      height: 10px;
+      background: var(--green);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    .live-text {
+      font-size: 0.85rem;
+      color: var(--green);
+    }
+
+    .live-text strong {
+      color: var(--light-gray);
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    /* Footer */
+    footer {
+      background: var(--charcoal);
+      border-top: 1px solid var(--medium-gray);
+      padding: 2rem;
+      text-align: center;
+      margin-top: 3rem;
+    }
+
+    .footer-text {
+      color: var(--light-gray);
+      opacity: 0.6;
+      font-size: 0.85rem;
+    }
+
+    .footer-text a {
+      color: var(--gold);
+      text-decoration: none;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .header-content {
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .form-group.full-width {
+        grid-column: span 1;
+      }
+
+      .page-title {
+        font-size: 1.75rem;
+      }
+
+      .tournament-option-details {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .game-options {
+        grid-template-columns: 1fr;
+      }
+
+      .tabs {
+        flex-direction: column;
+      }
+
+      .tab {
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-content">
+      <a href="index.html">
+        <img src="logo.png" alt="Speaking Rock Poker" class="logo">
+      </a>
+      <nav class="header-nav">
+        <a href="index.html">Home</a>
+        <a href="index.html#schedule">Schedule</a>
+        <a href="index.html#tournaments">Tournaments</a>
+        <a href="login.html" class="btn btn-secondary">Admin Login</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="page-header">
+      <h1 class="page-title">Player Registration</h1>
+      <p class="page-subtitle">Sign up for tournaments or join the cash game wait list</p>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab active" data-tab="waitlist">🎰 Cash Game Wait List</button>
+      <button class="tab" data-tab="tournament">🏆 Tournament Registration</button>
+      <button class="tab" data-tab="account">👤 Create Account</button>
+    </div>
+
+    <!-- Wait List Tab -->
+    <div class="tab-content active" id="waitlist">
+      <div class="card">
+        <h2 class="card-title">Join the Wait List</h2>
+
+        <div class="live-status">
+          <span class="live-dot"></span>
+          <span class="live-text"><strong>3 tables</strong> currently running • <strong>8 players</strong> on wait list • Est. wait: <strong>~20 min</strong></span>
+        </div>
+
+        <form id="waitlistForm" onsubmit="submitWaitlist(event)">
+          <div class="form-group">
+            <label>Select Game</label>
+            <div class="game-options">
+              <label class="game-option selected">
+                <input type="radio" name="game" value="nlh-1-3" checked>
+                <div class="game-option-icon">♠️</div>
+                <div class="game-option-name">No Limit Hold'em</div>
+                <div class="game-option-stakes">$1/$3</div>
+              </label>
+              <label class="game-option">
+                <input type="radio" name="game" value="plo">
+                <div class="game-option-icon">🃏</div>
+                <div class="game-option-name">Pot Limit Omaha</div>
+                <div class="game-option-stakes">$1/$3</div>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="wl-name">Full Name *</label>
+              <input type="text" id="wl-name" placeholder="Enter your full name" required>
+            </div>
+            <div class="form-group">
+              <label for="wl-phone">Phone Number *</label>
+              <input type="tel" id="wl-phone" placeholder="(915) 555-0000" required>
+              <p class="form-hint">We'll text you when your seat is ready</p>
+            </div>
+            <div class="form-group">
+              <label for="wl-players">Number of Players</label>
+              <select id="wl-players">
+                <option value="1">1 Player (Just me)</option>
+                <option value="2">2 Players</option>
+                <option value="3">3 Players</option>
+                <option value="4">4+ Players</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="wl-buyin">Planned Buy-in</label>
+              <select id="wl-buyin">
+                <option value="100">$100 (Min)</option>
+                <option value="200">$200</option>
+                <option value="300" selected>$300 (Max)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="summary-box">
+            <h4 class="summary-title">Wait List Summary</h4>
+            <div class="summary-row">
+              <span class="summary-label">Game</span>
+              <span class="summary-value" id="wl-summary-game">$1/$3 No Limit Hold'em</span>
+            </div>
+            <div class="summary-row">
+              <span class="summary-label">Estimated Wait</span>
+              <span class="summary-value">~20 minutes</span>
+            </div>
+            <div class="summary-row">
+              <span class="summary-label">Your Position</span>
+              <span class="summary-value">#9</span>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-success" style="width: 100%; margin-top: 1.5rem; padding: 1rem;">
+            Join Wait List
+          </button>
+        </form>
+
+        <div class="success-message" id="waitlist-success">
+          <div class="success-icon">✓</div>
+          <h3 class="success-title">You're on the List!</h3>
+          <p class="success-text">We'll send you a text when your seat is ready.<br>Please check in at the poker room podium when you arrive.</p>
+          <div class="confirmation-number">
+            <div class="confirmation-label">Your Position</div>
+            <div class="confirmation-code">#9</div>
+          </div>
+          <a href="index.html" class="btn btn-primary">Back to Home</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tournament Tab -->
+    <div class="tab-content" id="tournament">
+      <div class="card">
+        <h2 class="card-title">Tournament Registration</h2>
+
+        <form id="tournamentForm" onsubmit="submitTournament(event)">
+          <div class="form-group">
+            <label>Select Tournament</label>
+            <div class="tournament-list">
+              <label class="tournament-option selected">
+                <input type="radio" name="tournament" value="early-bird" checked>
+                <div class="tournament-option-check">✓</div>
+                <div class="tournament-option-header">
+                  <span class="tournament-option-name">Early Bird Hold'em</span>
+                  <span class="tournament-option-date">Today, 3:00 PM</span>
+                </div>
+                <div class="tournament-option-details">
+                  <span class="tournament-option-detail">Buy-in: <span>$10</span></span>
+                  <span class="tournament-option-detail">Rebuy: <span>$20</span></span>
+                  <span class="tournament-option-detail">Registered: <span>13 players</span></span>
+                </div>
+              </label>
+
+              <label class="tournament-option">
+                <input type="radio" name="tournament" value="evening">
+                <div class="tournament-option-check">✓</div>
+                <div class="tournament-option-header">
+                  <span class="tournament-option-name">7PM No Limit Hold'em</span>
+                  <span class="tournament-option-date">Today, 7:00 PM</span>
+                </div>
+                <div class="tournament-option-details">
+                  <span class="tournament-option-detail">Buy-in: <span>$20 + $10 + $10</span></span>
+                  <span class="tournament-option-detail">Registered: <span>34 players</span></span>
+                </div>
+              </label>
+
+              <label class="tournament-option">
+                <input type="radio" name="tournament" value="friday-gtd">
+                <div class="tournament-option-check">✓</div>
+                <div class="tournament-option-header">
+                  <span class="tournament-option-name">Friday $3K Guarantee</span>
+                  <span class="tournament-option-date">Fri, Dec 13 • 7:00 PM</span>
+                </div>
+                <div class="tournament-option-details">
+                  <span class="tournament-option-detail">Buy-in: <span>$20 + $20 + $20</span></span>
+                  <span class="tournament-option-detail">Guarantee: <span>$3,000</span></span>
+                  <span class="tournament-option-detail">Pre-registered: <span>18 players</span></span>
+                </div>
+              </label>
+
+              <label class="tournament-option">
+                <input type="radio" name="tournament" value="naughty-nice">
+                <div class="tournament-option-check">✓</div>
+                <div class="tournament-option-header">
+                  <span class="tournament-option-name">🎅 Naughty or Nice Tournament</span>
+                  <span class="tournament-option-date">Sat, Dec 13 • 4:00 PM</span>
+                </div>
+                <div class="tournament-option-details">
+                  <span class="tournament-option-detail">Buy-in: <span>$50 + $50 + $50</span></span>
+                  <span class="tournament-option-detail">Special: <span>Hot Seat Giveaways</span></span>
+                  <span class="tournament-option-detail">Pre-registered: <span>42 players</span></span>
+                </div>
+              </label>
+
+              <label class="tournament-option">
+                <input type="radio" name="tournament" value="nye">
+                <div class="tournament-option-check">✓</div>
+                <div class="tournament-option-header">
+                  <span class="tournament-option-name">🎉 Bye Felicia, Hello Chips!</span>
+                  <span class="tournament-option-date">Tue, Dec 31 • 4:00 PM</span>
+                </div>
+                <div class="tournament-option-details">
+                  <span class="tournament-option-detail">Buy-in: <span>$50 + $20</span></span>
+                  <span class="tournament-option-detail">Drawings: <span>$2,026</span></span>
+                  <span class="tournament-option-detail">Pre-registered: <span>67 players</span></span>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-grid" style="margin-top: 1.5rem;">
+            <div class="form-group">
+              <label for="t-name">Full Name *</label>
+              <input type="text" id="t-name" placeholder="Enter your full name" required>
+            </div>
+            <div class="form-group">
+              <label for="t-phone">Phone Number *</label>
+              <input type="tel" id="t-phone" placeholder="(915) 555-0000" required>
+            </div>
+            <div class="form-group">
+              <label for="t-email">Email Address</label>
+              <input type="email" id="t-email" placeholder="email@example.com">
+              <p class="form-hint">For tournament updates and receipts</p>
+            </div>
+            <div class="form-group">
+              <label for="t-payment">Payment Method</label>
+              <select id="t-payment">
+                <option value="venue">Pay at Venue</option>
+                <option value="prepaid">Pre-pay Online (Coming Soon)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="summary-box">
+            <h4 class="summary-title">Registration Summary</h4>
+            <div class="summary-row">
+              <span class="summary-label">Tournament</span>
+              <span class="summary-value" id="t-summary-name">Early Bird Hold'em</span>
+            </div>
+            <div class="summary-row">
+              <span class="summary-label">Date & Time</span>
+              <span class="summary-value" id="t-summary-date">Today, 3:00 PM</span>
+            </div>
+            <div class="summary-row">
+              <span class="summary-label">Buy-in</span>
+              <span class="summary-value" id="t-summary-buyin">$10</span>
+            </div>
+            <div class="summary-row">
+              <span class="summary-label">Total Due at Venue</span>
+              <span class="summary-value">$10</span>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-success" style="width: 100%; margin-top: 1.5rem; padding: 1rem;">
+            Complete Registration
+          </button>
+        </form>
+
+        <div class="success-message" id="tournament-success">
+          <div class="success-icon">✓</div>
+          <h3 class="success-title">Registration Complete!</h3>
+          <p class="success-text">You're registered for the tournament.<br>Please arrive 15 minutes early to check in and pay your buy-in.</p>
+          <div class="confirmation-number">
+            <div class="confirmation-label">Confirmation Number</div>
+            <div class="confirmation-code">SR-2025-4847</div>
+          </div>
+          <a href="index.html" class="btn btn-primary">Back to Home</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Create Account Tab -->
+    <div class="tab-content" id="account">
+      <div class="card">
+        <h2 class="card-title">Create Player Account</h2>
+        <p style="color: var(--light-gray); opacity: 0.8; margin-bottom: 1.5rem;">Create an account to save your info, track your play history, and earn rewards.</p>
+
+        <form id="accountForm" onsubmit="submitAccount(event)">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="a-firstname">First Name *</label>
+              <input type="text" id="a-firstname" placeholder="John" required>
+            </div>
+            <div class="form-group">
+              <label for="a-lastname">Last Name *</label>
+              <input type="text" id="a-lastname" placeholder="Doe" required>
+            </div>
+            <div class="form-group">
+              <label for="a-email">Email Address *</label>
+              <input type="email" id="a-email" placeholder="email@example.com" required>
+            </div>
+            <div class="form-group">
+              <label for="a-phone">Phone Number *</label>
+              <input type="tel" id="a-phone" placeholder="(915) 555-0000" required>
+            </div>
+            <div class="form-group">
+              <label for="a-password">Password *</label>
+              <input type="password" id="a-password" placeholder="Create a password" required>
+              <p class="form-hint">At least 8 characters</p>
+            </div>
+            <div class="form-group">
+              <label for="a-confirm">Confirm Password *</label>
+              <input type="password" id="a-confirm" placeholder="Confirm your password" required>
+            </div>
+            <div class="form-group full-width">
+              <label for="a-dob">Date of Birth *</label>
+              <input type="date" id="a-dob" required>
+              <p class="form-hint">Must be 21 or older to play</p>
+            </div>
+          </div>
+
+          <div style="margin: 1.5rem 0;">
+            <label style="display: flex; align-items: flex-start; gap: 0.75rem; cursor: pointer;">
+              <input type="checkbox" style="margin-top: 0.25rem;" required>
+              <span style="font-size: 0.85rem; color: var(--light-gray); opacity: 0.9;">
+                I agree to the <a href="#" style="color: var(--gold);">Terms of Service</a> and <a href="#" style="color: var(--gold);">Privacy Policy</a>. I confirm that I am at least 21 years of age.
+              </span>
+            </label>
+          </div>
+
+          <div style="margin-bottom: 1.5rem;">
+            <label style="display: flex; align-items: flex-start; gap: 0.75rem; cursor: pointer;">
+              <input type="checkbox" checked style="margin-top: 0.25rem;">
+              <span style="font-size: 0.85rem; color: var(--light-gray); opacity: 0.9;">
+                Send me tournament announcements, promotions, and poker room updates via text and email.
+              </span>
+            </label>
+          </div>
+
+          <button type="submit" class="btn btn-success" style="width: 100%; padding: 1rem;">
+            Create Account
+          </button>
+        </form>
+
+        <div class="success-message" id="account-success">
+          <div class="success-icon">✓</div>
+          <h3 class="success-title">Account Created!</h3>
+          <p class="success-text">Welcome to Speaking Rock Poker!<br>You can now register for tournaments and join the wait list faster.</p>
+          <div class="confirmation-number">
+            <div class="confirmation-label">Player ID</div>
+            <div class="confirmation-code">SRP-00156</div>
+          </div>
+          <a href="index.html" class="btn btn-primary">Back to Home</a>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <footer>
+    <p class="footer-text">
+      © 2025 Speaking Rock Entertainment Center • 122 S Old Pueblo Rd, El Paso, TX 79907 • <a href="tel:9158607777">(915) 860-7777</a>
+    </p>
+  </footer>
+
+  <script>
+    // Tab Navigation
+    const tabs = document.querySelectorAll('.tab');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const tabId = tab.dataset.tab;
+
+        tabs.forEach(t => t.classList.remove('active'));
+        tabContents.forEach(c => c.classList.remove('active'));
+
+        tab.classList.add('active');
+        document.getElementById(tabId).classList.add('active');
+      });
+    });
+
+    // Game Option Selection
+    document.querySelectorAll('.game-option').forEach(option => {
+      option.addEventListener('click', () => {
+        document.querySelectorAll('.game-option').forEach(o => o.classList.remove('selected'));
+        option.classList.add('selected');
+        
+        const gameName = option.querySelector('.game-option-name').textContent;
+        const stakes = option.querySelector('.game-option-stakes').textContent;
+        document.getElementById('wl-summary-game').textContent = `${stakes} ${gameName}`;
+      });
+    });
+
+    // Tournament Option Selection
+    document.querySelectorAll('.tournament-option').forEach(option => {
+      option.addEventListener('click', () => {
+        document.querySelectorAll('.tournament-option').forEach(o => o.classList.remove('selected'));
+        option.classList.add('selected');
+        
+        const name = option.querySelector('.tournament-option-name').textContent;
+        const date = option.querySelector('.tournament-option-date').textContent;
+        const buyinEl = option.querySelector('.tournament-option-detail span');
+        const buyin = buyinEl ? buyinEl.textContent : '$10';
+        
+        document.getElementById('t-summary-name').textContent = name;
+        document.getElementById('t-summary-date').textContent = date;
+        document.getElementById('t-summary-buyin').textContent = buyin;
+      });
+    });
+
+    // Form Submissions
+    function submitWaitlist(e) {
+      e.preventDefault();
+      const form = document.getElementById('waitlistForm');
+      const success = document.getElementById('waitlist-success');
+      
+      form.style.display = 'none';
+      document.querySelector('#waitlist .live-status').style.display = 'none';
+      success.classList.add('show');
+    }
+
+    function submitTournament(e) {
+      e.preventDefault();
+      const form = document.getElementById('tournamentForm');
+      const success = document.getElementById('tournament-success');
+      
+      form.style.display = 'none';
+      success.classList.add('show');
+    }
+
+    function submitAccount(e) {
+      e.preventDefault();
+      const form = document.getElementById('accountForm');
+      const success = document.getElementById('account-success');
+      
+      form.style.display = 'none';
+      document.querySelector('#account p').style.display = 'none';
+      success.classList.add('show');
+    }
+  </script>
+
+</body>
+</html>
