@@ -59,6 +59,95 @@
       z-index: 100;
     }
 
+    /* Live Status Bar */
+    .live-status-bar {
+      background: linear-gradient(90deg, var(--dark-gray) 0%, var(--charcoal) 100%);
+      border-bottom: 1px solid rgba(212, 165, 50, 0.2);
+      padding: 0.75rem 2rem;
+    }
+
+    .live-status-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+    }
+
+    .live-indicator {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(34, 197, 94, 0.1);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      padding: 0.4rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: #22c55e;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .live-dot {
+      width: 8px;
+      height: 8px;
+      background: #22c55e;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .live-stats {
+      display: flex;
+      gap: 2rem;
+      flex: 1;
+      justify-content: center;
+    }
+
+    .live-stat {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+    }
+
+    .live-stat-icon {
+      font-size: 1rem;
+    }
+
+    .live-stat-value {
+      font-weight: 700;
+      color: var(--gold);
+    }
+
+    .live-stat-label {
+      color: var(--light-gray);
+      opacity: 0.7;
+      font-size: 0.75rem;
+    }
+
+    .live-cta {
+      background: var(--gold);
+      color: var(--black);
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .live-cta:hover {
+      background: var(--gold-light);
+      transform: translateX(3px);
+    }
+
     .header-content {
       max-width: 1200px;
       margin: 0 auto;
@@ -614,6 +703,36 @@
         font-size: 0.75rem;
       }
 
+      .live-status-bar {
+        padding: 0.5rem 1rem;
+      }
+
+      .live-status-content {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.75rem;
+      }
+
+      .live-stats {
+        gap: 1rem;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .live-stat {
+        font-size: 0.75rem;
+      }
+
+      .live-stat-label {
+        display: none;
+      }
+
+      .live-cta {
+        width: 100%;
+        text-align: center;
+        padding: 0.6rem;
+      }
+
       .hero {
         min-height: 50vh;
         padding: 3rem 1.5rem;
@@ -731,6 +850,39 @@
     <p>December 12-23: Get a ticket every day you play tournaments or cash! All tickets valid for New Year's Eve Drawings!</p>
   </div>
 
+  <!-- Live Status Widget -->
+  <div class="live-status-bar">
+    <div class="live-status-content">
+      <div class="live-indicator">
+        <span class="live-dot"></span>
+        <span>LIVE</span>
+      </div>
+      <div class="live-stats">
+        <div class="live-stat">
+          <span class="live-stat-icon">🎰</span>
+          <span class="live-stat-value" id="tablesOpen">3</span>
+          <span class="live-stat-label">Tables Open</span>
+        </div>
+        <div class="live-stat">
+          <span class="live-stat-icon">👥</span>
+          <span class="live-stat-value" id="seatsAvailable">4</span>
+          <span class="live-stat-label">Seats Available</span>
+        </div>
+        <div class="live-stat">
+          <span class="live-stat-icon">📋</span>
+          <span class="live-stat-value" id="waitlistCount">8</span>
+          <span class="live-stat-label">On Wait List</span>
+        </div>
+        <div class="live-stat">
+          <span class="live-stat-icon">⏱️</span>
+          <span class="live-stat-value" id="avgWait">~15 min</span>
+          <span class="live-stat-label">Est. Wait</span>
+        </div>
+      </div>
+      <a href="register.html" class="live-cta">Join Now →</a>
+    </div>
+  </div>
+
   <section class="hero">
     <div class="hero-content">
       <img src="logo.png" alt="Speaking Rock Poker" class="hero-logo">
@@ -750,33 +902,19 @@
       
       <div class="gallery-grid">
         <div class="gallery-item gallery-large">
-          <div class="gallery-placeholder" style="background: var(--dark-gray); color: var(--gold); font-family: 'Cinzel', serif;">
-            <div>
-              <div style="font-size: 2.5rem; margin-bottom: 0.75rem;">♠♥♣♦</div>
-              8-Seat Digital Tables<br>
-              <span style="font-size: 0.75rem; color: rgba(255,255,255,0.5);">IMG_9335</span>
-            </div>
-          </div>
+          <img src="table1.jpg" alt="8-Seat Digital Poker Tables">
         </div>
         <div class="gallery-item">
-          <div class="gallery-placeholder" style="background: var(--medium-gray); color: var(--gold); font-size: 0.75rem;">
-            Digital Interface<br><span style="color: rgba(255,255,255,0.5);">IMG_9336</span>
-          </div>
+          <img src="table2.jpg" alt="Digital Table Interface">
         </div>
         <div class="gallery-item">
-          <div class="gallery-placeholder" style="background: linear-gradient(135deg, var(--green-felt) 0%, #094d1f 100%); color: var(--gold); font-size: 0.75rem;">
-            Live Action<br><span style="color: rgba(255,255,255,0.5);">IMG_9337</span>
-          </div>
+          <img src="table3.jpg" alt="Live Poker Action">
         </div>
         <div class="gallery-item">
-          <div class="gallery-placeholder" style="background: var(--charcoal); color: var(--gold); font-size: 0.75rem;">
-            Food & Drinks<br><span style="color: rgba(255,255,255,0.5);">IMG_9338</span>
-          </div>
+          <img src="food.jpg" alt="Food & Drinks">
         </div>
         <div class="gallery-item">
-          <div class="gallery-placeholder" style="background: linear-gradient(135deg, #8B0000 0%, #5c0000 100%); color: var(--gold); font-size: 0.75rem;">
-            Winners Circle<br><span style="color: rgba(255,255,255,0.5);">IMG_9342</span>
-          </div>
+          <img src="winners.jpg" alt="Winners Circle">
         </div>
       </div>
     </div>

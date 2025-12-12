@@ -790,7 +790,7 @@
     <!-- Sidebar -->
     <aside class="sidebar">
       <div class="sidebar-logo">
-        <h1>SPEAKING ROCK</h1>
+        <img src="logo.png" alt="Speaking Rock Poker" style="width: 100%; max-width: 180px; margin-bottom: 0.5rem;">
         <span>Poker Admin</span>
       </div>
 
@@ -1414,7 +1414,7 @@
                   </div>
                 </td>
                 <td>(915) 555-0123</td>
-                <td>mike.r@email.com</td>
+                <td><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="096460626c277b496c64686065276a6664">[email&#160;protected]</a></td>
                 <td>47</td>
                 <td>Today</td>
                 <td>
@@ -1430,7 +1430,7 @@
                   </div>
                 </td>
                 <td>(915) 555-0456</td>
-                <td>sarah.lopez@email.com</td>
+                <td><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="aeddcfdccfc680c2c1decbd4eecbc3cfc7c280cdc1c3">[email&#160;protected]</a></td>
                 <td>32</td>
                 <td>Today</td>
                 <td>
@@ -1446,7 +1446,7 @@
                   </div>
                 </td>
                 <td>(915) 555-0789</td>
-                <td>carlos.m@email.com</td>
+                <td><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="375456455b5844195a77525a565e5b1954585a">[email&#160;protected]</a></td>
                 <td>28</td>
                 <td>Yesterday</td>
                 <td>
@@ -1462,7 +1462,7 @@
                   </div>
                 </td>
                 <td>(915) 555-1234</td>
-                <td>jchen@email.com</td>
+                <td><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="b2d8d1dad7dcf2d7dfd3dbde9cd1dddf">[email&#160;protected]</a></td>
                 <td>21</td>
                 <td>Dec 9</td>
                 <td>
@@ -1478,7 +1478,7 @@
                   </div>
                 </td>
                 <td>(915) 555-5678</td>
-                <td>david.kim@email.com</td>
+                <td><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="ea8e8b9c838ec4818387aa8f878b8386c4898587">[email&#160;protected]</a></td>
                 <td>19</td>
                 <td>Dec 8</td>
                 <td>
@@ -1494,7 +1494,7 @@
                   </div>
                 </td>
                 <td>(915) 555-9012</td>
-                <td>mgarcia@email.com</td>
+                <td><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="214c46405342484061444c40484d0f424e4c">[email&#160;protected]</a></td>
                 <td>15</td>
                 <td>Dec 7</td>
                 <td>
@@ -1574,11 +1574,11 @@
             <h3 class="card-title" style="margin-bottom: 1.5rem;">Admin Users</h3>
             <div style="display: flex; flex-direction: column; gap: 0.75rem;">
               <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: var(--bg-dark); border-radius: 6px;">
-                <span>admin@speakingrock.com</span>
+                <span><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="a1c0c5ccc8cfe1d2d1c4c0cac8cfc6d3cec2ca8fc2cecc">[email&#160;protected]</a></span>
                 <span style="color: var(--gold); font-size: 0.8rem;">Owner</span>
               </div>
               <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: var(--bg-dark); border-radius: 6px;">
-                <span>manager@speakingrock.com</span>
+                <span><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="a5c8c4cbc4c2c0d7e5d6d5c0c4cecccbc2d7cac6ce8bc6cac8">[email&#160;protected]</a></span>
                 <span style="color: var(--text-muted); font-size: 0.8rem;">Manager</span>
               </div>
             </div>
@@ -1606,7 +1606,7 @@
   <!-- Toast -->
   <div class="toast" id="toast">Action completed successfully!</div>
 
-  <script>
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
     // Navigation
     const navItems = document.querySelectorAll('.nav-item');
     const pages = document.querySelectorAll('.page');
@@ -1747,43 +1747,4 @@
             <label>Number of Seats</label>
             <select>
               <option>8</option>
-              <option>9</option>
-              <option>10</option>
-            </select>
-          </div>
-          <div class="modal-actions">
-            <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-            <button class="btn btn-primary" onclick="closeModal(); showToast('Table added!')">Add Table</button>
-          </div>
-        `;
-      }
-      
-      overlay.classList.add('active');
-    }
-
-    function closeModal() {
-      document.getElementById('modalOverlay').classList.remove('active');
-    }
-
-    // Toast
-    function showToast(message, isError = false) {
-      const toast = document.getElementById('toast');
-      toast.textContent = message;
-      toast.classList.toggle('error', isError);
-      toast.classList.add('show');
-      
-      setTimeout(() => {
-        toast.classList.remove('show');
-      }, 3000);
-    }
-
-    // Close modal on overlay click
-    document.getElementById('modalOverlay').addEventListener('click', (e) => {
-      if (e.target === e.currentTarget) {
-        closeModal();
-      }
-    });
-  </script>
-
-</body>
-</html>
+           
