@@ -5,19 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="refresh" content="30">
   <title>Speaking Rock Poker | Live Display</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --gold: #D4A532;
-      --gold-light: #E8C45A;
-      --black: #000000;
-      --dark-gray: #111111;
-      --green: #22c55e;
-      --red: #ef4444;
-      --blue: #3b82f6;
-      --yellow: #eab308;
-    }
-
     * {
       margin: 0;
       padding: 0;
@@ -25,567 +14,281 @@
     }
 
     body {
-      font-family: 'Montserrat', sans-serif;
-      background: var(--black);
+      font-family: 'Roboto', sans-serif;
+      background: #1a1a2e;
       color: white;
       min-height: 100vh;
-      overflow: hidden;
+      display: flex;
+      flex-direction: column;
     }
 
     /* Header */
     .header {
-      background: linear-gradient(180deg, rgba(212, 165, 50, 0.1) 0%, transparent 100%);
-      border-bottom: 2px solid var(--gold);
-      padding: 1.5rem 3rem;
+      background: linear-gradient(180deg, #1e3a5f 0%, #0d1b2a 100%);
+      padding: 0.75rem 2rem;
       display: flex;
-      justify-content: space-between;
+      justify-content: center;
       align-items: center;
+      border-bottom: 3px solid #2563eb;
     }
 
-    .logo {
-      height: 80px;
-    }
-
-    .header-right {
-      text-align: right;
-    }
-
-    .current-time {
-      font-size: 3rem;
-      font-weight: 700;
-      color: var(--gold);
-      font-family: 'Cinzel', serif;
-    }
-
-    .current-date {
-      font-size: 1.2rem;
-      color: rgba(255,255,255,0.7);
-    }
-
-    /* Main Content */
-    .main {
-      display: grid;
-      grid-template-columns: 2fr 1fr;
-      gap: 2rem;
-      padding: 2rem 3rem;
-      height: calc(100vh - 140px);
-    }
-
-    /* Tables Section */
-    .tables-section {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .section-title {
-      font-family: 'Cinzel', serif;
-      font-size: 1.8rem;
-      color: var(--gold);
-      margin-bottom: 1.5rem;
+    .logo-left, .logo-right {
       display: flex;
       align-items: center;
-      gap: 1rem;
+      gap: 0.5rem;
     }
 
-    .section-title .live-dot {
-      width: 12px;
-      height: 12px;
-      background: var(--green);
-      border-radius: 50%;
-      animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; box-shadow: 0 0 10px var(--green); }
-      50% { opacity: 0.5; box-shadow: 0 0 20px var(--green); }
-    }
-
-    .tables-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1.5rem;
-      flex: 1;
-    }
-
-    .table-card {
-      background: var(--dark-gray);
-      border: 2px solid rgba(212, 165, 50, 0.3);
-      border-radius: 12px;
-      padding: 1.5rem;
-      position: relative;
-    }
-
-    .table-card.active {
-      border-color: var(--green);
-      box-shadow: 0 0 20px rgba(34, 197, 94, 0.2);
-    }
-
-    .table-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1rem;
-    }
-
-    .table-name {
-      font-family: 'Cinzel', serif;
-      font-size: 1.5rem;
-      color: var(--gold);
-    }
-
-    .table-status {
-      padding: 0.4rem 1rem;
-      border-radius: 20px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      text-transform: uppercase;
-    }
-
-    .table-status.open {
-      background: rgba(34, 197, 94, 0.2);
-      color: var(--green);
-    }
-
-    .table-status.full {
-      background: rgba(239, 68, 68, 0.2);
-      color: var(--red);
-    }
-
-    .table-game {
-      font-size: 1.1rem;
-      color: rgba(255,255,255,0.8);
-      margin-bottom: 0.5rem;
-    }
-
-    .table-seats {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      margin-top: 1rem;
-    }
-
-    .seat {
+    .logo-icon {
       width: 40px;
       height: 40px;
+      background: #D4A532;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: 600;
-      font-size: 0.9rem;
+      font-weight: bold;
+      color: #000;
+      font-size: 0.8rem;
     }
 
-    .seat.filled {
-      background: var(--gold);
-      color: var(--black);
+    .logo-text {
+      color: #D4A532;
+      font-weight: 700;
+      font-size: 1.1rem;
     }
 
-    .seat.empty {
-      background: transparent;
-      border: 2px dashed rgba(255,255,255,0.3);
-      color: rgba(255,255,255,0.5);
+    .room-name {
+      font-size: 2rem;
+      font-weight: 700;
+      color: white;
+      text-align: center;
+      flex: 1;
     }
 
-    .seats-count {
-      font-size: 1.3rem;
-      font-weight: 600;
-      margin-left: auto;
-    }
-
-    .seats-count span {
-      color: var(--gold);
-    }
-
-    /* Wait List Section */
-    .waitlist-section {
-      background: var(--dark-gray);
-      border: 2px solid var(--gold);
-      border-radius: 12px;
+    /* Game Columns Container */
+    .games-container {
+      flex: 1;
       display: flex;
       flex-direction: column;
-      overflow: hidden;
     }
 
-    .waitlist-header {
-      background: linear-gradient(135deg, var(--gold) 0%, #B8860B 100%);
-      color: var(--black);
-      padding: 1.25rem 1.5rem;
-      font-family: 'Cinzel', serif;
+    /* Game Headers Row */
+    .games-header {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      background: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%);
+    }
+
+    .game-column-header {
+      padding: 0.75rem 0.5rem;
+      text-align: center;
+      border-right: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .game-column-header:last-child {
+      border-right: none;
+    }
+
+    .game-name {
       font-size: 1.5rem;
       font-weight: 700;
-      text-align: center;
+      color: white;
     }
 
-    .waitlist-content {
+    .game-buyin {
+      font-size: 1rem;
+      color: rgba(255,255,255,0.8);
+      margin-top: 0.25rem;
+    }
+
+    .game-tables {
+      font-size: 1.1rem;
+      color: white;
+      margin-top: 0.25rem;
+    }
+
+    .game-status {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-top: 0.5rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 3px;
+      display: inline-block;
+    }
+
+    .game-status.seat-open {
+      color: #22c55e;
+    }
+
+    .game-status.waiting {
+      color: #eab308;
+    }
+
+    .game-status.interest {
+      color: #eab308;
+    }
+
+    .game-status.full {
+      color: #ef4444;
+    }
+
+    /* Waitlist Columns */
+    .waitlist-grid {
       flex: 1;
-      overflow-y: auto;
-      padding: 1rem;
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      background: #0f0f1a;
     }
 
-    .waitlist-item {
-      display: flex;
-      align-items: center;
-      padding: 1rem;
-      border-bottom: 1px solid rgba(255,255,255,0.1);
-      transition: all 0.3s;
+    .waitlist-column {
+      border-right: 1px solid rgba(255,255,255,0.1);
+      padding: 1rem 0.75rem;
+      min-height: 300px;
     }
 
-    .waitlist-item:last-child {
+    .waitlist-column:last-child {
+      border-right: none;
+    }
+
+    .waitlist-player {
+      font-size: 1.3rem;
+      font-weight: 500;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .waitlist-player:last-child {
       border-bottom: none;
     }
 
-    .waitlist-item.called {
-      background: rgba(59, 130, 246, 0.2);
-      border-left: 4px solid var(--blue);
-      animation: callPulse 1s infinite;
-    }
-
-    @keyframes callPulse {
-      0%, 100% { background: rgba(59, 130, 246, 0.2); }
-      50% { background: rgba(59, 130, 246, 0.4); }
-    }
-
-    .waitlist-position {
-      width: 50px;
-      height: 50px;
-      background: rgba(212, 165, 50, 0.2);
-      border: 2px solid var(--gold);
-      border-radius: 50%;
+    /* Time Display */
+    .time-display {
+      background: #0a0a12;
+      padding: 1rem;
       display: flex;
-      align-items: center;
       justify-content: center;
-      font-family: 'Cinzel', serif;
-      font-size: 1.5rem;
+      align-items: center;
+      gap: 0.25rem;
+      border-top: 2px solid #333;
+    }
+
+    .time-box {
+      font-size: 2.5rem;
       font-weight: 700;
-      color: var(--gold);
-      margin-right: 1rem;
-    }
-
-    .waitlist-item.called .waitlist-position {
-      background: var(--blue);
-      border-color: var(--blue);
-      color: white;
-    }
-
-    .waitlist-info {
-      flex: 1;
-    }
-
-    .waitlist-name {
-      font-size: 1.3rem;
-      font-weight: 600;
-      margin-bottom: 0.25rem;
-    }
-
-    .waitlist-game {
-      font-size: 0.9rem;
-      color: rgba(255,255,255,0.6);
-    }
-
-    .waitlist-status {
       padding: 0.5rem 1rem;
-      border-radius: 20px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      text-transform: uppercase;
+      border-radius: 8px;
+      min-width: 80px;
+      text-align: center;
     }
 
-    .waitlist-status.waiting {
-      background: rgba(234, 179, 8, 0.2);
-      color: var(--yellow);
-    }
-
-    .waitlist-status.called {
-      background: var(--blue);
+    .time-box.hours {
+      background: #22c55e;
       color: white;
-      animation: callBlink 0.5s infinite;
     }
 
-    @keyframes callBlink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.7; }
+    .time-box.minutes {
+      background: #ef4444;
+      color: white;
     }
 
     /* Promo Banner */
     .promo-banner {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
       background: linear-gradient(90deg, #8B0000 0%, #5c0000 50%, #8B0000 100%);
-      padding: 1rem 3rem;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 3rem;
-      border-top: 2px solid var(--gold);
+      padding: 0.75rem 2rem;
+      text-align: center;
+      border-top: 2px solid #D4A532;
     }
 
-    .promo-item {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      font-size: 1.3rem;
-    }
-
-    .promo-item .emoji {
-      font-size: 2rem;
+    .promo-text {
+      font-size: 1.25rem;
+      color: white;
     }
 
     .promo-highlight {
-      color: var(--gold);
+      color: #D4A532;
       font-weight: 700;
-      font-family: 'Cinzel', serif;
-    }
-
-    /* Now Seating Alert */
-    .now-seating {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: rgba(0, 0, 0, 0.95);
-      border: 4px solid var(--blue);
-      border-radius: 20px;
-      padding: 3rem 5rem;
-      text-align: center;
-      z-index: 1000;
-      animation: alertPop 0.5s ease;
-      display: none;
-    }
-
-    .now-seating.active {
-      display: block;
-    }
-
-    @keyframes alertPop {
-      0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0; }
-      100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-    }
-
-    .now-seating h2 {
-      font-family: 'Cinzel', serif;
-      font-size: 2rem;
-      color: var(--blue);
-      margin-bottom: 1rem;
-    }
-
-    .now-seating .player-name {
-      font-size: 4rem;
-      font-weight: 700;
-      color: white;
-      margin-bottom: 1rem;
-    }
-
-    .now-seating .table-info {
-      font-size: 1.5rem;
-      color: var(--gold);
     }
   </style>
 </head>
 <body>
 
-  <header class="header">
-    <img src="logo.png" alt="Speaking Rock Poker" class="logo">
-    <div class="header-right">
-      <div class="current-time" id="currentTime">8:45 PM</div>
-      <div class="current-date" id="currentDate">Friday, December 13, 2025</div>
-    </div>
-  </header>
+  <!-- Header removed -->
 
-  <main class="main">
-    <!-- Active Tables -->
-    <div class="tables-section">
-      <h2 class="section-title">
-        <span class="live-dot"></span>
-        Active Tables
-      </h2>
-      <div class="tables-grid">
-        <div class="table-card active">
-          <div class="table-header">
-            <span class="table-name">Table 1</span>
-            <span class="table-status open">2 Seats Open</span>
-          </div>
-          <div class="table-game">$1/$3 No Limit Hold'em</div>
-          <div class="table-seats">
-            <span class="seat filled">1</span>
-            <span class="seat filled">2</span>
-            <span class="seat filled">3</span>
-            <span class="seat empty">4</span>
-            <span class="seat filled">5</span>
-            <span class="seat filled">6</span>
-            <span class="seat empty">7</span>
-            <span class="seat filled">8</span>
-            <span class="seats-count"><span>6</span>/8</span>
-          </div>
-        </div>
-
-        <div class="table-card active">
-          <div class="table-header">
-            <span class="table-name">Table 2</span>
-            <span class="table-status full">Full</span>
-          </div>
-          <div class="table-game">$1/$3 No Limit Hold'em</div>
-          <div class="table-seats">
-            <span class="seat filled">1</span>
-            <span class="seat filled">2</span>
-            <span class="seat filled">3</span>
-            <span class="seat filled">4</span>
-            <span class="seat filled">5</span>
-            <span class="seat filled">6</span>
-            <span class="seat filled">7</span>
-            <span class="seat filled">8</span>
-            <span class="seats-count"><span>8</span>/8</span>
-          </div>
-        </div>
-
-        <div class="table-card active">
-          <div class="table-header">
-            <span class="table-name">Table 3</span>
-            <span class="table-status open">1 Seat Open</span>
-          </div>
-          <div class="table-game">$1/$3 No Limit Hold'em</div>
-          <div class="table-seats">
-            <span class="seat filled">1</span>
-            <span class="seat filled">2</span>
-            <span class="seat filled">3</span>
-            <span class="seat filled">4</span>
-            <span class="seat filled">5</span>
-            <span class="seat filled">6</span>
-            <span class="seat empty">7</span>
-            <span class="seat filled">8</span>
-            <span class="seats-count"><span>7</span>/8</span>
-          </div>
-        </div>
-
-        <div class="table-card active">
-          <div class="table-header">
-            <span class="table-name">Table 4</span>
-            <span class="table-status open">3 Seats Open</span>
-          </div>
-          <div class="table-game">Pot Limit Omaha</div>
-          <div class="table-seats">
-            <span class="seat filled">1</span>
-            <span class="seat filled">2</span>
-            <span class="seat empty">3</span>
-            <span class="seat filled">4</span>
-            <span class="seat empty">5</span>
-            <span class="seat filled">6</span>
-            <span class="seat empty">7</span>
-            <span class="seat filled">8</span>
-            <span class="seats-count"><span>5</span>/8</span>
-          </div>
-        </div>
+  <!-- Games Container -->
+  <div class="games-container">
+    <!-- Game Headers -->
+    <div class="games-header">
+      <div class="game-column-header">
+        <div class="game-name">$1/$3 NLH</div>
+        <div class="game-buyin">$60-300</div>
+        <div class="game-tables">01, 02, 03</div>
+        <div class="game-status seat-open">SEAT OPEN</div>
+      </div>
+      <div class="game-column-header">
+        <div class="game-name">$2/$5 NLH</div>
+        <div class="game-buyin">$200-1,000</div>
+        <div class="game-tables">04</div>
+        <div class="game-status waiting">WAITING: 2</div>
+      </div>
+      <div class="game-column-header">
+        <div class="game-name">$1/$3 PLO</div>
+        <div class="game-buyin">$100-500</div>
+        <div class="game-tables">05</div>
+        <div class="game-status waiting">WAITING: 4</div>
+      </div>
+      <div class="game-column-header">
+        <div class="game-name">$5 ROE</div>
+        <div class="game-buyin">NLH / PLO</div>
+        <div class="game-tables">—</div>
+        <div class="game-status interest">INTEREST</div>
+      </div>
+      <div class="game-column-header">
+        <div class="game-name">$4/$8 O8</div>
+        <div class="game-buyin">$40</div>
+        <div class="game-tables">—</div>
+        <div class="game-status interest">INTEREST</div>
+      </div>
+      <div class="game-column-header">
+        <div class="game-name">TOURNAMENT</div>
+        <div class="game-buyin">$60 Buy-in</div>
+        <div class="game-tables">SAT 6PM</div>
+        <div class="game-status seat-open">REGISTER</div>
       </div>
     </div>
 
-    <!-- Wait List -->
-    <div class="waitlist-section">
-      <div class="waitlist-header">📋 Wait List</div>
-      <div class="waitlist-content">
-        <div class="waitlist-item called">
-          <div class="waitlist-position">1</div>
-          <div class="waitlist-info">
-            <div class="waitlist-name">Mike R.</div>
-            <div class="waitlist-game">$1/$3 NLH</div>
-          </div>
-          <span class="waitlist-status called">Now Seating</span>
-        </div>
-        <div class="waitlist-item">
-          <div class="waitlist-position">2</div>
-          <div class="waitlist-info">
-            <div class="waitlist-name">Sarah L.</div>
-            <div class="waitlist-game">$1/$3 NLH</div>
-          </div>
-          <span class="waitlist-status waiting">~5 min</span>
-        </div>
-        <div class="waitlist-item">
-          <div class="waitlist-position">3</div>
-          <div class="waitlist-info">
-            <div class="waitlist-name">Carlos M.</div>
-            <div class="waitlist-game">$1/$3 NLH</div>
-          </div>
-          <span class="waitlist-status waiting">~10 min</span>
-        </div>
-        <div class="waitlist-item">
-          <div class="waitlist-position">4</div>
-          <div class="waitlist-info">
-            <div class="waitlist-name">David N.</div>
-            <div class="waitlist-game">PLO</div>
-          </div>
-          <span class="waitlist-status waiting">~15 min</span>
-        </div>
-        <div class="waitlist-item">
-          <div class="waitlist-position">5</div>
-          <div class="waitlist-info">
-            <div class="waitlist-name">Jennifer C.</div>
-            <div class="waitlist-game">$1/$3 NLH</div>
-          </div>
-          <span class="waitlist-status waiting">~20 min</span>
-        </div>
-        <div class="waitlist-item">
-          <div class="waitlist-position">6</div>
-          <div class="waitlist-info">
-            <div class="waitlist-name">Robert T.</div>
-            <div class="waitlist-game">$1/$3 NLH</div>
-          </div>
-          <span class="waitlist-status waiting">~25 min</span>
-        </div>
+    <!-- Waitlist Columns -->
+    <div class="waitlist-grid">
+      <div class="waitlist-column">
+        <!-- $1/$3 NLH waitlist - empty, seat open -->
+      </div>
+      <div class="waitlist-column">
+        <!-- $2/$5 NLH waitlist -->
+        <div class="waitlist-player">MIKE R</div>
+        <div class="waitlist-player">CARLOS M</div>
+      </div>
+      <div class="waitlist-column">
+        <!-- $1/$3 PLO waitlist -->
+        <div class="waitlist-player">BELLA</div>
+        <div class="waitlist-player">KHALIF</div>
+        <div class="waitlist-player">MICHAEL</div>
+        <div class="waitlist-player">TONY M</div>
+      </div>
+      <div class="waitlist-column">
+        <!-- $5 ROE interest -->
+        <div class="waitlist-player">DAVID N</div>
+        <div class="waitlist-player">SARAH L</div>
+        <div class="waitlist-player">JENNIFER C</div>
+      </div>
+      <div class="waitlist-column">
+        <!-- $4/$8 O8 interest -->
+        <div class="waitlist-player">ROBERT T</div>
+      </div>
+      <div class="waitlist-column">
+        <!-- Tournament registrants -->
+        <div class="waitlist-player">REGISTERED: 12</div>
       </div>
     </div>
-  </main>
-
-  <!-- Promo Banner -->
-  <div class="promo-banner">
-    <div class="promo-item">
-      <span class="emoji">💰</span>
-      <span><span class="promo-highlight">$50 SPLASH POTS</span> Every 30 Minutes!</span>
-    </div>
-    <div class="promo-item">
-      <span class="emoji">🎄</span>
-      <span><span class="promo-highlight">12 DAYS OF GIVEAWAY</span> Dec 12-23</span>
-    </div>
   </div>
-
-  <!-- Now Seating Alert (shows when someone is called) -->
-  <div class="now-seating" id="nowSeating">
-    <h2>🎰 NOW SEATING 🎰</h2>
-    <div class="player-name" id="calledPlayer">MIKE R.</div>
-    <div class="table-info">Table 1 • Seat 4</div>
-  </div>
-
-  <script>
-    // Update time
-    function updateTime() {
-      const now = new Date();
-      const timeOptions = { hour: 'numeric', minute: '2-digit', hour12: true };
-      const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-      
-      document.getElementById('currentTime').textContent = now.toLocaleTimeString('en-US', timeOptions);
-      document.getElementById('currentDate').textContent = now.toLocaleDateString('en-US', dateOptions);
-    }
-    
-    updateTime();
-    setInterval(updateTime, 1000);
-
-    // Demo: Show "Now Seating" alert periodically
-    function showNowSeating(name, table, seat) {
-      const alert = document.getElementById('nowSeating');
-      document.getElementById('calledPlayer').textContent = name;
-      alert.querySelector('.table-info').textContent = `Table ${table} • Seat ${seat}`;
-      alert.classList.add('active');
-      
-      setTimeout(() => {
-        alert.classList.remove('active');
-      }, 8000);
-    }
-
-    // Demo: Show alert every 30 seconds
-    // In production, this would be triggered by the admin dashboard
-    setTimeout(() => {
-      showNowSeating('MIKE R.', 1, 4);
-    }, 5000);
-  </script>
 
 </body>
 </html>
