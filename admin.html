@@ -3802,7 +3802,7 @@
     }
 
     // Quick add player
-    function quickAddPlayer() {
+    async function quickAddPlayer() {
       const name = document.getElementById('quickName').value;
       const phone = document.getElementById('quickPhone').value;
       const game = document.getElementById('quickGame').value;
@@ -3812,11 +3812,26 @@
         return;
       }
       
-      showToast(`${name} added to ${game} waitlist!`);
-      
-      // Clear form
-      document.getElementById('quickName').value = '';
-      document.getElementById('quickPhone').value = '';
+      try {
+        await apiCall('/waitlist', 'POST', {
+          player_name: name,
+          phone: phone,
+          game_id: game,
+          num_players: 1,
+          planned_buyin: 300
+        });
+        
+        showToast(`${name} added to ${game} waitlist!`);
+        
+        // Clear form
+        document.getElementById('quickName').value = '';
+        document.getElementById('quickPhone').value = '';
+        
+        // Refresh live data
+        loadLiveData();
+      } catch (e) {
+        console.error('Error adding player:', e);
+      }
     }
 
     // Add player from modal
