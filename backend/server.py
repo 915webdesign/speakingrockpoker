@@ -775,7 +775,7 @@ async def open_table(data: TableCreate):
     await log_activity("table_open", f"Table {data.table_number} opened for {table['game_name']}", 
                        table_number=str(data.table_number))
     
-    return table
+    return serialize_doc(table)
 
 
 @app.delete("/api/tables/{table_number}")
@@ -813,7 +813,7 @@ async def seat_player(table_number: int, seat_number: int, data: SeatAssignment)
     await db.seats.insert_one(seat)
     await log_activity("player_seated", f"Seated at Seat {seat_number}", data.player_name, str(table_number))
     
-    return seat
+    return serialize_doc(seat)
 
 
 @app.delete("/api/tables/{table_number}/seats/{seat_number}")
@@ -834,7 +834,7 @@ async def remove_player_from_seat(table_number: int, seat_number: int):
 async def get_tournaments():
     """Get all tournaments"""
     tournaments = await db.tournaments.find({"active": True}).to_list(50)
-    return tournaments
+    return serialize_doc(tournaments)
 
 
 @app.get("/api/tournaments/{tournament_id}")
@@ -845,8 +845,8 @@ async def get_tournament(tournament_id: str):
         raise HTTPException(status_code=404, detail="Tournament not found")
     
     registrations = await db.tournament_registrations.find({"tournament_id": tournament_id}).to_list(200)
-    tournament["registrations"] = registrations
-    return tournament
+    tournament["registrations"] = serialize_doc(registrations)
+    return serialize_doc(tournament)
 
 
 @app.post("/api/tournaments")
