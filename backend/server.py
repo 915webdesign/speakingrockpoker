@@ -409,7 +409,7 @@ async def player_register(data: PlayerCreate):
         "type": "player"
     })
     
-    await log_activity("player_register", f"New player registered", player["name"])
+    await log_activity("player_register", "New player registered", player["name"])
     
     # Send welcome email if email provided
     if data.email:
