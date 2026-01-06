@@ -1287,8 +1287,8 @@ async def get_points_leaderboard():
 
 
 @app.post("/api/points/award")
-async def award_points(data: PointsAward):
-    """Award points to a player"""
+async def award_points(data: PointsAward, staff: dict = Depends(require_staff)):
+    """Award points to a player (staff only)"""
     await db.players.update_one(
         {"id": data.player_id},
         {"$inc": {"points": data.points}}
