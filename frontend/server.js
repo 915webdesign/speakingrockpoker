@@ -14,8 +14,8 @@ app.use('/api', createProxyMiddleware({
 // Serve static files
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Handle all routes with index.html for SPA-like behavior
-app.get('*', (req, res) => {
+// Fallback to index.html for any route not found
+app.use((req, res) => {
   const filePath = path.join(__dirname, 'public', req.path);
   res.sendFile(filePath, (err) => {
     if (err) {
