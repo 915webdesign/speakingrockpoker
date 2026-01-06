@@ -1212,7 +1212,7 @@ async def get_display_waitlist():
         ).sort("position", 1).to_list(10)
         
         display_data.append({
-            "game": game,
+            "game": serialize_doc(game),
             "tables": len(game_tables),
             "seats_open": seats_open,
             "waitlist": [w["player_name"] for w in waitlist],
