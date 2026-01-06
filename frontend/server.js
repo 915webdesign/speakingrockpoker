@@ -5,11 +5,12 @@ const path = require('path');
 const app = express();
 const PORT = 3000;
 
-// Proxy API requests to backend - must come before static files
+// Proxy API requests to backend - keep the /api prefix
 app.use('/api', createProxyMiddleware({
   target: 'http://localhost:8001',
   changeOrigin: true,
-  pathRewrite: { '^/api': '/api' }
+  // Don't strip /api from the path
+  pathRewrite: undefined
 }));
 
 // Serve static files
