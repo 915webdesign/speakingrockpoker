@@ -284,8 +284,11 @@ class PokerAPITester:
             return False
             
         try:
+            import random
+            table_number = random.randint(10, 99)  # Use random table number to avoid conflicts
+            
             table_data = {
-                "table_number": 5,
+                "table_number": table_number,
                 "game_id": "nlh-1-3",
                 "capacity": 9
             }
@@ -300,8 +303,25 @@ class PokerAPITester:
             
             if response.status_code in [200, 201]:
                 data = response.json()
-                self.log_result("Create Table", True, f"Created table: {data}")
+                self.log_result("Create Table", True, f"Created table {table_number}: {data.get('message', 'Success')}")
                 return True
+            elif response.status_code == 400 and "already open" in response.text:
+                # Try with a different table number
+                table_number = random.randint(100, 199)
+                table_data["table_number"] = table_number
+                response = self.session.post(
+                    f"{API_BASE}/tables",
+                    json=table_data,
+                    headers=headers,
+                    timeout=10
+                )
+                if response.status_code in [200, 201]:
+                    data = response.json()
+                    self.log_result("Create Table", True, f"Created table {table_number}: {data.get('message', 'Success')}")
+                    return True
+                else:
+                    self.log_result("Create Table", False, f"Status: {response.status_code}, Response: {response.text}")
+                    return False
             else:
                 self.log_result("Create Table", False, f"Status: {response.status_code}, Response: {response.text}")
                 return False
