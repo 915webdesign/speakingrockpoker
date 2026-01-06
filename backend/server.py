@@ -1164,7 +1164,7 @@ async def get_activity_log(
         query["staff_name"] = staff
     
     logs = await db.activity_log.find(query).sort("timestamp", -1).limit(limit).to_list(limit)
-    return logs
+    return serialize_doc(logs)
 
 
 # ==================== LIVE STATUS ENDPOINTS ====================
