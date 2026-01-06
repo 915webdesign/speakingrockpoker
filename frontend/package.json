@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Speaking Rock Poker Room Frontend",
   "scripts": {
-    "start": "npx serve public -l 3000"
+    "start": "npx serve public -l 3000 -c ../serve.json"
   },
   "dependencies": {
     "serve": "^14.2.0"
