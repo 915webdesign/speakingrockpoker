@@ -446,7 +446,7 @@ async def staff_login(data: StaffLogin):
         "type": "staff"
     })
     
-    await log_activity("staff_login", f"Staff logged in", staff_name=staff["name"])
+    await log_activity("staff_login", "Staff logged in", staff_name=staff["name"])
     
     return {
         "token": token,
