@@ -3705,6 +3705,53 @@
   </div>
 
   <script>
+    // API Configuration
+    const API_URL = window.location.origin + '/api';
+    
+    // Helper function for API calls
+    async function apiCall(endpoint, method = 'GET', body = null) {
+      const options = {
+        method,
+        headers: { 'Content-Type': 'application/json' }
+      };
+      if (body) options.body = JSON.stringify(body);
+      
+      try {
+        const response = await fetch(`${API_URL}${endpoint}`, options);
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.detail || 'API Error');
+        return data;
+      } catch (error) {
+        console.error('API Error:', error);
+        showToast(error.message, true);
+        throw error;
+      }
+    }
+
+    // Load live data from API
+    async function loadLiveData() {
+      try {
+        // Load live status
+        const status = await apiCall('/live-status');
+        const tablesEl = document.getElementById('live-tables');
+        const seatsEl = document.getElementById('live-seats');
+        const waitlistEl = document.getElementById('live-waitlist');
+        
+        if (tablesEl) tablesEl.textContent = status.tables_open;
+        if (seatsEl) seatsEl.textContent = status.seats_available;
+        if (waitlistEl) waitlistEl.textContent = status.waitlist_count;
+      } catch (e) {
+        console.log('Could not load live data');
+      }
+    }
+
+    // Initialize on load
+    document.addEventListener('DOMContentLoaded', function() {
+      loadLiveData();
+      // Refresh every 30 seconds
+      setInterval(loadLiveData, 30000);
+    });
+
     // Update time
     function updateTime() {
       const now = new Date();
