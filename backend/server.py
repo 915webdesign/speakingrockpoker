@@ -358,7 +358,7 @@ async def player_login(data: PlayerLogin):
         "type": "player"
     })
     
-    await log_activity("player_login", f"Player logged in", player["name"])
+    await log_activity("player_login", "Player logged in", player["name"])
     
     return {
         "token": token,
