@@ -1014,8 +1014,8 @@ async def get_tournament(tournament_id: str):
 
 
 @app.post("/api/tournaments")
-async def create_tournament(data: TournamentCreate):
-    """Create a new tournament"""
+async def create_tournament(data: TournamentCreate, staff: dict = Depends(require_staff)):
+    """Create a new tournament (staff only)"""
     tournament = {
         "id": str(uuid.uuid4()),
         "name": data.name,
