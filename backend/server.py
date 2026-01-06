@@ -1056,7 +1056,7 @@ async def create_order(data: FoodOrderCreate):
     }
     
     await db.food_orders.insert_one(order)
-    await log_activity("order_create", f"New order placed", data.player_name, str(data.table_number))
+    await log_activity("order_create", "New order placed", data.player_name, str(data.table_number))
     
     return {"message": "Order placed", "order": serialize_doc(order)}
 
