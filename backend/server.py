@@ -565,7 +565,7 @@ async def checkout_player(player_id: str):
 async def get_games():
     """Get all available games"""
     games = await db.games.find({"active": True}).to_list(20)
-    return games
+    return serialize_doc(games)
 
 
 @app.post("/api/games")
