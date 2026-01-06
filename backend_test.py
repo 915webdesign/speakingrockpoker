@@ -339,12 +339,18 @@ class PokerAPITester:
             
             if response.status_code == 200:
                 data = response.json()
-                if isinstance(data, list):
-                    leader_count = len(data)
-                    self.log_result("Points Leaderboard", True, f"Found {leader_count} leaders")
-                    return True
+                if isinstance(data, dict) and 'leaderboard' in data:
+                    leaderboard = data['leaderboard']
+                    if isinstance(leaderboard, list):
+                        leader_count = len(leaderboard)
+                        top30_cutoff = data.get('top30_cutoff', 'N/A')
+                        self.log_result("Points Leaderboard", True, f"Found {leader_count} leaders, Top 30 cutoff: {top30_cutoff}")
+                        return True
+                    else:
+                        self.log_result("Points Leaderboard", False, f"Expected leaderboard to be list, got: {type(leaderboard)}")
+                        return False
                 else:
-                    self.log_result("Points Leaderboard", False, f"Expected list, got: {type(data)}")
+                    self.log_result("Points Leaderboard", False, f"Expected dict with 'leaderboard' key, got: {data}")
                     return False
             else:
                 self.log_result("Points Leaderboard", False, f"Status: {response.status_code}, Response: {response.text}")
