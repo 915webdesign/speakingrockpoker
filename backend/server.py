@@ -1027,11 +1027,11 @@ async def reset_flush_progress():
 # ==================== FOOD ORDERS ENDPOINTS ====================
 
 @app.get("/api/orders")
-async def get_orders(status: Optional[str] = None):
+async def get_orders(order_status: Optional[str] = None):
     """Get all food orders"""
     query = {}
-    if status:
-        query["status"] = status
+    if order_status:
+        query["status"] = order_status
     else:
         query["status"] = {"$in": ["pending", "preparing"]}
     
