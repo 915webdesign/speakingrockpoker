@@ -1217,5 +1217,34 @@
     </div>
   </footer>
 
+  <script>
+    const API_URL = window.location.origin + '/api';
+    
+    async function loadLiveStatus() {
+      try {
+        const status = await fetch(`${API_URL}/live-status`).then(r => r.json());
+        
+        // Update any live status displays on the page
+        const tablesEl = document.querySelector('.tables-open');
+        const seatsEl = document.querySelector('.seats-available');
+        const waitlistEl = document.querySelector('.waitlist-count');
+        
+        if (tablesEl) tablesEl.textContent = status.tables_open + ' Tables';
+        if (seatsEl) seatsEl.textContent = status.seats_available + ' Seats Open';
+        if (waitlistEl) waitlistEl.textContent = status.waitlist_count + ' Waiting';
+        
+        console.log('Live status:', status);
+      } catch (e) {
+        console.log('Could not load live status');
+      }
+    }
+    
+    // Load on page load
+    loadLiveStatus();
+    
+    // Refresh every 30 seconds
+    setInterval(loadLiveStatus, 30000);
+  </script>
+
 </body>
 </html>
