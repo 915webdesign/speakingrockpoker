@@ -132,7 +132,7 @@ app.add_middleware(
 )
 
 
-# ==================== MODELS ====================
+# ==================== MODELS WITH VALIDATION ====================
 
 class PlayerCreate(BaseModel):
     first_name: str
@@ -140,17 +140,63 @@ class PlayerCreate(BaseModel):
     phone: str
     email: Optional[str] = None
     pin: str
+    
+    @validator('first_name')
+    def validate_first_name(cls, v):
+        if not v or len(v) < 1 or len(v) > 50:
+            raise ValueError('First name must be 1-50 characters')
+        if not re.match(r'^[a-zA-Z\s\-]+$', v):
+            raise ValueError('First name can only contain letters, spaces, and hyphens')
+        return v.strip()
+    
+    @validator('last_initial')
+    def validate_last_initial(cls, v):
+        if not v or len(v) != 1 or not v.isalpha():
+            raise ValueError('Last initial must be a single letter')
+        return v.upper()
+    
+    @validator('phone')
+    def validate_phone(cls, v):
+        # Remove non-digits
+        cleaned = re.sub(r'\D', '', v)
+        if len(cleaned) != 10:
+            raise ValueError('Phone must be 10 digits')
+        return cleaned
+    
+    @validator('pin')
+    def validate_pin(cls, v):
+        if not v or len(v) != 4 or not v.isdigit():
+            raise ValueError('PIN must be exactly 4 digits')
+        return v
 
 
 class PlayerLogin(BaseModel):
     card_number: str
     credential: str
     method: str = "phone"  # phone or pin
+    
+    @validator('card_number')
+    def validate_card_number(cls, v):
+        if not v or not v.isdigit() or len(v) != 5:
+            raise ValueError('Invalid card number format')
+        return v
+    
+    @validator('method')
+    def validate_method(cls, v):
+        if v not in ['phone', 'pin']:
+            raise ValueError('Method must be phone or pin')
+        return v
 
 
 class StaffLogin(BaseModel):
     username: str
     password: str
+    
+    @validator('username')
+    def validate_username(cls, v):
+        if not v or len(v) < 3 or len(v) > 30:
+            raise ValueError('Username must be 3-30 characters')
+        return v.lower().strip()
 
 
 class WaitlistEntry(BaseModel):
@@ -160,6 +206,25 @@ class WaitlistEntry(BaseModel):
     game_id: str
     num_players: int = 1
     planned_buyin: int = 300
+    
+    @validator('player_name')
+    def validate_player_name(cls, v):
+        if not v or len(v) < 2 or len(v) > 50:
+            raise ValueError('Player name must be 2-50 characters')
+        return v.strip()
+    
+    @validator('phone')
+    def validate_phone(cls, v):
+        cleaned = re.sub(r'\D', '', v)
+        if len(cleaned) != 10:
+            raise ValueError('Phone must be 10 digits')
+        return cleaned
+    
+    @validator('num_players')
+    def validate_num_players(cls, v):
+        if v < 1 or v > 9:
+            raise ValueError('Number of players must be 1-9')
+        return v
 
 
 class TableCreate(BaseModel):
