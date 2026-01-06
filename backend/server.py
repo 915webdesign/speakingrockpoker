@@ -1,17 +1,20 @@
 """Speaking Rock Poker Room Management System - Backend API"""
 import os
+import re
 import uuid
 from datetime import datetime, timedelta
 from typing import Optional, List
 from contextlib import asynccontextmanager
+from collections import defaultdict
+import time
 from bson import ObjectId
 
-from fastapi import FastAPI, HTTPException, Depends, status, Query
+from fastapi import FastAPI, HTTPException, Depends, status, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, validator
 from motor.motor_asyncio import AsyncIOMotorClient
 from passlib.context import CryptContext
 from jose import JWTError, jwt
@@ -45,13 +48,50 @@ def serialize_doc(doc):
         return result
     return doc
 
+
+# ==================== SECURITY: Rate Limiting ====================
+class RateLimiter:
+    def __init__(self):
+        self.requests = defaultdict(list)
+        self.blocked = {}
+    
+    def is_blocked(self, ip: str) -> bool:
+        if ip in self.blocked:
+            if time.time() < self.blocked[ip]:
+                return True
+            del self.blocked[ip]
+        return False
+    
+    def record_attempt(self, ip: str, success: bool):
+        now = time.time()
+        # Clean old entries (older than 15 minutes)
+        self.requests[ip] = [t for t in self.requests[ip] if now - t < 900]
+        
+        if not success:
+            self.requests[ip].append(now)
+            # Block after 5 failed attempts in 15 minutes
+            if len(self.requests[ip]) >= 5:
+                self.blocked[ip] = now + 900  # Block for 15 minutes
+                return True
+        else:
+            self.requests[ip] = []
+        return False
+
+rate_limiter = RateLimiter()
+
+
 # Configuration
 MONGO_URL = os.getenv("MONGO_URL", "mongodb://localhost:27017/speakingrock")
-JWT_SECRET = os.getenv("JWT_SECRET", "speaking-rock-poker-secret-key-2025")
+JWT_SECRET = os.getenv("JWT_SECRET")
+if not JWT_SECRET:
+    raise ValueError("JWT_SECRET environment variable must be set!")
 JWT_ALGORITHM = "HS256"
 JWT_EXPIRATION_HOURS = 24
 ELASTIC_EMAIL_API_KEY = os.getenv("ELASTIC_EMAIL_API_KEY", "")
 ADMIN_EMAIL = os.getenv("ADMIN_EMAIL", "hello@speakingrockpoker.com")
+
+# Allowed origins for CORS (update for production)
+ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS", "http://localhost:3000,http://localhost:8001").split(",")
 
 # Password hashing
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
