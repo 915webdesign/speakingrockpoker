@@ -1239,10 +1239,14 @@ async def get_display_flush():
         if len(suits) > 0:  # Only show players with at least 1 flush
             suit_display = []
             for s in suits:
-                if s == "spade" or s == "S": suit_display.append("S")
-                elif s == "heart" or s == "H": suit_display.append("H")
-                elif s == "diamond" or s == "D": suit_display.append("D")
-                elif s == "club" or s == "C": suit_display.append("C")
+                if s == "spade" or s == "S":
+                    suit_display.append("S")
+                elif s == "heart" or s == "H":
+                    suit_display.append("H")
+                elif s == "diamond" or s == "D":
+                    suit_display.append("D")
+                elif s == "club" or s == "C":
+                    suit_display.append("C")
             
             leaders.append({
                 "name": p["player_name"],
