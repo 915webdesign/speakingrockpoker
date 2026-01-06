@@ -964,7 +964,7 @@ async def get_flush_jackpots():
     active = "flush_shine" if 14 <= hour < 20 else "last_call" if hour >= 20 or hour < 2 else None
     
     return {
-        "jackpots": jackpots,
+        "jackpots": serialize_doc(jackpots),
         "active_session": active
     }
 
