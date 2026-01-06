@@ -290,5 +290,27 @@
     </div>
   </div>
 
+  <script>
+    const API_URL = window.location.origin + '/api';
+    
+    async function loadDisplayData() {
+      try {
+        // Load display data
+        const data = await fetch(`${API_URL}/display/waitlist`).then(r => r.json());
+        const status = await fetch(`${API_URL}/live-status`).then(r => r.json());
+        
+        // Update the display (you can expand this based on the display layout)
+        console.log('Display data loaded:', data, status);
+        
+        // The display will auto-refresh via meta tag
+      } catch (e) {
+        console.log('Could not load live data, showing static demo');
+      }
+    }
+    
+    // Load data on page load
+    loadDisplayData();
+  </script>
+
 </body>
 </html>
