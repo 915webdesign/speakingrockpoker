@@ -458,18 +458,43 @@ async def initialize_default_data():
 # ==================== AUTH ENDPOINTS ====================
 
 @app.post("/api/auth/player/login")
-async def player_login(data: PlayerLogin):
+async def player_login(data: PlayerLogin, request: Request):
     """Player login with card number + phone last 4 or PIN"""
-    player = await db.players.find_one({"card_number": data.card_number})
-    if not player:
-        raise HTTPException(status_code=401, detail="Card number not found")
+    client_ip = request.client.host if request.client else "unknown"
     
+    # Check if IP is blocked due to too many failed attempts
+    if rate_limiter.is_blocked(client_ip):
+        raise HTTPException(
+            status_code=429, 
+            detail="Too many failed attempts. Please try again in 15 minutes."
+        )
+    
+    player = await db.players.find_one({"card_number": data.card_number})
+    
+    # Generic error message to prevent enumeration attacks
+    invalid_credentials_msg = "Invalid card number or credentials"
+    
+    if not player:
+        rate_limiter.record_attempt(client_ip, False)
+        raise HTTPException(status_code=401, detail=invalid_credentials_msg)
+    
+    is_valid = False
     if data.method == "phone":
-        if player.get("phone_last4") != data.credential:
-            raise HTTPException(status_code=401, detail="Phone number does not match")
+        is_valid = player.get("phone_last4") == data.credential
     else:
-        if not pwd_context.verify(data.credential, player.get("pin_hash", "")):
-            raise HTTPException(status_code=401, detail="Incorrect PIN")
+        is_valid = pwd_context.verify(data.credential, player.get("pin_hash", ""))
+    
+    if not is_valid:
+        was_blocked = rate_limiter.record_attempt(client_ip, False)
+        if was_blocked:
+            raise HTTPException(
+                status_code=429, 
+                detail="Too many failed attempts. Account temporarily locked."
+            )
+        raise HTTPException(status_code=401, detail=invalid_credentials_msg)
+    
+    # Successful login - clear rate limit
+    rate_limiter.record_attempt(client_ip, True)
     
     token = create_access_token({
         "sub": player["id"],
