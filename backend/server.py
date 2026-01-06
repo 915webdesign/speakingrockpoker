@@ -577,11 +577,30 @@ async def player_register(data: PlayerCreate):
 
 
 @app.post("/api/auth/staff/login")
-async def staff_login(data: StaffLogin):
-    """Staff login"""
+async def staff_login(data: StaffLogin, request: Request):
+    """Staff login with rate limiting"""
+    client_ip = request.client.host if request.client else "unknown"
+    
+    # Check if IP is blocked
+    if rate_limiter.is_blocked(client_ip):
+        raise HTTPException(
+            status_code=429, 
+            detail="Too many failed attempts. Please try again in 15 minutes."
+        )
+    
     staff = await db.staff.find_one({"username": data.username})
+    
     if not staff or not pwd_context.verify(data.password, staff["password"]):
+        was_blocked = rate_limiter.record_attempt(client_ip, False)
+        if was_blocked:
+            raise HTTPException(
+                status_code=429, 
+                detail="Too many failed attempts. Account temporarily locked."
+            )
         raise HTTPException(status_code=401, detail="Invalid credentials")
+    
+    # Successful login
+    rate_limiter.record_attempt(client_ip, True)
     
     token = create_access_token({
         "sub": staff["id"],
