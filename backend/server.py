@@ -1181,8 +1181,8 @@ async def award_flush_suit(player_id: str, data: FlushSuitAward):
 
 
 @app.delete("/api/flush/reset")
-async def reset_flush_progress():
-    """Reset all flush progress (end of session)"""
+async def reset_flush_progress(staff: dict = Depends(require_staff)):
+    """Reset all flush progress (end of session) - staff only"""
     await db.flush_progress.delete_many({})
     await log_activity("flush_reset", "All flush progress reset")
     return {"message": "All flush progress reset"}
