@@ -943,8 +943,8 @@ async def open_table(data: TableCreate, staff: dict = Depends(require_staff)):
 
 
 @app.delete("/api/tables/{table_number}")
-async def close_table(table_number: int):
-    """Close a table"""
+async def close_table(table_number: int, staff: dict = Depends(require_staff)):
+    """Close a table (staff only)"""
     await db.tables.update_one(
         {"table_number": table_number},
         {"$set": {"status": "closed", "closed_at": datetime.utcnow()}}
