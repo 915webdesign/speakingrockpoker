@@ -324,6 +324,19 @@ async def require_auth(credentials: HTTPAuthorizationCredentials = Depends(secur
         raise HTTPException(status_code=401, detail="Invalid token")
 
 
+async def require_staff(credentials: HTTPAuthorizationCredentials = Depends(security)):
+    """Require staff authentication for admin endpoints"""
+    if not credentials:
+        raise HTTPException(status_code=401, detail="Staff authentication required")
+    try:
+        payload = jwt.decode(credentials.credentials, JWT_SECRET, algorithms=[JWT_ALGORITHM])
+        if payload.get("type") != "staff":
+            raise HTTPException(status_code=403, detail="Staff access required")
+        return payload
+    except JWTError:
+        raise HTTPException(status_code=401, detail="Invalid token")
+
+
 async def send_email(to_email: str, subject: str, body: str):
     """Send email via Elastic Email API"""
     if not ELASTIC_EMAIL_API_KEY:
