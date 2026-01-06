@@ -1270,15 +1270,15 @@ async def health_check():
     return {"status": "healthy", "timestamp": datetime.utcnow().isoformat()}
 
 
-# Serve static files (HTML pages)
+# Serve static files (HTML pages from frontend/public)
 @app.get("/")
 async def serve_index():
-    return FileResponse("/app/index.html")
+    return FileResponse("/app/frontend/public/index.html")
 
 
 @app.get("/{filename}.html")
 async def serve_html(filename: str):
-    filepath = f"/app/{filename}.html"
+    filepath = f"/app/frontend/public/{filename}.html"
     if os.path.exists(filepath):
         return FileResponse(filepath)
     raise HTTPException(status_code=404, detail="Page not found")
@@ -1286,7 +1286,7 @@ async def serve_html(filename: str):
 
 @app.get("/{filename}.{ext}")
 async def serve_static(filename: str, ext: str):
-    filepath = f"/app/{filename}.{ext}"
+    filepath = f"/app/frontend/public/{filename}.{ext}"
     if os.path.exists(filepath):
         return FileResponse(filepath)
     raise HTTPException(status_code=404, detail="File not found")
