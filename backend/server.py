@@ -719,7 +719,7 @@ async def get_player_waitlist_status(card_number: str):
     entries = await db.waitlist.find(
         {"card_number": card_number, "status": {"$in": ["waiting", "called"]}}
     ).to_list(10)
-    return entries
+    return serialize_doc(entries)
 
 
 # ==================== TABLES ENDPOINTS ====================
@@ -732,11 +732,11 @@ async def get_tables():
     # Enrich with seat info
     for table in tables:
         seats = await db.seats.find({"table_number": table["table_number"]}).to_list(10)
-        table["seats"] = seats
+        table["seats"] = serialize_doc(seats)
         table["occupied_count"] = len(seats)
         table["available_seats"] = table.get("capacity", 9) - len(seats)
     
-    return tables
+    return serialize_doc(tables)
 
 
 @app.get("/api/tables/{table_number}")
@@ -747,8 +747,8 @@ async def get_table(table_number: int):
         raise HTTPException(status_code=404, detail="Table not found")
     
     seats = await db.seats.find({"table_number": table_number}).to_list(10)
-    table["seats"] = seats
-    return table
+    table["seats"] = serialize_doc(seats)
+    return serialize_doc(table)
 
 
 @app.post("/api/tables")
