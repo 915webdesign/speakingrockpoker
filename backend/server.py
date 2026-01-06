@@ -916,8 +916,8 @@ async def get_table(table_number: int):
 
 
 @app.post("/api/tables")
-async def open_table(data: TableCreate):
-    """Open a new table"""
+async def open_table(data: TableCreate, staff: dict = Depends(require_staff)):
+    """Open a new table (staff only)"""
     existing = await db.tables.find_one({"table_number": data.table_number, "status": "open"})
     if existing:
         raise HTTPException(status_code=400, detail="Table already open")
