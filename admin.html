@@ -3887,12 +3887,22 @@
     }
 
     // Food order functions
-    function markOrderInProgress(orderId) {
-      showToast('Order #' + orderId + ' marked as in progress');
+    async function markOrderInProgress(orderId) {
+      try {
+        await apiCall(`/orders/${orderId}/start`, 'PUT');
+        showToast('Order #' + orderId + ' marked as in progress');
+      } catch (e) {
+        console.error('Error updating order:', e);
+      }
     }
 
-    function markOrderComplete(orderId) {
-      showToast('Order #' + orderId + ' completed and delivered!');
+    async function markOrderComplete(orderId) {
+      try {
+        await apiCall(`/orders/${orderId}/complete`, 'PUT');
+        showToast('Order #' + orderId + ' completed and delivered!');
+      } catch (e) {
+        console.error('Error completing order:', e);
+      }
     }
 
     // Notification functions
