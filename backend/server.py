@@ -4,6 +4,7 @@ import uuid
 from datetime import datetime, timedelta
 from typing import Optional, List
 from contextlib import asynccontextmanager
+from bson import ObjectId
 
 from fastapi import FastAPI, HTTPException, Depends, status, Query
 from fastapi.middleware.cors import CORSMiddleware
@@ -18,6 +19,31 @@ from dotenv import load_dotenv
 import httpx
 
 load_dotenv()
+
+
+def serialize_doc(doc):
+    """Convert MongoDB document to JSON-serializable dict"""
+    if doc is None:
+        return None
+    if isinstance(doc, list):
+        return [serialize_doc(d) for d in doc]
+    if isinstance(doc, dict):
+        result = {}
+        for key, value in doc.items():
+            if key == "_id":
+                result["_id"] = str(value)
+            elif isinstance(value, ObjectId):
+                result[key] = str(value)
+            elif isinstance(value, datetime):
+                result[key] = value.isoformat()
+            elif isinstance(value, dict):
+                result[key] = serialize_doc(value)
+            elif isinstance(value, list):
+                result[key] = [serialize_doc(v) if isinstance(v, dict) else v for v in value]
+            else:
+                result[key] = value
+        return result
+    return doc
 
 # Configuration
 MONGO_URL = os.getenv("MONGO_URL", "mongodb://localhost:27017/speakingrock")
