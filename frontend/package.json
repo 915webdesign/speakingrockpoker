@@ -6,6 +6,8 @@
     "start": "npx serve public -l 3000 -c ../serve.json"
   },
   "dependencies": {
+    "express": "^5.2.1",
+    "http-proxy-middleware": "^3.0.5",
     "serve": "^14.2.0"
   }
 }
