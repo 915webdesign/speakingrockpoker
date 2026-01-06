@@ -1061,12 +1061,24 @@
       cartItems.innerHTML = cart.map(i => '<div class="order-cart-item"><span>' + i.name + ' ' + (i.price > 0 ? '($' + i.price + ')' : '(Free)') + '</span><div class="order-cart-item-qty"><button class="qty-btn" onclick="removeFromCart(\'' + i.name + '\')">-</button><span>' + i.qty + '</span><button class="qty-btn" onclick="addToCart(\'' + i.name + '\',' + i.price + ')">+</button></div></div>').join('');
     }
     
-    function submitOrder() {
+    async function submitOrder() {
       const table = document.getElementById('tableSelect').value;
       if (!table) { alert('Please select your table number'); return; }
-      document.getElementById('confirmTable').textContent = table;
-      document.getElementById('orderConfirmModal').classList.add('active');
-      cart = []; updateCartDisplay();
+      
+      try {
+        await apiCall('/orders', 'POST', {
+          player_name: currentPlayer ? currentPlayer.name : 'Guest',
+          card_number: currentPlayer ? currentPlayer.cardNumber : null,
+          table_number: parseInt(table.replace('Table ', '')),
+          items: cart.map(i => ({ name: i.name, price: i.price, qty: i.qty }))
+        });
+        
+        document.getElementById('confirmTable').textContent = table;
+        document.getElementById('orderConfirmModal').classList.add('active');
+        cart = []; updateCartDisplay();
+      } catch (e) {
+        alert('Error placing order: ' + e.message);
+      }
     }
     
     // ============================================
