@@ -205,12 +205,14 @@ class PokerAPITester:
             
             if response.status_code == 200:
                 data = response.json()
-                if isinstance(data, list):
-                    waitlist_count = len(data)
-                    self.log_result("Get Waitlist", True, f"Found {waitlist_count} waitlist entries")
+                if isinstance(data, dict) and 'waitlists' in data:
+                    total_count = data.get('total_count', 0)
+                    waitlists = data['waitlists']
+                    total_entries = sum(len(entries) for entries in waitlists.values())
+                    self.log_result("Get Waitlist", True, f"Found {total_entries} waitlist entries across {len(waitlists)} games")
                     return True
                 else:
-                    self.log_result("Get Waitlist", False, f"Expected list, got: {type(data)}")
+                    self.log_result("Get Waitlist", False, f"Expected dict with 'waitlists' key, got: {data}")
                     return False
             else:
                 self.log_result("Get Waitlist", False, f"Status: {response.status_code}, Response: {response.text}")
