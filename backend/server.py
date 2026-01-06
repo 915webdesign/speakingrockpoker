@@ -636,7 +636,7 @@ async def join_waitlist(data: WaitlistEntry):
     
     return {
         "message": "Added to waitlist",
-        "entry": entry
+        "entry": serialize_doc(entry)
     }
 
 
