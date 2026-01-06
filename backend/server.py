@@ -117,16 +117,18 @@ app = FastAPI(
     title="Speaking Rock Poker API",
     description="Poker Room Management System for Speaking Rock Entertainment Center",
     version="2.0",
-    lifespan=lifespan
+    lifespan=lifespan,
+    docs_url="/api/docs" if os.getenv("ENABLE_DOCS", "true") == "true" else None,
+    redoc_url="/api/redoc" if os.getenv("ENABLE_DOCS", "true") == "true" else None
 )
 
-# CORS
+# CORS - Restrict to allowed origins
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE"],
+    allow_headers=["Authorization", "Content-Type"],
 )
 
 
