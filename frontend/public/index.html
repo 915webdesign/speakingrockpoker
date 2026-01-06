@@ -699,13 +699,24 @@
     /* Info Grid */
     .info-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      grid-template-columns: repeat(2, 1fr);
       gap: 2rem;
       text-align: center;
+      max-width: 800px;
+      margin: 0 auto;
     }
 
     .info-card {
       padding: 1.5rem;
+      background: rgba(255,255,255,0.03);
+      border-radius: 12px;
+      border: 1px solid rgba(212, 165, 50, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    .info-card:hover {
+      border-color: rgba(212, 165, 50, 0.3);
+      transform: translateY(-4px);
     }
 
     .info-icon {
