@@ -1036,7 +1036,7 @@ async def get_orders(status: Optional[str] = None):
         query["status"] = {"$in": ["pending", "preparing"]}
     
     orders = await db.food_orders.find(query).sort("created_at", 1).to_list(50)
-    return orders
+    return serialize_doc(orders)
 
 
 @app.post("/api/orders")
@@ -1058,7 +1058,7 @@ async def create_order(data: FoodOrderCreate):
     await db.food_orders.insert_one(order)
     await log_activity("order_create", f"New order placed", data.player_name, str(data.table_number))
     
-    return {"message": "Order placed", "order": order}
+    return {"message": "Order placed", "order": serialize_doc(order)}
 
 
 @app.put("/api/orders/{order_id}/start")
