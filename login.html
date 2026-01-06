@@ -637,17 +637,11 @@
       document.getElementById('errorMessage').classList.remove('show');
     }
 
-    // Demo player database
-    const demoPlayers = {
-      '12345': { name: 'David N', phone: '1234', pin: '1234', points: 89, rank: 4 },
-      '23456': { name: 'Mike R', phone: '5678', pin: '5678', points: 75, rank: 8 },
-      '34567': { name: 'Sarah M', phone: '9012', pin: '9012', points: 62, rank: 12 },
-      '45678': { name: 'John D', phone: '3456', pin: '3456', points: 45, rank: 30 },
-      '56789': { name: 'Jennifer C', phone: '7890', pin: '7890', points: 38, rank: 35 }
-    };
+    // API Base URL
+    const API_URL = window.location.origin + '/api';
 
     // Handle login
-    function handleLogin(event, method) {
+    async function handleLogin(event, method) {
       event.preventDefault();
       hideError();
 
@@ -661,40 +655,45 @@
         credential = document.getElementById('pinNumber').value.trim();
       }
 
-      // Validate
-      const player = demoPlayers[cardNum];
-      
-      if (!player) {
-        showError('Card number not found. Please check and try again.');
-        return;
+      try {
+        const response = await fetch(`${API_URL}/auth/player/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            card_number: cardNum,
+            credential: credential,
+            method: method === 'cardPhone' ? 'phone' : 'pin'
+          })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          showError(data.detail || 'Login failed. Please try again.');
+          return;
+        }
+
+        // Success - save session
+        const session = {
+          token: data.token,
+          cardNumber: data.player.card_number,
+          playerId: data.player.id,
+          name: data.player.name,
+          points: data.player.points,
+          rank: data.player.rank,
+          loginTime: new Date().toISOString()
+        };
+        localStorage.setItem('playerSession', JSON.stringify(session));
+
+        showSuccess(data.player.name.split(' ')[0]);
+      } catch (error) {
+        console.error('Login error:', error);
+        showError('Connection error. Please try again.');
       }
-
-      const isValid = (method === 'cardPhone') 
-        ? player.phone === credential 
-        : player.pin === credential;
-
-      if (!isValid) {
-        showError(method === 'cardPhone' 
-          ? 'Phone number does not match. Please try again.' 
-          : 'Incorrect PIN. Please try again.');
-        return;
-      }
-
-      // Success - save session
-      const session = {
-        cardNumber: cardNum,
-        name: player.name,
-        points: player.points,
-        rank: player.rank,
-        loginTime: new Date().toISOString()
-      };
-      localStorage.setItem('playerSession', JSON.stringify(session));
-
-      showSuccess(player.name.split(' ')[0]);
     }
 
     // Handle registration
-    function handleRegister(event) {
+    async function handleRegister(event) {
       event.preventDefault();
 
       const firstName = document.getElementById('regFirstName').value.trim();
@@ -703,31 +702,47 @@
       const email = document.getElementById('regEmail').value.trim();
       const pin = document.getElementById('regPin').value.trim();
 
-      // Generate card number (in production, this comes from backend)
-      const newCardNum = String(Math.floor(10000 + Math.random() * 90000));
+      try {
+        const response = await fetch(`${API_URL}/auth/player/register`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            first_name: firstName,
+            last_initial: lastInitial,
+            phone: phone,
+            email: email || null,
+            pin: pin
+          })
+        });
 
-      // Save new player (in production, this goes to database)
-      const newPlayer = {
-        name: `${firstName} ${lastInitial}`,
-        phone: phone.slice(-4),
-        pin: pin,
-        points: 0,
-        rank: 999
-      };
-      demoPlayers[newCardNum] = newPlayer;
+        const data = await response.json();
 
-      // Create session
-      const session = {
-        cardNumber: newCardNum,
-        name: newPlayer.name,
-        points: 0,
-        rank: null,
-        loginTime: new Date().toISOString(),
-        isNew: true
-      };
-      localStorage.setItem('playerSession', JSON.stringify(session));
+        if (!response.ok) {
+          showError(data.detail || 'Registration failed. Please try again.');
+          return;
+        }
 
-      showSuccess(firstName, true);
+        // Create session
+        const session = {
+          token: data.token,
+          cardNumber: data.player.card_number,
+          playerId: data.player.id,
+          name: data.player.name,
+          points: 0,
+          rank: null,
+          loginTime: new Date().toISOString(),
+          isNew: true
+        };
+        localStorage.setItem('playerSession', JSON.stringify(session));
+
+        // Update success message with card number
+        document.getElementById('welcomeText').innerHTML = `Welcome to Speaking Rock Poker, ${firstName}!<br>Your card number is: <strong>${data.player.card_number}</strong>`;
+
+        showSuccess(firstName, true);
+      } catch (error) {
+        console.error('Registration error:', error);
+        showError('Connection error. Please try again.');
+      }
     }
 
     // Continue to destination
