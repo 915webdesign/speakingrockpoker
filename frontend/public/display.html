@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="refresh" content="30">
+  <title>Speaking Rock Poker | Live Display</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: #1a1a2e;
+      color: white;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header */
+    .header {
+      background: linear-gradient(180deg, #1e3a5f 0%, #0d1b2a 100%);
+      padding: 0.75rem 2rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-bottom: 3px solid #2563eb;
+    }
+
+    .logo-left, .logo-right {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .logo-icon {
+      width: 40px;
+      height: 40px;
+      background: #D4A532;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      color: #000;
+      font-size: 0.8rem;
+    }
+
+    .logo-text {
+      color: #D4A532;
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+
+    .room-name {
+      font-size: 2rem;
+      font-weight: 700;
+      color: white;
+      text-align: center;
+      flex: 1;
+    }
+
+    /* Game Columns Container */
+    .games-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Game Headers Row */
+    .games-header {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      background: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%);
+    }
+
+    .game-column-header {
+      padding: 0.75rem 0.5rem;
+      text-align: center;
+      border-right: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .game-column-header:last-child {
+      border-right: none;
+    }
+
+    .game-name {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: white;
+    }
+
+    .game-buyin {
+      font-size: 1rem;
+      color: rgba(255,255,255,0.8);
+      margin-top: 0.25rem;
+    }
+
+    .game-tables {
+      font-size: 1.1rem;
+      color: white;
+      margin-top: 0.25rem;
+    }
+
+    .game-status {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-top: 0.5rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 3px;
+      display: inline-block;
+    }
+
+    .game-status.seat-open {
+      color: #22c55e;
+    }
+
+    .game-status.waiting {
+      color: #eab308;
+    }
+
+    .game-status.interest {
+      color: #eab308;
+    }
+
+    .game-status.full {
+      color: #ef4444;
+    }
+
+    /* Waitlist Columns */
+    .waitlist-grid {
+      flex: 1;
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      background: #0f0f1a;
+    }
+
+    .waitlist-column {
+      border-right: 1px solid rgba(255,255,255,0.1);
+      padding: 1rem 0.75rem;
+      min-height: 300px;
+    }
+
+    .waitlist-column:last-child {
+      border-right: none;
+    }
+
+    .waitlist-player {
+      font-size: 1.3rem;
+      font-weight: 500;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .waitlist-player:last-child {
+      border-bottom: none;
+    }
+
+    /* Time Display */
+    .time-display {
+      background: #0a0a12;
+      padding: 1rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.25rem;
+      border-top: 2px solid #333;
+    }
+
+    .time-box {
+      font-size: 2.5rem;
+      font-weight: 700;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      min-width: 80px;
+      text-align: center;
+    }
+
+    .time-box.hours {
+      background: #22c55e;
+      color: white;
+    }
+
+    .time-box.minutes {
+      background: #ef4444;
+      color: white;
+    }
+
+    /* Promo Banner */
+    .promo-banner {
+      background: linear-gradient(90deg, #8B0000 0%, #5c0000 50%, #8B0000 100%);
+      padding: 0.75rem 2rem;
+      text-align: center;
+      border-top: 2px solid #D4A532;
+    }
+
+    .promo-text {
+      font-size: 1.25rem;
+      color: white;
+    }
+
+    .promo-highlight {
+      color: #D4A532;
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header removed -->
+
+  <!-- Games Container -->
+  <div class="games-container">
+    <!-- Game Headers -->
+    <div class="games-header">
+      <div class="game-column-header">
+        <div class="game-name">$1/$3 NLH</div>
+        <div class="game-buyin">$60-300</div>
+        <div class="game-tables">01, 02, 03</div>
+        <div class="game-status seat-open">SEAT OPEN</div>
+      </div>
+      <div class="game-column-header">
+        <div class="game-name">$2/$5 NLH</div>
+        <div class="game-buyin">$200-1,000</div>
+        <div class="game-tables">04</div>
+        <div class="game-status waiting">WAITING: 2</div>
+      </div>
+      <div class="game-column-header">
+        <div class="game-name">$1/$3 PLO</div>
+        <div class="game-buyin">$100-500</div>
+        <div class="game-tables">05</div>
+        <div class="game-status waiting">WAITING: 4</div>
+      </div>
+      <div class="game-column-header">
+        <div class="game-name">$5 ROE</div>
+        <div class="game-buyin">NLH / PLO</div>
+        <div class="game-tables">—</div>
+        <div class="game-status interest">INTEREST</div>
+      </div>
+      <div class="game-column-header">
+        <div class="game-name">$4/$8 O8</div>
+        <div class="game-buyin">$40</div>
+        <div class="game-tables">—</div>
+        <div class="game-status interest">INTEREST</div>
+      </div>
+      <div class="game-column-header">
+        <div class="game-name">TOURNAMENT</div>
+        <div class="game-buyin">$60 Buy-in</div>
+        <div class="game-tables">SAT 6PM</div>
+        <div class="game-status seat-open">REGISTER</div>
+      </div>
+    </div>
+
+    <!-- Waitlist Columns -->
+    <div class="waitlist-grid">
+      <div class="waitlist-column">
+        <!-- $1/$3 NLH waitlist - empty, seat open -->
+      </div>
+      <div class="waitlist-column">
+        <!-- $2/$5 NLH waitlist -->
+        <div class="waitlist-player">MIKE R</div>
+        <div class="waitlist-player">CARLOS M</div>
+      </div>
+      <div class="waitlist-column">
+        <!-- $1/$3 PLO waitlist -->
+        <div class="waitlist-player">BELLA</div>
+        <div class="waitlist-player">KHALIF</div>
+        <div class="waitlist-player">MICHAEL</div>
+        <div class="waitlist-player">TONY M</div>
+      </div>
+      <div class="waitlist-column">
+        <!-- $5 ROE interest -->
+        <div class="waitlist-player">DAVID N</div>
+        <div class="waitlist-player">SARAH L</div>
+        <div class="waitlist-player">JENNIFER C</div>
+      </div>
+      <div class="waitlist-column">
+        <!-- $4/$8 O8 interest -->
+        <div class="waitlist-player">ROBERT T</div>
+      </div>
+      <div class="waitlist-column">
+        <!-- Tournament registrants -->
+        <div class="waitlist-player">REGISTERED: 12</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_URL = window.location.origin + '/api';
+    
+    async function loadDisplayData() {
+      try {
+        // Load display data
+        const data = await fetch(`${API_URL}/display/waitlist`).then(r => r.json());
+        const status = await fetch(`${API_URL}/live-status`).then(r => r.json());
+        
+        // Update the display (you can expand this based on the display layout)
+        console.log('Display data loaded:', data, status);
+        
+        // The display will auto-refresh via meta tag
+      } catch (e) {
+        console.log('Could not load live data, showing static demo');
+      }
+    }
+    
+    // Load data on page load
+    loadDisplayData();
+  </script>
+
+</body>
+</html>

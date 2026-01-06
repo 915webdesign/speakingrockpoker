@@ -1,0 +1,1250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Speaking Rock Poker | El Paso's Premier Digital Poker Room</title>
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="El Paso's premier digital poker room at Speaking Rock Entertainment Center. 8-seat digital tables, daily tournaments, $1/$3 No Limit Hold'em, and cash games. Join the wait list online!">
+  <meta name="keywords" content="poker, El Paso poker, Speaking Rock, digital poker tables, Texas Hold'em, poker tournaments, cash games">
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://speakingrockpoker.com/">
+  <meta property="og:title" content="Speaking Rock Poker | El Paso's Premier Digital Poker Room">
+  <meta property="og:description" content="8-seat digital tables, daily tournaments, and cash games. Join the wait list from your phone and get notified when your seat is ready!">
+  <meta property="og:image" content="https://speakingrockpoker.com/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://speakingrockpoker.com/">
+  <meta name="twitter:title" content="Speaking Rock Poker | El Paso's Premier Digital Poker Room">
+  <meta name="twitter:description" content="8-seat digital tables, daily tournaments, and cash games. Join the wait list from your phone!">
+  <meta name="twitter:image" content="https://speakingrockpoker.com/og-image.jpg">
+  
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --gold: #D4A532;
+      --gold-light: #E8C45A;
+      --gold-dark: #B8860B;
+      --black: #000000;
+      --charcoal: #0A0A0A;
+      --dark-gray: #111111;
+      --medium-gray: #1a1a1a;
+      --light-gray: #E5E5E5;
+      --green-felt: #0D5C2E;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: var(--black);
+      color: var(--light-gray);
+      min-height: 100vh;
+      overflow-x: hidden;
+      width: 100%;
+      max-width: 100vw;
+    }
+
+    /* Subtle texture overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+      opacity: 0.03;
+      pointer-events: none;
+      z-index: 1000;
+    }
+
+    /* Header */
+    header {
+      background: var(--black);
+      border-bottom: 1px solid rgba(212, 165, 50, 0.3);
+      padding: 1rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    /* Live Status Bar */
+    .live-status-bar {
+      background: linear-gradient(90deg, var(--dark-gray) 0%, var(--charcoal) 100%);
+      border-bottom: 1px solid rgba(212, 165, 50, 0.2);
+      padding: 0.75rem 2rem;
+    }
+
+    .live-status-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+    }
+
+    .live-indicator {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(34, 197, 94, 0.1);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      padding: 0.4rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: #22c55e;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .live-dot {
+      width: 8px;
+      height: 8px;
+      background: #22c55e;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .live-stats {
+      display: flex;
+      gap: 2rem;
+      flex: 1;
+      justify-content: center;
+    }
+
+    .live-stat {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+    }
+
+    .live-stat-icon {
+      font-size: 1rem;
+    }
+
+    .live-stat-value {
+      font-weight: 700;
+      color: var(--gold);
+    }
+
+    .live-stat-label {
+      color: var(--light-gray);
+      opacity: 0.7;
+      font-size: 0.75rem;
+    }
+
+    .live-cta {
+      background: var(--gold);
+      color: var(--black);
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .live-cta:hover {
+      background: var(--gold-light);
+      transform: translateX(3px);
+    }
+
+    .header-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-family: 'Cinzel', serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--gold);
+      text-decoration: none;
+      letter-spacing: 3px;
+      text-shadow: 0 0 20px rgba(212, 165, 50, 0.3);
+    }
+
+    .logo span {
+      color: var(--light-gray);
+      font-weight: 400;
+    }
+
+    nav {
+      display: flex;
+      gap: 2rem;
+    }
+
+    nav a {
+      color: var(--light-gray);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition: color 0.3s ease;
+      position: relative;
+    }
+
+    nav a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--gold);
+      transition: width 0.3s ease;
+    }
+
+    nav a:hover {
+      color: var(--gold);
+    }
+
+    nav a:hover::after {
+      width: 100%;
+    }
+
+    /* Promo Banner */
+    .promo-banner {
+      background: linear-gradient(135deg, #8B0000 0%, #5c0000 100%);
+      padding: 1rem 2rem;
+      text-align: center;
+      border-bottom: 2px solid var(--gold);
+    }
+
+    .promo-banner h3 {
+      font-family: 'Cinzel', serif;
+      color: var(--gold);
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .promo-banner p {
+      color: var(--light-gray);
+      font-size: 0.85rem;
+    }
+
+    /* Hero Section */
+    .hero {
+      min-height: 70vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 4rem 2rem;
+      background: url('hero.jpg') center center / cover no-repeat;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.8) 100%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      background: rgba(0,0,0,0.5);
+      padding: 3rem 4rem;
+      border-radius: 12px;
+      border: 1px solid rgba(212, 165, 50, 0.3);
+      backdrop-filter: blur(5px);
+    }
+
+    .hero-logo {
+      max-width: 500px;
+      width: 90%;
+      height: auto;
+      margin-bottom: 2rem;
+      animation: fadeInUp 1s ease;
+    }
+
+    .hero h1 {
+      display: none;
+    }
+
+    .hero .tagline {
+      font-size: 2rem;
+      font-weight: 400;
+      color: var(--gold);
+      margin-bottom: 2.5rem;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      animation: fadeInUp 1s ease 0.2s backwards;
+      text-shadow: 2px 2px 8px rgba(0,0,0,0.8);
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 1.5rem;
+      justify-content: center;
+      animation: fadeInUp 1s ease 0.4s backwards;
+    }
+
+    .btn {
+      padding: 1rem 2.5rem;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+      color: var(--black);
+      box-shadow: 0 4px 20px rgba(212, 165, 50, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 30px rgba(212, 165, 50, 0.5);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--gold);
+      border: 2px solid var(--gold);
+    }
+
+    .btn-secondary:hover {
+      background: var(--gold);
+      color: var(--black);
+    }
+
+    /* Section Styles */
+    .section {
+      padding: 5rem 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-dark {
+      background: var(--dark-gray);
+      max-width: 100%;
+      padding-left: 0;
+      padding-right: 0;
+    }
+
+    .section-dark .section-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    .section-title {
+      font-family: 'Cinzel', serif;
+      font-size: 2.2rem;
+      color: var(--gold);
+      text-align: center;
+      margin-bottom: 1rem;
+      letter-spacing: 3px;
+    }
+
+    .section-title::after {
+      content: '';
+      display: block;
+      width: 80px;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      margin: 1rem auto 0;
+    }
+
+    .section-subtitle {
+      text-align: center;
+      color: rgba(255,255,255,0.7);
+      margin-bottom: 3rem;
+      font-size: 1rem;
+    }
+
+    /* Photo Gallery */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: repeat(2, 180px);
+      gap: 1rem;
+    }
+
+    .gallery-item {
+      border-radius: 4px;
+      overflow: hidden;
+      position: relative;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      border: 1px solid rgba(212, 165, 50, 0.2);
+    }
+
+    .gallery-item:hover {
+      transform: scale(1.02);
+      box-shadow: 0 10px 40px rgba(212, 165, 50, 0.2);
+      border-color: var(--gold);
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .gallery-large {
+      grid-column: span 2;
+      grid-row: span 2;
+    }
+
+    .gallery-placeholder {
+      width: 100%;
+      height: 100%;
+      min-height: 150px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 1rem;
+    }
+
+    /* Daily Schedule */
+    .daily-schedule {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+
+    .schedule-card {
+      background: var(--dark-gray);
+      border: 1px solid rgba(212, 165, 50, 0.2);
+      border-radius: 4px;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .schedule-card:hover {
+      border-color: var(--gold);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(212, 165, 50, 0.1);
+    }
+
+    .schedule-card.featured {
+      border-color: var(--gold);
+      background: linear-gradient(145deg, rgba(212, 165, 50, 0.1) 0%, var(--dark-gray) 100%);
+    }
+
+    .schedule-time {
+      font-family: 'Cinzel', serif;
+      font-size: 1rem;
+      color: var(--gold);
+      margin-bottom: 0.5rem;
+    }
+
+    .schedule-name {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--light-gray);
+      margin-bottom: 0.75rem;
+    }
+
+    .schedule-details {
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.7);
+      line-height: 1.6;
+    }
+
+    .schedule-details strong {
+      color: var(--gold);
+    }
+
+    .guarantee-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--green-felt) 0%, #094d1f 100%);
+      color: white;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-top: 0.75rem;
+    }
+
+    /* Special Events */
+    .special-events {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2rem;
+    }
+
+    .special-card {
+      background: linear-gradient(145deg, #8B0000 0%, #3d0000 100%);
+      border: 2px solid var(--gold);
+      border-radius: 4px;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .special-card h3 {
+      font-family: 'Cinzel', serif;
+      font-size: 1.4rem;
+      color: var(--gold);
+      margin-bottom: 0.5rem;
+    }
+
+    .special-card .date {
+      font-size: 1rem;
+      color: var(--light-gray);
+      margin-bottom: 1rem;
+    }
+
+    .special-card .details {
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.8);
+      line-height: 1.6;
+    }
+
+    /* Cash Games */
+    .cash-info {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .cash-card {
+      background: var(--dark-gray);
+      border: 1px solid rgba(212, 165, 50, 0.2);
+      border-radius: 4px;
+      padding: 2rem;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .cash-card:hover {
+      border-color: var(--gold);
+    }
+
+    .cash-card h3 {
+      font-family: 'Cinzel', serif;
+      color: var(--gold);
+      font-size: 1.1rem;
+      margin-bottom: 0.75rem;
+      letter-spacing: 1px;
+    }
+
+    .cash-card p {
+      color: rgba(255,255,255,0.7);
+      line-height: 1.6;
+      font-size: 0.9rem;
+    }
+
+    .cash-card .highlight {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--gold);
+      margin: 0.5rem 0;
+    }
+
+    /* Wait List Form */
+    .waitlist-form {
+      background: var(--dark-gray);
+      border: 1px solid rgba(212, 165, 50, 0.3);
+      border-radius: 4px;
+      padding: 3rem;
+      max-width: 550px;
+      margin: 0 auto;
+    }
+
+    /* Waitlist CTA Box */
+    .waitlist-cta-box {
+      background: linear-gradient(145deg, rgba(20,20,20,0.95) 0%, rgba(10,10,10,0.98) 100%);
+      border: 1px solid rgba(212, 165, 50, 0.25);
+      border-radius: 16px;
+      padding: 3rem 2.5rem;
+      max-width: 480px;
+      margin: 2rem auto 0;
+      text-align: center;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    }
+
+    .waitlist-cta-icon {
+      margin-bottom: 1.25rem;
+    }
+
+    .waitlist-cta-icon svg {
+      opacity: 0.9;
+    }
+
+    .waitlist-cta-content h3 {
+      font-family: 'Cinzel', serif;
+      color: var(--gold);
+      font-size: 1.4rem;
+      margin-bottom: 1rem;
+      letter-spacing: 1px;
+    }
+
+    .waitlist-cta-content > p {
+      color: rgba(255,255,255,0.75);
+      font-size: 0.95rem;
+      line-height: 1.7;
+      margin-bottom: 1.75rem;
+    }
+
+    .waitlist-cta-features {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.875rem 1.5rem;
+      text-align: left;
+      margin-bottom: 1.75rem;
+      padding: 0 0.5rem;
+    }
+
+    .waitlist-feature {
+      color: rgba(255,255,255,0.8);
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .feature-check {
+      color: var(--gold);
+      font-weight: 600;
+    }
+
+    .waitlist-cta-btn {
+      width: 100%;
+      padding: 1rem 2rem;
+      font-size: 0.9rem;
+      letter-spacing: 1px;
+      margin-bottom: 1.25rem;
+      display: block;
+      text-align: center;
+    }
+
+    .waitlist-new-member {
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.7);
+      margin: 0;
+    }
+
+    .waitlist-new-member a {
+      color: var(--gold);
+      text-decoration: underline;
+      font-weight: 500;
+    }
+
+    .waitlist-new-member a:hover {
+      color: var(--gold-light);
+    }
+
+    .waitlist-new-member .free-play {
+      color: #22c55e;
+      font-weight: 700;
+    }
+
+    @media (max-width: 540px) {
+      .waitlist-cta-features {
+        grid-template-columns: 1fr;
+        gap: 0.625rem;
+      }
+      .waitlist-cta-box {
+        padding: 2rem 1.5rem;
+        margin: 1.5rem 1rem 0;
+      }
+      .waitlist-cta-content h3 {
+        font-size: 1.2rem;
+      }
+    }
+
+    /* Info Grid */
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 2rem;
+      text-align: center;
+    }
+
+    .info-card {
+      padding: 1.5rem;
+    }
+
+    .info-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .info-card h3 {
+      font-family: 'Cinzel', serif;
+      color: var(--gold);
+      font-size: 1.1rem;
+      margin-bottom: 0.75rem;
+      letter-spacing: 1px;
+    }
+
+    .info-card p {
+      color: rgba(255,255,255,0.7);
+      line-height: 1.6;
+      font-size: 0.9rem;
+    }
+
+    .info-card a {
+      color: var(--gold);
+      text-decoration: none;
+    }
+
+    /* Footer */
+    footer {
+      background: var(--charcoal);
+      border-top: 1px solid rgba(212, 165, 50, 0.3);
+      padding: 3rem 2rem;
+      text-align: center;
+    }
+
+    .footer-logo {
+      font-family: 'Cinzel', serif;
+      font-size: 1.4rem;
+      color: var(--gold);
+      margin-bottom: 1rem;
+      letter-spacing: 3px;
+    }
+
+    .footer-info {
+      color: rgba(255,255,255,0.6);
+      font-size: 0.85rem;
+      line-height: 1.8;
+    }
+
+    .footer-info a {
+      color: var(--gold);
+      text-decoration: none;
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Mobile */
+    @media (max-width: 768px) {
+      .header-content {
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .header-content img {
+        height: 80px !important;
+      }
+
+      nav {
+        gap: 0.6rem;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      nav a {
+        font-size: 0.7rem;
+      }
+
+      .promo-banner {
+        padding: 0.75rem 1rem;
+      }
+
+      .promo-banner h3 {
+        font-size: 0.9rem;
+      }
+
+      .promo-banner p {
+        font-size: 0.75rem;
+      }
+
+      .live-status-bar {
+        padding: 0.5rem 1rem;
+      }
+
+      .live-status-content {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.75rem;
+      }
+
+      .live-stats {
+        gap: 1rem;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .live-stat {
+        font-size: 0.75rem;
+      }
+
+      .live-stat-label {
+        display: none;
+      }
+
+      .live-cta {
+        width: 100%;
+        text-align: center;
+        padding: 0.6rem;
+      }
+
+      .hero {
+        min-height: 60vh;
+        padding: 2rem 1rem;
+      }
+
+      .hero-content {
+        padding: 2.5rem 2rem;
+        margin: 0 0.5rem;
+      }
+
+      .hero-logo {
+        font-size: 3rem;
+      }
+
+      .hero h1 {
+        font-size: 2rem;
+        letter-spacing: 2px;
+      }
+
+      .hero .tagline {
+        font-size: 1.8rem;
+        letter-spacing: 2px;
+        line-height: 1.4;
+        font-weight: 500;
+      }
+
+      .hero-buttons {
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .btn {
+        padding: 1rem 2.5rem;
+        font-size: 1rem;
+        width: 100%;
+      }
+
+      .section {
+        padding: 3rem 1rem;
+      }
+
+      .section-title {
+        font-size: 1.5rem;
+      }
+
+      .section-subtitle {
+        font-size: 0.85rem;
+      }
+
+      .gallery-grid {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto;
+      }
+      
+      .gallery-large {
+        grid-column: span 2;
+        grid-row: span 1;
+        min-height: 180px;
+      }
+      
+      .gallery-item {
+        min-height: 100px;
+      }
+
+      .daily-schedule {
+        grid-template-columns: 1fr;
+      }
+
+      .special-events {
+        grid-template-columns: 1fr;
+      }
+
+      .cash-info {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .info-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .waitlist-form {
+        padding: 2rem 1.5rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .cash-info {
+        grid-template-columns: 1fr;
+      }
+
+      .info-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .gallery-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .gallery-large {
+        grid-column: span 1;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-content">
+      <img src="logo.png" alt="Speaking Rock Poker" style="height: 50px;">
+      <nav>
+        <a href="#gallery">Gallery</a>
+        <a href="#schedule">Schedule</a>
+        <a href="#tournaments">Tournaments</a>
+        <a href="#cash">Cash Games</a>
+        <a href="login.html">Member Login</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="promo-banner">
+    <h3>🏆 January Points Race - Win Big in February! 🏆</h3>
+    <p>Earn points all month playing tournaments & cash! Top 30 get FREE entry to Feb 7 tournament. Plus $500/hour drawings on Feb 12!</p>
+  </div>
+
+  <!-- Live Status Widget -->
+  <div class="live-status-bar">
+    <div class="live-status-content">
+      <div class="live-indicator">
+        <span class="live-dot"></span>
+        <span>LIVE</span>
+      </div>
+      <div class="live-stats">
+        <div class="live-stat">
+          <span class="live-stat-icon">🎰</span>
+          <span class="live-stat-value" id="tablesOpen">3</span>
+          <span class="live-stat-label">Tables Open</span>
+        </div>
+        <div class="live-stat">
+          <span class="live-stat-icon">👥</span>
+          <span class="live-stat-value" id="seatsAvailable">4</span>
+          <span class="live-stat-label">Seats Available</span>
+        </div>
+        <div class="live-stat">
+          <span class="live-stat-icon">📋</span>
+          <span class="live-stat-value" id="waitlistCount">8</span>
+          <span class="live-stat-label">On Wait List</span>
+        </div>
+        <div class="live-stat">
+          <span class="live-stat-icon">⏱️</span>
+          <span class="live-stat-value" id="avgWait">~15 min</span>
+          <span class="live-stat-label">Est. Wait</span>
+        </div>
+      </div>
+      <a href="login.html?redirect=app.html" class="live-cta">Join Now →</a>
+    </div>
+  </div>
+
+  <section class="hero">
+    <div class="hero-content">
+      <p class="tagline">El Paso's Premier Digital Poker Room</p>
+      <div class="hero-buttons">
+        <a href="login.html?redirect=app.html" class="btn btn-primary">Join Wait List</a>
+        <a href="#schedule" class="btn btn-secondary">View Schedule</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Photo Gallery Section -->
+  <section class="section section-dark" id="gallery">
+    <div class="section-inner">
+      <h2 class="section-title">The Experience</h2>
+      <p class="section-subtitle">8-Seat Digital Tables • Food & Drinks • Winning Atmosphere</p>
+      
+      <div class="gallery-grid">
+        <div class="gallery-item gallery-large">
+          <img src="table1.jpg" alt="8-Seat Digital Poker Tables">
+        </div>
+        <div class="gallery-item">
+          <img src="table2.jpg" alt="Digital Table Interface">
+        </div>
+        <div class="gallery-item">
+          <img src="table3.jpg" alt="Live Poker Action">
+        </div>
+        <div class="gallery-item">
+          <img src="food.jpg" alt="Food & Drinks">
+        </div>
+        <div class="gallery-item">
+          <img src="winners.jpg" alt="Winners Circle">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="schedule">
+    <h2 class="section-title">Daily Tournaments</h2>
+    <p class="section-subtitle">Action 7 days a week</p>
+
+    <div class="daily-schedule">
+      <div class="schedule-card">
+        <div class="schedule-time">3:00 PM Daily</div>
+        <div class="schedule-name">Early Bird Hold'em</div>
+        <div class="schedule-details">
+          <strong>Buy-in:</strong> $10 w/ one $20 Rebuy<br>
+          <strong>Add-on:</strong> $10
+        </div>
+      </div>
+
+      <div class="schedule-card">
+        <div class="schedule-time">3:00 PM Mondays</div>
+        <div class="schedule-name">Early Bird PLO</div>
+        <div class="schedule-details">
+          <strong>Buy-in:</strong> $10 w/ one $20 Rebuy<br>
+          <strong>Add-on:</strong> $10
+        </div>
+      </div>
+
+      <div class="schedule-card featured">
+        <div class="schedule-time">7:00 PM Mon</div>
+        <div class="schedule-name">PLO Night</div>
+        <div class="schedule-details">
+          <strong>Buy-in:</strong> $20<br>
+          <strong>Rebuy:</strong> $10 • <strong>Add-on:</strong> $10
+        </div>
+        <div class="guarantee-badge">$1,500 GTD</div>
+      </div>
+
+      <div class="schedule-card featured">
+        <div class="schedule-time">7:00 PM Fri</div>
+        <div class="schedule-name">Friday $3K</div>
+        <div class="schedule-details">
+          <strong>Buy-in:</strong> $10<br>
+          <strong>Rebuy:</strong> $20 • <strong>Add-on:</strong> $20
+        </div>
+        <div class="guarantee-badge">$3,000 GTD</div>
+      </div>
+
+      <div class="schedule-card">
+        <div class="schedule-time">7:00 PM Wed/Thu/Sat</div>
+        <div class="schedule-name">Freeroll</div>
+        <div class="schedule-details">
+          <strong>Free Entry!</strong><br>
+          <strong>Rebuy:</strong> $20 • <strong>Add-on:</strong> $10
+        </div>
+      </div>
+
+      <div class="schedule-card">
+        <div class="schedule-time">Saturdays</div>
+        <div class="schedule-name">No Early Bird</div>
+        <div class="schedule-details">
+          <strong style="color: var(--gold);">$200/hr Splash Pots</strong><br>
+          3PM - 12AM on cash tables
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-dark" id="tournaments">
+    <div class="section-inner">
+      <h2 class="section-title">Special Events</h2>
+      <p class="section-subtitle">January 2026</p>
+
+      <div class="special-events">
+        <div class="special-card">
+          <h3>👑 Ladies Only: Queens Showdown</h3>
+          <div class="date">Friday, January 17 @ 4PM</div>
+          <div class="details">
+            <strong>Buy-in:</strong> $50 for 25K chips<br>
+            <strong>Rebuys:</strong> Unlimited $50 for 45K chips<br>
+            <strong>Add-on:</strong> $20 for 65K chips<br><br>
+            <strong style="color: var(--gold);">Top 5 Prizes:</strong> Pandora Bracelet, Jared's Earrings, Michael Kors, Dinner for 2, Pottery Barn Blanket<br><br>
+            $200/hr Splash Pots on Cash Tables 5PM-12AM!
+          </div>
+        </div>
+
+        <div class="special-card">
+          <h3>🏆 February 7 Points Tournament</h3>
+          <div class="date">Saturday, February 7 @ 4PM</div>
+          <div class="details">
+            <strong>Buy-in:</strong> $100<br><br>
+            <strong style="color: var(--gold);">Top 30 January Point Earners = FREE Entry!</strong><br><br>
+            Earn points all January playing tournaments & cash games.
+          </div>
+        </div>
+
+        <div class="special-card">
+          <h3>🎰 February 12 Cash Drawings</h3>
+          <div class="date">Thursday, February 12 @ 3PM</div>
+          <div class="details">
+            <strong style="color: var(--gold);">$500/Hour Drawings 4PM-11PM!</strong><br><br>
+            Convert January points to raffle tickets (20 pts = 1 ticket).<br><br>
+            All point earners qualify!
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="cash">
+    <h2 class="section-title">Cash Games & Promos</h2>
+    <p class="section-subtitle">Action starts at 2PM daily</p>
+
+    <div class="cash-info">
+      <div class="cash-card">
+        <h3>Stakes</h3>
+        <div class="highlight">$1/$3</div>
+        <p>No Limit Hold'em<br>8-Seat Digital Tables</p>
+      </div>
+
+      <div class="cash-card">
+        <h3>High Hand Wheel</h3>
+        <div class="highlight">$50-$1,000</div>
+        <p>Hit high hand of the day<br>Spin the wheel to win!</p>
+      </div>
+
+      <div class="cash-card">
+        <h3>Flush Madness</h3>
+        <div class="highlight">$250+</div>
+        <p>Hit all 4 flushes to win!<br>2PM-8PM & 8PM-2AM</p>
+      </div>
+
+      <div class="cash-card">
+        <h3>Splash Pots</h3>
+        <div class="highlight">$200/hr</div>
+        <p>Saturdays 3PM-12AM<br>Special event days</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-dark" id="waitlist">
+    <div class="section-inner">
+      <h2 class="section-title">Join the Wait List</h2>
+      <p class="section-subtitle">Get notified when your seat is ready</p>
+
+      <div class="waitlist-cta-box">
+        <div class="waitlist-cta-content">
+          <div class="waitlist-cta-icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#D4A532" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+              <line x1="12" y1="18" x2="12.01" y2="18"></line>
+            </svg>
+          </div>
+          <h3>Join from Your Phone</h3>
+          <p>Sign in with your player card to join the waitlist, track your position, and get notified when your seat is ready.</p>
+          <div class="waitlist-cta-features">
+            <div class="waitlist-feature"><span class="feature-check">✓</span> Real-time position updates</div>
+            <div class="waitlist-feature"><span class="feature-check">✓</span> SMS notifications</div>
+            <div class="waitlist-feature"><span class="feature-check">✓</span> Track your points</div>
+            <div class="waitlist-feature"><span class="feature-check">✓</span> Order food from your seat</div>
+          </div>
+          <a href="login.html?redirect=app.html" class="btn btn-primary waitlist-cta-btn">Sign In & Join Waitlist</a>
+          <p class="waitlist-new-member">New player? <a href="login.html?redirect=app.html">Create an account</a> and get <span class="free-play">$30 Free Play!</span></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="info">
+    <h2 class="section-title">Poker Room Info</h2>
+    <div class="info-grid">
+      <div class="info-card">
+        <div class="info-icon">🎰</div>
+        <h3>Digital Tables</h3>
+        <p>State-of-the-art 8-seat digital poker tables</p>
+      </div>
+      <div class="info-card">
+        <div class="info-icon">🕐</div>
+        <h3>Hours</h3>
+        <p>Cash @ 2PM<br>Tournaments @ 3PM & 7PM</p>
+      </div>
+      <div class="info-card">
+        <div class="info-icon">📍</div>
+        <h3>Location</h3>
+        <p>122 S Old Pueblo Rd<br>El Paso, TX 79907</p>
+      </div>
+      <div class="info-card">
+        <div class="info-icon">📞</div>
+        <h3>Contact</h3>
+        <p><a href="tel:9158607777">(915) 860-7777</a></p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-logo">SPEAKING ROCK POKER</div>
+    <div class="footer-info">
+      122 South Old Pueblo Road, El Paso, TX 79907<br>
+      <a href="tel:9158607777">(915) 860-7777</a><br><br>
+      Must be 21+ to play<br>
+      © 2025 Speaking Rock Entertainment Center
+    </div>
+  </footer>
+
+  <script>
+    const API_URL = window.location.origin + '/api';
+    
+    async function loadLiveStatus() {
+      try {
+        const status = await fetch(`${API_URL}/live-status`).then(r => r.json());
+        
+        // Update any live status displays on the page
+        const tablesEl = document.querySelector('.tables-open');
+        const seatsEl = document.querySelector('.seats-available');
+        const waitlistEl = document.querySelector('.waitlist-count');
+        
+        if (tablesEl) tablesEl.textContent = status.tables_open + ' Tables';
+        if (seatsEl) seatsEl.textContent = status.seats_available + ' Seats Open';
+        if (waitlistEl) waitlistEl.textContent = status.waitlist_count + ' Waiting';
+        
+        console.log('Live status:', status);
+      } catch (e) {
+        console.log('Could not load live status');
+      }
+    }
+    
+    // Load on page load
+    loadLiveStatus();
+    
+    // Refresh every 30 seconds
+    setInterval(loadLiveStatus, 30000);
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,740 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex,nofollow">
+  <meta http-equiv="refresh" content="30">
+  <title>Flush Attack — Display</title>
+  <style>
+    :root{
+      --bg:#070710;
+      --card:#0c0c16;
+      --border:rgba(255,255,255,.14);
+      --muted:rgba(255,255,255,.72);
+      --gold:#D4A532;
+      --green:#22c55e;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      background: radial-gradient(1200px 700px at 30% -10%, rgba(212,165,50,.14), transparent 60%),
+                  radial-gradient(900px 600px at 100% 0%, rgba(34,197,94,.10), transparent 55%),
+                  var(--bg);
+      color:white;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      height:100vh;
+      overflow:hidden;
+    }
+    .wrap{
+      height:100%;
+      display:flex;
+      flex-direction:column;
+      padding:20px 28px;
+      gap:12px;
+    }
+    
+    /* Header */
+    .header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:20px;
+      padding-bottom:12px;
+      border-bottom:2px solid var(--gold);
+      flex-shrink:0;
+    }
+    .title{
+      display:flex;
+      align-items:center;
+      gap:16px;
+    }
+    .title img{
+      height:45px;
+      width:auto;
+    }
+    .title h1{
+      margin:0;
+      font-size:38px;
+      letter-spacing:.4px;
+      line-height:1;
+    }
+    .session-pills{
+      display:flex;
+      gap:12px;
+      align-items:center;
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      padding:.25rem .75rem;
+      border-radius:999px;
+      font-weight:800;
+      font-size:13px;
+      border:1px solid rgba(255,255,255,.18);
+      background:rgba(255,255,255,.06);
+      color:white;
+    }
+    .pill.active{ border-color: rgba(34,197,94,.5); background: rgba(34,197,94,.14); }
+    .pill.inactive{ color: rgba(255,255,255,.45); }
+    .pill .time{ margin-left:6px; font-weight:600; opacity:0.7; }
+    
+    /* Jackpots Row */
+    .jackpots-row{
+      display:flex;
+      gap:16px;
+      flex-shrink:0;
+    }
+    .jackpot-box{
+      flex:1;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:12px 20px;
+      border-radius:12px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.03);
+    }
+    .jackpot-box.active{
+      border-color: rgba(34,197,94,.35);
+      background: rgba(34,197,94,.08);
+    }
+    .jackpot-box .info{
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+    }
+    .jackpot-box .label{
+      color:var(--muted);
+      font-size:14px;
+      font-weight:700;
+    }
+    .jackpot-box .sublabel{
+      font-size:11px;
+      color:rgba(255,255,255,.4);
+    }
+    .jackpot-box .amt{
+      font-size:42px;
+      font-weight:900;
+      line-height:1;
+    }
+    .jackpot-box.active .amt{ color:var(--green); }
+    .jackpot-box:not(.active) .amt{ color:rgba(255,255,255,.35); }
+    
+    .rules-box{
+      flex:1.2;
+      display:flex;
+      align-items:center;
+      padding:14px 24px;
+      border-radius:12px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.03);
+      color:var(--muted);
+      font-size:18px;
+      line-height:1.5;
+    }
+
+    /* Leaderboard */
+    .leaderboard{
+      flex:1;
+      display:flex;
+      flex-direction:column;
+      min-height:0;
+      background: rgba(255,255,255,.02);
+      border:1px solid var(--border);
+      border-radius:14px;
+      overflow:hidden;
+    }
+    .leaderboard-header{
+      display:grid;
+      grid-template-columns: 60px 1fr 200px 80px;
+      gap:10px;
+      padding:10px 16px;
+      background:rgba(255,255,255,.04);
+      border-bottom:1px solid var(--border);
+      color:var(--muted);
+      font-weight:800;
+      font-size:13px;
+      text-transform:uppercase;
+      letter-spacing:.5px;
+      flex-shrink:0;
+    }
+    .leaderboard-header .suits-col{ text-align:center; }
+    .leaderboard-header .progress-col{ text-align:right; }
+    
+    .leaderboard-list{
+      flex:1;
+      display:flex;
+      flex-direction:column;
+      min-height:0;
+      padding:0;
+      margin:0;
+      list-style:none;
+    }
+    .leaderboard-list li{
+      flex:1;
+      display:grid;
+      grid-template-columns: 60px 1fr 200px 80px;
+      gap:10px;
+      align-items:center;
+      padding:0 16px;
+      border-bottom:1px solid rgba(255,255,255,.06);
+      min-height:0;
+    }
+    .leaderboard-list li:last-child{
+      border-bottom:none;
+    }
+    
+    /* Row highlighting */
+    .leaderboard-list li.close{
+      background: rgba(212,165,50,.08);
+      border-left:4px solid var(--gold);
+    }
+    .leaderboard-list li.winner{
+      background: rgba(34,197,94,.10);
+      border-left:4px solid var(--green);
+      animation: winnerPulse 1.5s ease-in-out infinite;
+    }
+    @keyframes winnerPulse {
+      0%, 100% { background: rgba(34,197,94,.10); }
+      50% { background: rgba(34,197,94,.20); }
+    }
+    
+    .rank{
+      font-size:22px;
+      font-weight:900;
+      color:rgba(255,255,255,.6);
+    }
+    .player-info{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width:0;
+    }
+    .player-name{
+      font-size:22px;
+      font-weight:900;
+      letter-spacing:.2px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:4px;
+      padding:3px 8px;
+      border-radius:6px;
+      font-size:11px;
+      font-weight:800;
+      flex-shrink:0;
+    }
+    .badge.close-badge{
+      background:var(--gold);
+      color:#000;
+    }
+    .badge.winner-badge{
+      background:var(--green);
+      color:#000;
+    }
+    
+    .suits{
+      display:flex;
+      gap:6px;
+      justify-content:center;
+    }
+    .suit-pill{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:36px;
+      height:36px;
+      border-radius:8px;
+      font-size:22px;
+      font-weight:900;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+      line-height:1;
+    }
+    .suit-pill.red{ color:#ff5b5b; }
+    .suit-pill.black{ color:#e6e8ee; }
+    .suit-pill.hit{
+      background: rgba(34,197,94,.18);
+      border-color: rgba(34,197,94,.35);
+    }
+    .suit-pill.miss{
+      opacity:0.25;
+    }
+    
+    .progress{
+      font-size:22px;
+      font-weight:900;
+      text-align:right;
+      color:rgba(255,255,255,.8);
+    }
+
+    /* Footer */
+    .footer{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      color:rgba(255,255,255,.5);
+      font-size:13px;
+      padding-top:8px;
+      border-top:1px solid rgba(255,255,255,.08);
+      flex-shrink:0;
+    }
+
+    /* Tablet */
+    @media (max-width: 1200px){
+      .wrap{ padding:16px 20px; gap:10px; }
+      .title h1{ font-size:30px; }
+      .title img{ height:36px; }
+      .jackpot-box .amt{ font-size:32px; }
+      .leaderboard-header{ grid-template-columns: 50px 1fr 160px 70px; font-size:11px; }
+      .leaderboard-list li{ grid-template-columns: 50px 1fr 160px 70px; }
+      .rank, .player-name, .progress{ font-size:18px; }
+      .suit-pill{ width:30px; height:30px; font-size:18px; }
+    }
+    
+    /* Mobile */
+    @media (max-width: 768px){
+      body{
+        height:auto;
+        min-height:100vh;
+        overflow:auto;
+      }
+      .wrap{
+        padding:12px 14px;
+        gap:10px;
+        height:auto;
+        min-height:100vh;
+      }
+      
+      /* Header - stack vertically */
+      .header{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:10px;
+        padding-bottom:10px;
+      }
+      .title{
+        gap:10px;
+      }
+      .title img{
+        height:32px;
+      }
+      .title h1{
+        font-size:24px;
+      }
+      .session-pills{
+        gap:8px;
+        flex-wrap:wrap;
+      }
+      .pill{
+        font-size:11px;
+        padding:.2rem .5rem;
+      }
+      .pill .time{
+        margin-left:4px;
+      }
+      
+      /* Jackpots - stack vertically */
+      .jackpots-row{
+        flex-direction:column;
+        gap:10px;
+      }
+      .jackpot-box{
+        padding:10px 14px;
+        border-radius:10px;
+      }
+      .jackpot-box .label{
+        font-size:12px;
+      }
+      .jackpot-box .sublabel{
+        font-size:10px;
+      }
+      .jackpot-box .amt{
+        font-size:28px;
+      }
+      .rules-box{
+        padding:12px 16px;
+        font-size:14px;
+        line-height:1.4;
+        border-radius:10px;
+      }
+      
+      /* Leaderboard - scrollable on mobile */
+      .leaderboard{
+        flex:none;
+        border-radius:10px;
+        max-height:none;
+      }
+      .leaderboard-header{
+        grid-template-columns: 40px 1fr 100px;
+        gap:6px;
+        padding:8px 10px;
+        font-size:10px;
+      }
+      .leaderboard-header .progress-col{
+        display:none;
+      }
+      .leaderboard-list{
+        flex:none;
+      }
+      .leaderboard-list li{
+        grid-template-columns: 40px 1fr 100px;
+        gap:6px;
+        padding:10px;
+        flex:none;
+        min-height:auto;
+      }
+      .leaderboard-list li.close,
+      .leaderboard-list li.winner{
+        padding-left:8px;
+        margin-left:0;
+        border-left-width:3px;
+      }
+      .rank{
+        font-size:14px;
+      }
+      .player-info{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:4px;
+      }
+      .player-name{
+        font-size:14px;
+      }
+      .badge{
+        font-size:9px;
+        padding:2px 6px;
+      }
+      .suits{
+        gap:4px;
+        flex-wrap:wrap;
+        justify-content:flex-end;
+      }
+      .suit-pill{
+        width:22px;
+        height:22px;
+        font-size:14px;
+        border-radius:5px;
+      }
+      .progress{
+        display:none;
+      }
+      
+      /* Footer */
+      .footer{
+        flex-direction:column;
+        gap:4px;
+        text-align:center;
+        font-size:11px;
+        padding-top:10px;
+      }
+    }
+    
+    /* Small phones */
+    @media (max-width: 380px){
+      .title h1{
+        font-size:20px;
+      }
+      .jackpot-box .amt{
+        font-size:24px;
+      }
+      .player-name{
+        font-size:13px;
+      }
+      .suit-pill{
+        width:20px;
+        height:20px;
+        font-size:12px;
+      }
+    }
+    
+    /* Empty state */
+    .empty-state{
+      flex:1;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:var(--muted);
+      font-size:20px;
+    }
+    @media (max-width: 768px){
+      .empty-state{
+        font-size:14px;
+        padding:40px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <!-- Header -->
+    <div class="header">
+      <div class="title">
+        <img src="logo.png" alt="Speaking Rock">
+        <h1>Flush Attack</h1>
+      </div>
+      <div class="session-pills">
+        <span class="pill active" id="flushShinePill">FLUSH & SHINE<span class="time">2PM-8PM</span></span>
+        <span class="pill inactive" id="lastCallPill">LAST CALL<span class="time">8PM-2AM</span></span>
+      </div>
+    </div>
+
+    <!-- Jackpots Row -->
+    <div class="jackpots-row">
+      <div class="jackpot-box active" id="flushShineBox">
+        <div class="info">
+          <div class="label">Flush & Shine</div>
+          <div class="sublabel">+$250/day if unclaimed</div>
+        </div>
+        <div class="amt" id="flushShineAmt">$3,000</div>
+      </div>
+      <div class="jackpot-box" id="lastCallBox">
+        <div class="info">
+          <div class="label">Last Call</div>
+          <div class="sublabel">+$50/day if unclaimed</div>
+        </div>
+        <div class="amt" id="lastCallAmt">$1,150</div>
+      </div>
+      <div class="rules-box">
+        <div>
+          <strong>Goal:</strong> Hit a flush in each suit (<span style="color:#e6e8ee;">♠</span> <span style="color:#ff5b5b;">♥</span> <span style="color:#ff5b5b;">♦</span> <span style="color:#e6e8ee;">♣</span>) to win the jackpot.<br>
+          <strong>Rules:</strong> Cash game, $50+ pot, 4+ players, both hole cards, must win the hand.
+        </div>
+      </div>
+    </div>
+
+    <!-- Leaderboard -->
+    <div class="leaderboard">
+      <div class="leaderboard-header">
+        <div>Rank</div>
+        <div>Player</div>
+        <div class="suits-col">Suits Hit</div>
+        <div class="progress-col">Progress</div>
+      </div>
+      <ul class="leaderboard-list" id="leadersList">
+        <li class="close">
+          <span class="rank">#1</span>
+          <div class="player-info">
+            <span class="player-name">MIKE R</span>
+            <span class="badge close-badge">⭐ CLOSE!</span>
+          </div>
+          <div class="suits">
+            <span class="suit-pill black hit">♠</span>
+            <span class="suit-pill red hit">♥</span>
+            <span class="suit-pill red miss">♦</span>
+            <span class="suit-pill black hit">♣</span>
+          </div>
+          <span class="progress">3/4</span>
+        </li>
+        <li>
+          <span class="rank">#2</span>
+          <div class="player-info">
+            <span class="player-name">SARAH M</span>
+          </div>
+          <div class="suits">
+            <span class="suit-pill black miss">♠</span>
+            <span class="suit-pill red hit">♥</span>
+            <span class="suit-pill red hit">♦</span>
+            <span class="suit-pill black miss">♣</span>
+          </div>
+          <span class="progress">2/4</span>
+        </li>
+        <li>
+          <span class="rank">#3</span>
+          <div class="player-info">
+            <span class="player-name">JOHN D</span>
+          </div>
+          <div class="suits">
+            <span class="suit-pill black hit">♠</span>
+            <span class="suit-pill red miss">♥</span>
+            <span class="suit-pill red miss">♦</span>
+            <span class="suit-pill black hit">♣</span>
+          </div>
+          <span class="progress">2/4</span>
+        </li>
+        <li>
+          <span class="rank">#4</span>
+          <div class="player-info">
+            <span class="player-name">DAVID N</span>
+          </div>
+          <div class="suits">
+            <span class="suit-pill black miss">♠</span>
+            <span class="suit-pill red hit">♥</span>
+            <span class="suit-pill red miss">♦</span>
+            <span class="suit-pill black miss">♣</span>
+          </div>
+          <span class="progress">1/4</span>
+        </li>
+        <li>
+          <span class="rank">#5</span>
+          <div class="player-info">
+            <span class="player-name">JENNIFER C</span>
+          </div>
+          <div class="suits">
+            <span class="suit-pill black miss">♠</span>
+            <span class="suit-pill red miss">♥</span>
+            <span class="suit-pill red hit">♦</span>
+            <span class="suit-pill black miss">♣</span>
+          </div>
+          <span class="progress">1/4</span>
+        </li>
+        <li>
+          <span class="rank">#6</span>
+          <div class="player-info">
+            <span class="player-name">CARLOS M</span>
+          </div>
+          <div class="suits">
+            <span class="suit-pill black hit">♠</span>
+            <span class="suit-pill red miss">♥</span>
+            <span class="suit-pill red miss">♦</span>
+            <span class="suit-pill black miss">♣</span>
+          </div>
+          <span class="progress">1/4</span>
+        </li>
+        <li>
+          <span class="rank">#7</span>
+          <div class="player-info">
+            <span class="player-name">MARIA G</span>
+          </div>
+          <div class="suits">
+            <span class="suit-pill black miss">♠</span>
+            <span class="suit-pill red miss">♥</span>
+            <span class="suit-pill red miss">♦</span>
+            <span class="suit-pill black hit">♣</span>
+          </div>
+          <span class="progress">1/4</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <div>Speaking Rock Entertainment Center • Poker Room</div>
+      <div>Auto-refresh: 30s • Don't see your name? Ask the floor for a promo check.</div>
+      <div id="lastUpdated">Last updated: —</div>
+    </div>
+  </div>
+
+  <script>
+  /*
+    Backend API Integration:
+    GET /api/promos/flush-attack
+    {
+      "activeSession": "flushShine", // or "lastCall"
+      "flushShineJackpot": "$3,000",
+      "lastCallJackpot": "$1,150",
+      "leaders": [
+        {"rank":1,"name":"MIKE R","suits":["♠","♥","♣"],"score":"3/4"},
+        {"rank":2,"name":"SARAH M","suits":["♥","♦"],"score":"2/4"},
+        ...
+      ]
+    }
+  */
+  (function(){
+    const last = document.getElementById('lastUpdated');
+    function stamp(){
+      if(last) last.textContent = "Last updated: " + new Date().toLocaleTimeString();
+    }
+    stamp();
+
+    // Determine active session based on time
+    function updateSessionStatus(){
+      const now = new Date();
+      const hour = now.getHours();
+      const isFlushShine = hour >= 14 && hour < 20; // 2PM-8PM
+      const isLastCall = hour >= 20 || hour < 2; // 8PM-2AM
+      
+      const flushShinePill = document.getElementById('flushShinePill');
+      const lastCallPill = document.getElementById('lastCallPill');
+      const flushShineBox = document.getElementById('flushShineBox');
+      const lastCallBox = document.getElementById('lastCallBox');
+      
+      if(flushShinePill && lastCallPill){
+        flushShinePill.classList.toggle('active', isFlushShine);
+        flushShinePill.classList.toggle('inactive', !isFlushShine);
+        lastCallPill.classList.toggle('active', isLastCall);
+        lastCallPill.classList.toggle('inactive', !isLastCall);
+      }
+      
+      if(flushShineBox && lastCallBox){
+        flushShineBox.classList.toggle('active', isFlushShine);
+        lastCallBox.classList.toggle('active', isLastCall);
+      }
+    }
+    updateSessionStatus();
+
+    fetch('/api/promos/flush-attack', { cache: 'no-store' })
+      .then(r => r.ok ? r.json() : null)
+      .then(data => {
+        if(!data) return;
+        
+        const flushShineAmt = document.getElementById('flushShineAmt');
+        const lastCallAmt = document.getElementById('lastCallAmt');
+        const list = document.getElementById('leadersList');
+
+        if(flushShineAmt && data.flushShineJackpot) flushShineAmt.textContent = data.flushShineJackpot;
+        if(lastCallAmt && data.lastCallJackpot) lastCallAmt.textContent = data.lastCallJackpot;
+
+        if(list && Array.isArray(data.leaders) && data.leaders.length){
+          // Filter to only show players with at least 1 flush
+          const eligiblePlayers = data.leaders.filter(p => {
+            const hitSuits = Array.isArray(p.suits) ? p.suits : [];
+            return hitSuits.length >= 1;
+          });
+          
+          if(eligiblePlayers.length === 0){
+            list.innerHTML = '<li class="empty-row" style="text-align:center; color:rgba(255,255,255,.5); padding:40px 20px; font-size:18px;">No players in the running yet. Hit a flush to get on the board!</li>';
+            stamp();
+            return;
+          }
+          
+          list.innerHTML = eligiblePlayers.slice(0,12).map((p, index) => {
+            const allSuits = ['♠','♥','♦','♣'];
+            const hitSuits = Array.isArray(p.suits) ? p.suits.map(s => {
+              if(s === 'H') return '♥';
+              if(s === 'D') return '♦';
+              if(s === 'S') return '♠';
+              if(s === 'C') return '♣';
+              return s;
+            }) : [];
+            
+            const suitsHtml = allSuits.map(suit => {
+              const isHit = hitSuits.includes(suit);
+              const isRed = (suit === '♥' || suit === '♦');
+              return `<span class="suit-pill ${isRed ? 'red' : 'black'} ${isHit ? 'hit' : 'miss'}">${suit}</span>`;
+            }).join('');
+            
+            const count = hitSuits.length;
+            const isClose = count === 3;
+            const isWinner = count === 4;
+            const rowClass = isWinner ? 'winner' : (isClose ? 'close' : '');
+            const badge = isWinner 
+              ? '<span class="badge winner-badge">🎉 WINNER!</span>' 
+              : (isClose ? '<span class="badge close-badge">⭐ CLOSE!</span>' : '');
+            
+            return `
+              <li class="${rowClass}">
+                <span class="rank">#${index + 1}</span>
+                <div class="player-info">
+                  <span class="player-name">${p.name ?? ''}</span>
+                  ${badge}
+                </div>
+                <div class="suits">${suitsHtml}</div>
+                <span class="progress">${p.score ?? (count + '/4')}</span>
+              </li>
+            `;
+          }).join('');
+        }
+        stamp();
+      })
+      .catch(()=>{});
+  })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,1274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Speaking Rock Poker | Digital Poker Room Management System</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --gold: #D4A532;
+      --gold-light: #E8C45A;
+      --gold-dark: #B8860B;
+      --black: #000000;
+      --bg-dark: #0a0a0a;
+      --bg-card: #111111;
+      --bg-section: #0f0f0f;
+      --border: #222222;
+      --text: #ffffff;
+      --text-muted: #999999;
+      --green: #22c55e;
+      --green-bg: rgba(34, 197, 94, 0.1);
+      --blue: #3b82f6;
+      --blue-bg: rgba(59, 130, 246, 0.1);
+      --purple: #8b5cf6;
+      --purple-bg: rgba(139, 92, 246, 0.1);
+      --orange: #f97316;
+      --orange-bg: rgba(249, 115, 22, 0.1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--black);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    /* Header */
+    header {
+      background: var(--black);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      height: 50px;
+      width: auto;
+    }
+
+    .header-nav {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .header-nav a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .header-nav a:hover {
+      color: var(--gold);
+    }
+
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      border: none;
+    }
+
+    .btn-primary {
+      background: var(--gold);
+      color: var(--black);
+    }
+
+    .btn-primary:hover {
+      background: var(--gold-light);
+      transform: translateY(-2px);
+    }
+
+    .btn-phone {
+      background: transparent;
+      color: #ffffff;
+      font-weight: 600;
+      font-size: 0.95rem;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      border: 2px solid #ffffff;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .btn-phone:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-2px);
+      color: #ffffff;
+    }
+
+    .btn-phone:active {
+      transform: scale(0.95);
+    }
+
+    .btn-phone .phone-icon {
+      margin-right: 0.25rem;
+      display: inline-block;
+      transition: transform 0.3s ease;
+    }
+
+    .btn-phone:active .phone-icon {
+      animation: ring 0.5s ease;
+    }
+
+    @keyframes ring {
+      0% { transform: rotate(0deg); }
+      20% { transform: rotate(15deg); }
+      40% { transform: rotate(-15deg); }
+      60% { transform: rotate(10deg); }
+      80% { transform: rotate(-10deg); }
+      100% { transform: rotate(0deg); }
+    }
+
+    .btn-phone::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: width 0.4s ease, height 0.4s ease;
+    }
+
+    .btn-phone:active::after {
+      width: 300px;
+      height: 300px;
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    /* Hero Section */
+    .hero {
+      background: linear-gradient(180deg, var(--bg-dark) 0%, var(--black) 100%);
+      padding: 6rem 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 800px;
+      background: radial-gradient(circle, rgba(212, 165, 50, 0.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-content {
+      max-width: 900px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      background: var(--gold);
+      color: var(--black);
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero h1 {
+      font-size: 3.5rem;
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero h1 span {
+      color: var(--gold);
+    }
+
+    .hero p {
+      font-size: 1.25rem;
+      color: var(--text-muted);
+      max-width: 700px;
+      margin: 0 auto 2.5rem;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 4rem;
+      margin-top: 4rem;
+      padding-top: 3rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .hero-stat {
+      text-align: center;
+    }
+
+    .hero-stat-value {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--gold);
+    }
+
+    .hero-stat-label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    /* Problem Section */
+    .problem-section {
+      background: var(--bg-section);
+      padding: 5rem 2rem;
+    }
+
+    .section-content {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .section-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--gold);
+      margin-bottom: 1rem;
+    }
+
+    .section-title {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+    }
+
+    .section-subtitle {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .problems-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+
+    .problem-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+
+    .problem-icon {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .problem-title {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .problem-text {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    /* Solution Section */
+    .solution-section {
+      background: var(--black);
+      padding: 5rem 2rem;
+    }
+
+    .solution-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+
+    .solution-content h3 {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 1.5rem;
+    }
+
+    .solution-content p {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      margin-bottom: 2rem;
+    }
+
+    .solution-list {
+      list-style: none;
+    }
+
+    .solution-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .solution-list .check {
+      width: 24px;
+      height: 24px;
+      background: var(--green-bg);
+      color: var(--green);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      flex-shrink: 0;
+      margin-top: 0.1rem;
+    }
+
+    .solution-list .text {
+      font-size: 1rem;
+    }
+
+    .solution-image {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .solution-image img {
+      max-width: 100%;
+      border-radius: 8px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+    }
+
+    .solution-image-placeholder {
+      background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-section) 100%);
+      border-radius: 8px;
+      height: 400px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      font-size: 1rem;
+    }
+
+    /* Features Section */
+    .features-section {
+      background: var(--bg-section);
+      padding: 5rem 2rem;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2rem;
+    }
+
+    .feature-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      transition: all 0.3s;
+    }
+
+    .feature-card:hover {
+      border-color: var(--gold);
+      transform: translateY(-4px);
+    }
+
+    .feature-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .feature-icon.green {
+      background: var(--green-bg);
+    }
+
+    .feature-icon.blue {
+      background: var(--blue-bg);
+    }
+
+    .feature-icon.purple {
+      background: var(--purple-bg);
+    }
+
+    .feature-icon.orange {
+      background: var(--orange-bg);
+    }
+
+    .feature-icon.gold {
+      background: rgba(212, 165, 50, 0.1);
+    }
+
+    .feature-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+    }
+
+    .feature-text {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      margin-bottom: 1.25rem;
+    }
+
+    .feature-list {
+      list-style: none;
+    }
+
+    .feature-list li {
+      font-size: 0.85rem;
+      color: var(--text);
+      padding: 0.4rem 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .feature-list li::before {
+      content: '→';
+      color: var(--gold);
+    }
+
+    /* Benefits Section */
+    .benefits-section {
+      background: var(--black);
+      padding: 5rem 2rem;
+    }
+
+    .benefits-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2rem;
+    }
+
+    .benefit-card {
+      text-align: center;
+      padding: 2rem 1.5rem;
+    }
+
+    .benefit-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    .benefit-value {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--gold);
+      margin-bottom: 0.5rem;
+    }
+
+    .benefit-label {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .benefit-text {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    /* Components Section */
+    .components-section {
+      background: var(--bg-section);
+      padding: 5rem 2rem;
+    }
+
+    .components-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+
+    .component-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+      transition: all 0.3s;
+    }
+
+    .component-card:hover {
+      border-color: var(--gold);
+    }
+
+    .component-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .component-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .component-text {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+
+    .component-link {
+      color: var(--gold);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .component-link:hover {
+      text-decoration: underline;
+    }
+
+    /* Comparison Section */
+    .comparison-section {
+      background: var(--black);
+      padding: 5rem 2rem;
+    }
+
+    .comparison-table {
+      max-width: 900px;
+      margin: 0 auto;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .comparison-header {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      background: var(--bg-card);
+    }
+
+    .comparison-header-cell {
+      padding: 1.5rem;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .comparison-header-cell:not(:last-child) {
+      border-right: 1px solid var(--border);
+    }
+
+    .comparison-header-cell h4 {
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .comparison-header-cell.highlight {
+      background: var(--gold);
+      color: var(--black);
+    }
+
+    .comparison-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+
+    .comparison-row:not(:last-child) {
+      border-bottom: 1px solid var(--border);
+    }
+
+    .comparison-cell {
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-size: 0.9rem;
+    }
+
+    .comparison-cell:first-child {
+      justify-content: flex-start;
+      font-weight: 500;
+    }
+
+    .comparison-cell:not(:last-child) {
+      border-right: 1px solid var(--border);
+    }
+
+    .comparison-cell.highlight {
+      background: rgba(212, 165, 50, 0.05);
+    }
+
+    .check-icon {
+      color: var(--green);
+      font-size: 1.25rem;
+    }
+
+    .x-icon {
+      color: var(--text-muted);
+      font-size: 1.25rem;
+    }
+
+    /* CTA Section */
+    .cta-section {
+      background: linear-gradient(180deg, var(--bg-section) 0%, var(--black) 100%);
+      padding: 5rem 2rem;
+      text-align: center;
+    }
+
+    .cta-content {
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .cta-content h2 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+    }
+
+    .cta-content p {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      margin-bottom: 2rem;
+    }
+
+    .cta-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .cta-contact {
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .cta-contact p {
+      font-size: 0.95rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .cta-contact a {
+      color: var(--gold);
+      text-decoration: none;
+    }
+
+    .cta-contact a:hover {
+      text-decoration: underline;
+    }
+
+    /* Footer */
+    footer {
+      background: var(--black);
+      border-top: 1px solid var(--border);
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .footer-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+    }
+
+    .footer-links a:hover {
+      color: var(--gold);
+    }
+
+    .footer-text {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .benefits-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .components-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .hero {
+        padding: 4rem 1.5rem;
+      }
+
+      .hero h1 {
+        font-size: 2.25rem;
+      }
+
+      .hero p {
+        font-size: 1rem;
+      }
+
+      .hero-stats {
+        flex-direction: column;
+        gap: 2rem;
+      }
+
+      .problems-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .solution-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+
+      .solution-image {
+        order: -1;
+      }
+
+      .benefits-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .components-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .comparison-table {
+        font-size: 0.8rem;
+      }
+
+      .comparison-cell {
+        padding: 0.75rem;
+      }
+
+      .section-title {
+        font-size: 1.75rem;
+      }
+
+      .header-nav {
+        display: none;
+      }
+
+      .cta-content h2 {
+        font-size: 1.75rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="header-content">
+      <a href="index.html">
+        <img src="logo.png" alt="Speaking Rock Poker" class="logo">
+      </a>
+      <nav class="header-nav">
+        <a href="index.html">Home</a>
+        <a href="waitlist.html">Player App</a>
+        <a href="#features">Features</a>
+        <a href="#benefits">Benefits</a>
+        <a href="tel:9152003700" class="btn btn-phone">
+          <span class="phone-icon">📞</span>
+          (915) 200-3700
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content">
+      <span class="hero-badge">Digital Poker Room Management</span>
+      <h1>Run Your Poker Room <span>Smarter</span>, Not Harder</h1>
+      <p>A complete digital system that streamlines operations, eliminates pen-and-paper chaos, and gives players the modern experience they expect.</p>
+      <div class="hero-buttons">
+        <a href="admin.html" class="btn btn-primary">View Admin Demo</a>
+        <a href="waitlist.html" class="btn btn-secondary">Try Player App</a>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <div class="hero-stat-value">Zero</div>
+          <div class="hero-stat-label">"Is there a game running?" Calls</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-value">Instant</div>
+          <div class="hero-stat-label">Player Card Linking</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-value">24/7</div>
+          <div class="hero-stat-label">Promo Visibility</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Problem Section -->
+  <section class="problem-section">
+    <div class="section-content">
+      <div class="section-header">
+        <div class="section-label">The Challenge</div>
+        <h2 class="section-title">Sound Familiar?</h2>
+        <p class="section-subtitle">Every poker room deals with these headaches. We built this system to solve them.</p>
+      </div>
+      <div class="problems-grid">
+        <div class="problem-card">
+          <div class="problem-icon">📞</div>
+          <h4 class="problem-title">Constant Phone Calls</h4>
+          <p class="problem-text">"Is there a game running? How long is the wait?" Players call repeatedly because they can't see this info online.</p>
+        </div>
+        <div class="problem-card">
+          <div class="problem-icon">📋</div>
+          <h4 class="problem-title">Pen & Paper Chaos</h4>
+          <p class="problem-text">Handwritten wait lists get messy. Names get crossed out, rewritten, lost. Who was next again?</p>
+        </div>
+        <div class="problem-card">
+          <div class="problem-icon">📢</div>
+          <h4 class="problem-title">Loudspeaker Pages</h4>
+          <p class="problem-text">Shouting names across the casino floor. Players miss their call at the bar or bathroom. Seats go unfilled.</p>
+        </div>
+        <div class="problem-card">
+          <div class="problem-icon">🚗</div>
+          <h4 class="problem-title">Wasted Trips</h4>
+          <p class="problem-text">Players drive 30 minutes only to find no tables running or a 2-hour wait. They leave frustrated and don't come back.</p>
+        </div>
+        <div class="problem-card">
+          <div class="problem-icon">💳</div>
+          <h4 class="problem-title">Missing Player Info</h4>
+          <p class="problem-text">Player card numbers collected at payout time. No database of regulars. No way to track who plays what games.</p>
+        </div>
+        <div class="problem-card">
+          <div class="problem-icon">📺</div>
+          <h4 class="problem-title">No Live Display</h4>
+          <p class="problem-text">Other poker rooms have PokerAtlas boards. Your players wonder what's running without walking over to ask.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Solution Section -->
+  <section class="solution-section">
+    <div class="section-content">
+      <div class="solution-grid">
+        <div class="solution-content">
+          <h3>One System That Does It All</h3>
+          <p>We built a complete poker room management platform that connects your staff, players, and TV displays in real-time.</p>
+          <ul class="solution-list">
+            <li>
+              <span class="check">✓</span>
+              <span class="text"><strong>Players see live table status</strong> from their phone before leaving home</span>
+            </li>
+            <li>
+              <span class="check">✓</span>
+              <span class="text"><strong>Digital waitlist</strong> replaces pen and paper with one-click management</span>
+            </li>
+            <li>
+              <span class="check">✓</span>
+              <span class="text"><strong>SMS notifications</strong> alert players when their seat is ready (no more loudspeaker)</span>
+            </li>
+            <li>
+              <span class="check">✓</span>
+              <span class="text"><strong>TV display board</strong> shows games, waitlists, and promos in your room</span>
+            </li>
+            <li>
+              <span class="check">✓</span>
+              <span class="text"><strong>Player database</strong> tracks card numbers, visit history, and preferences</span>
+            </li>
+            <li>
+              <span class="check">✓</span>
+              <span class="text"><strong>Tournament registration</strong> lets players sign up online</span>
+            </li>
+          </ul>
+        </div>
+        <div class="solution-image">
+          <div class="solution-image-placeholder">
+            <div style="text-align: center;">
+              <div style="font-size: 4rem; margin-bottom: 1rem;">📱💻📺</div>
+              <div>Player App • Admin Dashboard • TV Display</div>
+              <div style="margin-top: 1rem; font-size: 0.85rem;">All connected in real-time</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features-section" id="features">
+    <div class="section-content">
+      <div class="section-header">
+        <div class="section-label">Features</div>
+        <h2 class="section-title">Everything You Need to Run a Modern Poker Room</h2>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon green">📋</div>
+          <h4 class="feature-title">Smart Waitlist Management</h4>
+          <p class="feature-text">Digital waitlist that updates in real-time across all devices. Add players instantly, track wait times, and seat them with one click.</p>
+          <ul class="feature-list">
+            <li>Add walk-ins in seconds</li>
+            <li>Auto-calculate wait times</li>
+            <li>Filter by game type</li>
+            <li>Track player status (Waiting, Called, Seated)</li>
+            <li>Interest lists for games not running</li>
+          </ul>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon blue">📱</div>
+          <h4 class="feature-title">Player Mobile App</h4>
+          <p class="feature-text">Players check tables, join the waitlist, and track their position from their phone. No app download required—works in any browser.</p>
+          <ul class="feature-list">
+            <li>See live table status from anywhere</li>
+            <li>Join waitlist remotely</li>
+            <li>Real-time position updates</li>
+            <li>Tournament registration</li>
+            <li>View current promotions</li>
+          </ul>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon purple">📺</div>
+          <h4 class="feature-title">TV Display Board</h4>
+          <p class="feature-text">PokerAtlas-style display for your poker room TVs. Shows live games, waitlists, and promotions. Updates automatically.</p>
+          <ul class="feature-list">
+            <li>Industry-standard column layout</li>
+            <li>Game types with buy-in ranges</li>
+            <li>Table numbers and seat counts</li>
+            <li>Player names on waitlist</li>
+            <li>Promotional banners</li>
+          </ul>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon orange">⚙️</div>
+          <h4 class="feature-title">Staff Admin Dashboard</h4>
+          <p class="feature-text">Complete control center for your floor staff. Manage tables, waitlists, tournaments, and players from one screen.</p>
+          <ul class="feature-list">
+            <li>Quick-add players to waitlist</li>
+            <li>Open/close tables with one click</li>
+            <li>Call and seat players instantly</li>
+            <li>Tournament management</li>
+            <li>Player database with search</li>
+          </ul>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon gold">🏆</div>
+          <h4 class="feature-title">Tournament System</h4>
+          <p class="feature-text">Let players register for tournaments online. Track signups, manage entries, and display live tournament info.</p>
+          <ul class="feature-list">
+            <li>Online pre-registration</li>
+            <li>Buy-in and structure display</li>
+            <li>Registration count tracking</li>
+            <li>Calendar view of upcoming events</li>
+            <li>Late registration management</li>
+          </ul>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon green">👥</div>
+          <h4 class="feature-title">Player Database</h4>
+          <p class="feature-text">Build a database of your players. Store card numbers, contact info, and preferences for faster service.</p>
+          <ul class="feature-list">
+            <li>Player card # capture</li>
+            <li>Contact info storage</li>
+            <li>Game preferences</li>
+            <li>Visit history tracking</li>
+            <li>Searchable database</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Benefits Section -->
+  <section class="benefits-section" id="benefits">
+    <div class="section-content">
+      <div class="section-header">
+        <div class="section-label">Problems Solved</div>
+        <h2 class="section-title">What This System Fixes</h2>
+      </div>
+      <div class="benefits-grid">
+        <div class="benefit-card">
+          <div class="benefit-icon">📞</div>
+          <div class="benefit-value">Answered</div>
+          <div class="benefit-label">Before They Ask</div>
+          <p class="benefit-text">Players see live table status, wait times, and seat availability online. No more "is there a game running?" calls.</p>
+        </div>
+        <div class="benefit-card">
+          <div class="benefit-icon">📝</div>
+          <div class="benefit-value">Streamlined</div>
+          <div class="benefit-label">Registration</div>
+          <p class="benefit-text">Players register themselves online with name, phone, and game preference. Staff just confirms and seats.</p>
+        </div>
+        <div class="benefit-card">
+          <div class="benefit-icon">💳</div>
+          <div class="benefit-value">Linked</div>
+          <div class="benefit-label">Player Cards</div>
+          <p class="benefit-text">Capture player card numbers at registration, not payout time. Every player in your database, ready for rewards.</p>
+        </div>
+        <div class="benefit-card">
+          <div class="benefit-icon">🎁</div>
+          <div class="benefit-value">Promoted</div>
+          <div class="benefit-label">Events & Promos</div>
+          <p class="benefit-text">Splash pots, high hands, tournaments—players see them on the app, TV display, and dashboard. No missed promos.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Components Section -->
+  <section class="components-section">
+    <div class="section-content">
+      <div class="section-header">
+        <div class="section-label">System Components</div>
+        <h2 class="section-title">Six Connected Pieces, One Complete System</h2>
+      </div>
+      <div class="components-grid">
+        <div class="component-card">
+          <div class="component-icon">🏠</div>
+          <h4 class="component-title">Public Website</h4>
+          <p class="component-text">Landing page with live status, hours, and info. Your poker room's home on the web.</p>
+          <a href="index.html" class="component-link">View Demo →</a>
+        </div>
+        <div class="component-card">
+          <div class="component-icon">📱</div>
+          <h4 class="component-title">Player App</h4>
+          <p class="component-text">Mobile waitlist interface. Players join from their phone, track position, register for tournaments.</p>
+          <a href="waitlist.html" class="component-link">View Demo →</a>
+        </div>
+        <div class="component-card">
+          <div class="component-icon">📊</div>
+          <h4 class="component-title">Player Dashboard</h4>
+          <p class="component-text">Personal dashboard showing waitlist status, tournament registrations, and promotions.</p>
+          <a href="dashboard.html" class="component-link">View Demo →</a>
+        </div>
+        <div class="component-card">
+          <div class="component-icon">📺</div>
+          <h4 class="component-title">TV Display</h4>
+          <p class="component-text">Large-format display for poker room TVs. PokerAtlas-style layout with live updates.</p>
+          <a href="display.html" class="component-link">View Demo →</a>
+        </div>
+        <div class="component-card">
+          <div class="component-icon">⚙️</div>
+          <h4 class="component-title">Admin Dashboard</h4>
+          <p class="component-text">Staff control center. Manage waitlists, tables, tournaments, and players.</p>
+          <a href="admin.html" class="component-link">View Demo →</a>
+        </div>
+        <div class="component-card">
+          <div class="component-icon">🔐</div>
+          <h4 class="component-title">Staff Login</h4>
+          <p class="component-text">Secure authentication for admin access. Role-based permissions available.</p>
+          <a href="login.html" class="component-link">View Demo →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Comparison Section -->
+  <section class="comparison-section">
+    <div class="section-content">
+      <div class="section-header">
+        <div class="section-label">Comparison</div>
+        <h2 class="section-title">How We Stack Up</h2>
+        <p class="section-subtitle">More features than generic waitlist tools, comparable to enterprise solutions—at a fraction of the cost.</p>
+      </div>
+      <div class="comparison-table">
+        <div class="comparison-header" style="grid-template-columns: 1.2fr 1fr 1fr 1fr;">
+          <div class="comparison-header-cell">
+            <h4>Feature</h4>
+          </div>
+          <div class="comparison-header-cell">
+            <h4>TablesReady</h4>
+            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">$39/month</div>
+          </div>
+          <div class="comparison-header-cell">
+            <h4>PokerAtlas TableCaptain</h4>
+            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">$300-500+/month*</div>
+          </div>
+          <div class="comparison-header-cell highlight">
+            <h4>This System</h4>
+            <div style="font-size: 0.75rem; margin-top: 0.25rem;">One-time setup</div>
+          </div>
+        </div>
+        <div class="comparison-row" style="grid-template-columns: 1.2fr 1fr 1fr 1fr;">
+          <div class="comparison-cell">Basic waitlist</div>
+          <div class="comparison-cell"><span class="check-icon">✓</span></div>
+          <div class="comparison-cell"><span class="check-icon">✓</span></div>
+          <div class="comparison-cell highlight"><span class="check-icon">✓</span></div>
+        </div>
+        <div class="comparison-row" style="grid-template-columns: 1.2fr 1fr 1fr 1fr;">
+          <div class="comparison-cell">Game-specific waitlists</div>
+          <div class="comparison-cell"><span class="x-icon">✕</span></div>
+          <div class="comparison-cell"><span class="check-icon">✓</span></div>
+          <div class="comparison-cell highlight"><span class="check-icon">✓</span></div>
+        </div>
+        <div class="comparison-row" style="grid-template-columns: 1.2fr 1fr 1fr 1fr;">
+          <div class="comparison-cell">TV display board</div>
+          <div class="comparison-cell"><span class="x-icon">✕</span></div>
+          <div class="comparison-cell"><span class="check-icon">✓</span></div>
+          <div class="comparison-cell highlight"><span class="check-icon">✓</span></div>
+        </div>
+        <div class="comparison-row" style="grid-template-columns: 1.2fr 1fr 1fr 1fr;">
+          <div class="comparison-cell">Live table status online</div>
+          <div class="comparison-cell"><span class="x-icon">✕</span></div>
+          <div class="comparison-cell"><span class="check-icon">✓</span></div>
+          <div class="comparison-cell highlight"><span class="check-icon">✓</span></div>
+        </div>
+        <div class="comparison-row" style="grid-template-columns: 1.2fr 1fr 1fr 1fr;">
+          <div class="comparison-cell">Tournament registration</div>
+          <div class="comparison-cell"><span class="x-icon">✕</span></div>
+          <div class="comparison-cell"><span class="check-icon">✓</span></div>
+          <div class="comparison-cell highlight"><span class="check-icon">✓</span></div>
+        </div>
+        <div class="comparison-row" style="grid-template-columns: 1.2fr 1fr 1fr 1fr;">
+          <div class="comparison-cell">Player database</div>
+          <div class="comparison-cell"><span class="x-icon">✕</span></div>
+          <div class="comparison-cell"><span class="check-icon">✓</span></div>
+          <div class="comparison-cell highlight"><span class="check-icon">✓</span></div>
+        </div>
+        <div class="comparison-row" style="grid-template-columns: 1.2fr 1fr 1fr 1fr;">
+          <div class="comparison-cell">Player card # linking</div>
+          <div class="comparison-cell"><span class="x-icon">✕</span></div>
+          <div class="comparison-cell"><span class="check-icon">✓</span></div>
+          <div class="comparison-cell highlight"><span class="check-icon">✓</span></div>
+        </div>
+        <div class="comparison-row" style="grid-template-columns: 1.2fr 1fr 1fr 1fr;">
+          <div class="comparison-cell">Poker-specific design</div>
+          <div class="comparison-cell"><span class="x-icon">✕</span></div>
+          <div class="comparison-cell"><span class="check-icon">✓</span></div>
+          <div class="comparison-cell highlight"><span class="check-icon">✓</span></div>
+        </div>
+        <div class="comparison-row" style="grid-template-columns: 1.2fr 1fr 1fr 1fr;">
+          <div class="comparison-cell">100% custom branding</div>
+          <div class="comparison-cell"><span class="x-icon">✕</span></div>
+          <div class="comparison-cell"><span class="x-icon">✕</span></div>
+          <div class="comparison-cell highlight"><span class="check-icon">✓</span></div>
+        </div>
+        <div class="comparison-row" style="grid-template-columns: 1.2fr 1fr 1fr 1fr;">
+          <div class="comparison-cell">No monthly fees</div>
+          <div class="comparison-cell"><span class="x-icon">✕</span></div>
+          <div class="comparison-cell"><span class="x-icon">✕</span></div>
+          <div class="comparison-cell highlight"><span class="check-icon">✓</span></div>
+        </div>
+        <div class="comparison-row" style="grid-template-columns: 1.2fr 1fr 1fr 1fr;">
+          <div class="comparison-cell">You own the system</div>
+          <div class="comparison-cell"><span class="x-icon">✕</span></div>
+          <div class="comparison-cell"><span class="x-icon">✕</span></div>
+          <div class="comparison-cell highlight"><span class="check-icon">✓</span></div>
+        </div>
+        <div class="comparison-row" style="grid-template-columns: 1.2fr 1fr 1fr 1fr;">
+          <div class="comparison-cell">No third-party platform dependency</div>
+          <div class="comparison-cell"><span class="x-icon">✕</span></div>
+          <div class="comparison-cell"><span class="x-icon">✕</span></div>
+          <div class="comparison-cell highlight"><span class="check-icon">✓</span></div>
+        </div>
+      </div>
+      <p style="text-align: center; font-size: 0.8rem; color: var(--text-muted); margin-top: 1.5rem;">*PokerAtlas TableCaptain requires contacting sales for pricing. Estimates based on industry reports for enterprise poker room management systems.</p>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <div class="cta-content">
+      <h2>Ready to Modernize Your Poker Room?</h2>
+      <p>See the system in action. We built a complete working demo you can explore right now.</p>
+      <div class="cta-buttons">
+        <a href="admin.html" class="btn btn-primary">Explore Admin Demo</a>
+        <a href="waitlist.html" class="btn btn-secondary">Try Player App</a>
+      </div>
+      <div class="cta-contact">
+        <p><strong>Questions? Let's talk.</strong></p>
+        <p>
+          <a href="/cdn-cgi/l/email-protection#056164736c61453c34307260676160766c626b2b666a68"><span class="__cf_email__" data-cfemail="2044415649446019111557454244455349474e0e434f4d">[email&#160;protected]</span></a> • 
+          <a href="tel:9152003700">(915) 200-3700</a>
+        </p>
+        <p style="margin-top: 1rem; font-size: 0.85rem;">David Negrete • 915 Web Design</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-links">
+        <a href="index.html">Home</a>
+        <a href="waitlist.html">Player App</a>
+        <a href="admin.html">Admin Demo</a>
+        <a href="display.html">TV 

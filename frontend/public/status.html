@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Speaking Rock Poker | My Wait List Status</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --gold: #D4A532;
+      --gold-light: #E8C45A;
+      --gold-dark: #B8860B;
+      --black: #000000;
+      --charcoal: #0A0A0A;
+      --dark-gray: #111111;
+      --medium-gray: #1a1a1a;
+      --light-gray: #E5E5E5;
+      --green: #22c55e;
+      --red: #ef4444;
+      --blue: #3b82f6;
+      --yellow: #eab308;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: var(--black);
+      color: var(--light-gray);
+      min-height: 100vh;
+    }
+
+    /* Header */
+    header {
+      background: var(--black);
+      border-bottom: 1px solid rgba(212, 165, 50, 0.3);
+      padding: 1rem 2rem;
+    }
+
+    .header-content {
+      max-width: 800px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      height: 50px;
+      width: auto;
+    }
+
+    .header-nav a {
+      color: var(--gold);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+
+    /* Main */
+    .main {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    /* Status Card */
+    .status-card {
+      background: var(--dark-gray);
+      border: 2px solid var(--gold);
+      border-radius: 12px;
+      padding: 2rem;
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .status-label {
+      font-size: 0.8rem;
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 0.5rem;
+    }
+
+    .position-number {
+      font-family: 'Cinzel', serif;
+      font-size: 5rem;
+      font-weight: 700;
+      color: var(--gold);
+      line-height: 1;
+      margin-bottom: 0.5rem;
+      text-shadow: 0 0 30px rgba(212, 165, 50, 0.3);
+    }
+
+    .position-suffix {
+      font-size: 1.5rem;
+      color: var(--light-gray);
+    }
+
+    .status-message {
+      font-size: 1.1rem;
+      color: var(--light-gray);
+      margin-top: 1rem;
+    }
+
+    /* Live Indicator */
+    .live-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(34, 197, 94, 0.1);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      color: var(--green);
+      margin-bottom: 1.5rem;
+    }
+
+    .live-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--green);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    /* Info Grid */
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .info-card {
+      background: var(--dark-gray);
+      border: 1px solid var(--medium-gray);
+      border-radius: 8px;
+      padding: 1.25rem;
+      text-align: center;
+    }
+
+    .info-label {
+      font-size: 0.7rem;
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 0.5rem;
+    }
+
+    .info-value {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--light-gray);
+    }
+
+    .info-value.time {
+      color: var(--gold);
+    }
+
+    /* Details Card */
+    .details-card {
+      background: var(--dark-gray);
+      border: 1px solid var(--medium-gray);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .details-title {
+      font-size: 0.8rem;
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 1rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--medium-gray);
+    }
+
+    .details-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--medium-gray);
+      font-size: 0.9rem;
+    }
+
+    .details-row:last-child {
+      border-bottom: none;
+    }
+
+    .details-label {
+      color: var(--light-gray);
+      opacity: 0.7;
+    }
+
+    .details-value {
+      color: var(--light-gray);
+      font-weight: 500;
+    }
+
+    /* Progress Bar */
+    .progress-section {
+      margin-bottom: 1.5rem;
+    }
+
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      color: var(--light-gray);
+      margin-bottom: 0.5rem;
+    }
+
+    .progress-bar {
+      height: 8px;
+      background: var(--medium-gray);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--gold) 0%, var(--gold-light) 100%);
+      border-radius: 4px;
+      transition: width 0.5s ease;
+    }
+
+    /* Queue List */
+    .queue-list {
+      background: var(--dark-gray);
+      border: 1px solid var(--medium-gray);
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+    }
+
+    .queue-header {
+      background: var(--medium-gray);
+      padding: 1rem;
+      font-size: 0.8rem;
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .queue-item {
+      display: flex;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--medium-gray);
+    }
+
+    .queue-item:last-child {
+      border-bottom: none;
+    }
+
+    .queue-item.you {
+      background: rgba(212, 165, 50, 0.1);
+      border-left: 3px solid var(--gold);
+    }
+
+    .queue-position {
+      width: 32px;
+      height: 32px;
+      background: var(--medium-gray);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 0.85rem;
+      margin-right: 1rem;
+    }
+
+    .queue-item.you .queue-position {
+      background: var(--gold);
+      color: var(--black);
+    }
+
+    .queue-name {
+      flex: 1;
+      font-size: 0.9rem;
+    }
+
+    .queue-status {
+      font-size: 0.75rem;
+      padding: 0.25rem 0.6rem;
+      border-radius: 12px;
+    }
+
+    .queue-status.waiting {
+      background: rgba(234, 179, 8, 0.15);
+      color: var(--yellow);
+    }
+
+    .queue-status.called {
+      background: rgba(59, 130, 246, 0.15);
+      color: var(--blue);
+    }
+
+    /* Action Buttons */
+    .btn {
+      padding: 0.875rem 1.5rem;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      width: 100%;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+      color: var(--black);
+    }
+
+    .btn-primary:hover {
+      box-shadow: 0 4px 15px rgba(212, 165, 50, 0.3);
+    }
+
+    .btn-secondary {
+      background: var(--dark-gray);
+      color: var(--light-gray);
+      border: 1px solid var(--medium-gray);
+    }
+
+    .btn-danger {
+      background: rgba(239, 68, 68, 0.1);
+      color: var(--red);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .btn-danger:hover {
+      background: var(--red);
+      color: white;
+    }
+
+    .btn-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    /* Notification Settings */
+    .notification-card {
+      background: var(--dark-gray);
+      border: 1px solid var(--medium-gray);
+      border-radius: 8px;
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .notification-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .notification-info h4 {
+      font-size: 0.9rem;
+      color: var(--light-gray);
+      margin-bottom: 0.25rem;
+    }
+
+    .notification-info p {
+      font-size: 0.75rem;
+      color: var(--light-gray);
+      opacity: 0.6;
+    }
+
+    .toggle {
+      width: 48px;
+      height: 26px;
+      background: var(--medium-gray);
+      border-radius: 13px;
+      position: relative;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .toggle.active {
+      background: var(--green);
+    }
+
+    .toggle::after {
+      content: '';
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 20px;
+      height: 20px;
+      background: white;
+      border-radius: 50%;
+      transition: transform 0.2s;
+    }
+
+    .toggle.active::after {
+      transform: translateX(22px);
+    }
+
+    /* Called State */
+    .status-card.called {
+      border-color: var(--blue);
+      background: linear-gradient(145deg, rgba(59, 130, 246, 0.1) 0%, var(--dark-gray) 100%);
+    }
+
+    .status-card.called .position-number {
+      color: var(--blue);
+      text-shadow: 0 0 30px rgba(59, 130, 246, 0.3);
+    }
+
+    .called-alert {
+      background: rgba(59, 130, 246, 0.1);
+      border: 2px solid var(--blue);
+      border-radius: 8px;
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    .called-alert h3 {
+      color: var(--blue);
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .called-alert p {
+      font-size: 0.9rem;
+      color: var(--light-gray);
+    }
+
+    .countdown {
+      font-family: 'Cinzel', serif;
+      font-size: 2rem;
+      color: var(--blue);
+      margin: 0.75rem 0;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.8rem;
+      color: var(--light-gray);
+      opacity: 0.5;
+    }
+
+    footer a {
+      color: var(--gold);
+      text-decoration: none;
+    }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+      .main {
+        padding: 1rem;
+      }
+
+      .position-number {
+        font-size: 4rem;
+      }
+
+      .info-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-content">
+      <a href="index.html">
+        <img src="logo.png" alt="Speaking Rock Poker" class="logo">
+      </a>
+      <nav class="header-nav">
+        <a href="index.html">← Back to Home</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="main">
+    
+    <!-- Live Status -->
+    <div style="text-align: center;">
+      <div class="live-indicator">
+        <span class="live-dot"></span>
+        Live Updates
+      </div>
+    </div>
+
+    <!-- Position Card -->
+    <div class="status-card" id="statusCard">
+      <div class="status-label">Your Position</div>
+      <div class="position-number" id="positionNumber">4</div>
+      <div class="status-message" id="statusMessage">You're getting close!</div>
+    </div>
+
+    <!-- Called Alert (hidden by default) -->
+    <div class="called-alert" id="calledAlert" style="display: none;">
+      <h3>🎉 YOUR SEAT IS READY!</h3>
+      <p>Please check in at the podium within:</p>
+      <div class="countdown" id="countdown">5:00</div>
+      <p style="font-size: 0.8rem; opacity: 0.7;">After this time, your spot may be given to the next player</p>
+    </div>
+
+    <!-- Wait Info -->
+    <div class="info-grid">
+      <div class="info-card">
+        <div class="info-label">Est. Wait Time</div>
+        <div class="info-value time" id="waitTime">~12 min</div>
+      </div>
+      <div class="info-card">
+        <div class="info-label">Players Ahead</div>
+        <div class="info-value" id="playersAhead">3</div>
+      </div>
+    </div>
+
+    <!-- Progress -->
+    <div class="progress-section">
+      <div class="progress-label">
+        <span>Queue Progress</span>
+        <span id="progressPercent">60%</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill" style="width: 60%;"></div>
+      </div>
+    </div>
+
+    <!-- Queue Preview -->
+    <div class="queue-list">
+      <div class="queue-header">Wait List</div>
+      <div class="queue-item">
+        <span class="queue-position">1</span>
+        <span class="queue-name">Mike R.</span>
+        <span class="queue-status called">Called</span>
+      </div>
+      <div class="queue-item">
+        <span class="queue-position">2</span>
+        <span class="queue-name">Sarah L.</span>
+        <span class="queue-status waiting">Waiting</span>
+      </div>
+      <div class="queue-item">
+        <span class="queue-position">3</span>
+        <span class="queue-name">Carlos M.</span>
+        <span class="queue-status waiting">Waiting</span>
+      </div>
+      <div class="queue-item you">
+        <span class="queue-position">4</span>
+        <span class="queue-name">You</span>
+        <span class="queue-status waiting">Waiting</span>
+      </div>
+      <div class="queue-item">
+        <span class="queue-position">5</span>
+        <span class="queue-name">Jennifer C.</span>
+        <span class="queue-status waiting">Waiting</span>
+      </div>
+    </div>
+
+    <!-- Your Details -->
+    <div class="details-card">
+      <div class="details-title">Your Details</div>
+      <div class="details-row">
+        <span class="details-label">Name</span>
+        <span class="details-value" id="playerName">David G.</span>
+      </div>
+      <div class="details-row">
+        <span class="details-label">Phone</span>
+        <span class="details-value" id="playerPhone">(915) 555-0199</span>
+      </div>
+      <div class="details-row">
+        <span class="details-label">Game</span>
+        <span class="details-value">$1/$3 No Limit Hold'em</span>
+      </div>
+      <div class="details-row">
+        <span class="details-label">Joined At</span>
+        <span class="details-value" id="joinedAt">2:45 PM</span>
+      </div>
+      <div class="details-row">
+        <span class="details-label">Confirmation</span>
+        <span class="details-value" style="color: var(--gold);">#WL-4829</span>
+      </div>
+    </div>
+
+    <!-- Notifications -->
+    <div class="notification-card">
+      <div class="notification-row">
+        <div class="notification-info">
+          <h4>Text Notifications</h4>
+          <p>Get notified when your seat is ready</p>
+        </div>
+        <div class="toggle active" onclick="toggleNotification(this)"></div>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="btn-group">
+      <button class="btn btn-primary" onclick="refreshStatus()">↻ Refresh Status</button>
+      <button class="btn btn-danger" onclick="leaveWaitlist()">Leave Wait List</button>
+    </div>
+
+  </main>
+
+  <footer>
+    <p>Speaking Rock Poker • <a href="tel:9158607777">(915) 860-7777</a></p>
+    <p style="margin-top: 0.5rem;">This page updates automatically</p>
+  </footer>
+
+  <script>
+    // Simulate live updates
+    let position = 4;
+    let playersAhead = 3;
+    
+    // Demo: Simulate position moving up
+    function simulateProgress() {
+      if (position > 1) {
+        position--;
+        playersAhead--;
+        updateDisplay();
+      } else if (position === 1) {
+        showCalled();
+      }
+    }
+
+    function updateDisplay() {
+      document.getElementById('positionNumber').textContent = position;
+      document.getElementById('playersAhead').textContent = playersAhead;
+      
+      const waitTime = playersAhead * 4;
+      document.getElementById('waitTime').textContent = `~${waitTime} min`;
+      
+      const progress = Math.round((1 - (position - 1) / 10) * 100);
+      document.getElementById('progressPercent').textContent = `${progress}%`;
+      document.getElementById('progressFill').style.width = `${progress}%`;
+      
+      // Update message
+      const messages = {
+        1: "You're next! Get ready!",
+        2: "Almost there!",
+        3: "You're getting close!",
+        4: "Moving up the list..."
+      };
+      document.getElementById('statusMessage').textContent = messages[position] || "Hang tight!";
+      
+      // Update queue highlight
+      document.querySelectorAll('.queue-item').forEach((item, index) => {
+        item.classList.remove('you');
+        if (index === position - 1) {
+          item.classList.add('you');
+        }
+      });
+    }
+
+    function showCalled() {
+      document.getElementById('statusCard').classList.add('called');
+      document.getElementById('statusMessage').textContent = "YOUR SEAT IS READY!";
+      document.getElementById('calledAlert').style.display = 'block';
+      document.getElementById('waitTime').textContent = "NOW";
+      document.getElementById('progressFill').style.width = '100%';
+      document.getElementById('progressPercent').textContent = '100%';
+      
+      // Start countdown
+      let timeLeft = 300; // 5 minutes
+      const countdownEl = document.getElementById('countdown');
+      
+      const timer = setInterval(() => {
+        timeLeft--;
+        const mins = Math.floor(timeLeft / 60);
+        const secs = timeLeft % 60;
+        countdownEl.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+        
+        if (timeLeft <= 0) {
+          clearInterval(timer);
+          countdownEl.textContent = "EXPIRED";
+        }
+      }, 1000);
+    }
+
+    function refreshStatus() {
+      // Simulate refresh
+      const btn = event.target;
+      btn.textContent = "Refreshing...";
+      btn.disabled = true;
+      
+      setTimeout(() => {
+        btn.innerHTML = "↻ Refresh Status";
+        btn.disabled = false;
+        simulateProgress(); // Demo: move up one position
+      }, 1000);
+    }
+
+    function leaveWaitlist() {
+      if (confirm('Are you sure you want to leave the wait list?')) {
+        alert('You have been removed from the wait list.');
+        window.location.href = 'index.html';
+      }
+    }
+
+    function toggleNotification(el) {
+      el.classList.toggle('active');
+    }
+
+    // Auto-update every 30 seconds (demo)
+    // In production, this would poll the server or use WebSockets
+    setInterval(() => {
+      // Simulate occasional updates
+      if (Math.random() > 0.7 && position > 1) {
+        simulateProgress();
+      }
+    }, 30000);
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Speaking Rock Poker | Player App</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --gold: #D4A532;
+      --gold-light: #E8C45A;
+      --gold-dark: #B8860B;
+      --black: #000000;
+      --bg-dark: #1a1a1a;
+      --bg-card: #242424;
+      --bg-header: #2d2d2d;
+      --border: #333333;
+      --text: #ffffff;
+      --text-muted: #999999;
+      --green: #22c55e;
+      --green-bg: rgba(34, 197, 94, 0.15);
+      --red: #ef4444;
+      --blue: #3b82f6;
+      --blue-bg: rgba(59, 130, 246, 0.15);
+      --purple: #8b5cf6;
+      --purple-bg: rgba(139, 92, 246, 0.15);
+      --orange: #f97316;
+      --orange-bg: rgba(249, 115, 22, 0.15);
+      --tab-active: #3b82f6;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: var(--bg-dark); color: var(--text); min-height: 100vh; overflow-x: hidden; }
+    
+    /* Desktop Container */
+    .app-container { max-width: 900px; margin: 0 auto; }
+    
+    /* Hero */
+    .hero { background: linear-gradient(180deg, #000 0%, #1a1a1a 100%); padding: 1.5rem 1rem; text-align: center; border-bottom: 1px solid var(--border); }
+    .hero-logo { max-width: 180px; height: auto; }
+    
+    /* Desktop Header */
+    .desktop-header { display: none; }
+    @media (min-width: 768px) {
+      .desktop-header { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; background: var(--black); border-bottom: 1px solid var(--border); }
+      .desktop-header-logo { height: 45px; }
+      .desktop-header-nav { display: flex; gap: 1.5rem; align-items: center; }
+      .desktop-header-nav a { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: color 0.2s; }
+      .desktop-header-nav a:hover { color: var(--gold); }
+      .desktop-header-nav .active { color: var(--gold); }
+      .desktop-user { display: flex; align-items: center; gap: 0.75rem; background: var(--bg-card); padding: 0.5rem 1rem; border-radius: 8px; }
+      .desktop-user-name { font-weight: 600; font-size: 0.9rem; }
+      .desktop-user-card { font-size: 0.75rem; color: var(--text-muted); }
+      .hero { display: none; }
+    }
+    
+    /* Welcome Banner (Desktop) */
+    .welcome-banner { display: none; }
+    @media (min-width: 768px) {
+      .welcome-banner { display: block; background: linear-gradient(135deg, var(--bg-card) 0%, var(--black) 100%); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem 1.5rem; margin: 1rem 1rem 0; }
+      .welcome-banner h1 { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.25rem; }
+      .welcome-banner p { font-size: 0.85rem; color: var(--text-muted); }
+    }
+    
+    /* Location Banner */
+    .location-banner { background: linear-gradient(135deg, var(--green-bg) 0%, var(--blue-bg) 100%); border: 1px solid var(--green); padding: 0.75rem 1rem; margin: 0.75rem 1rem; border-radius: 10px; display: flex; align-items: center; gap: 0.75rem; }
+    .location-banner.hidden { display: none; }
+    .location-icon { font-size: 1.5rem; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.7; transform: scale(1.1); } }
+    .location-text { flex: 1; }
+    .location-title { font-size: 0.85rem; font-weight: 700; color: var(--green); }
+    .location-subtitle { font-size: 0.75rem; color: var(--text-muted); }
+    .location-badge { background: var(--green); color: white; font-size: 0.65rem; font-weight: 700; padding: 0.25rem 0.5rem; border-radius: 10px; text-transform: uppercase; }
+    
+    /* Promo Banner */
+    .promo-banner { background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%); padding: 0.75rem 1rem; margin: 0 1rem 0.75rem; border-radius: 10px; display: flex; align-items: center; gap: 0.75rem; cursor: pointer; }
+    .promo-icon { font-size: 1.75rem; }
+    .promo-text { flex: 1; }
+    .promo-title { font-size: 0.9rem; font-weight: 700; color: var(--black); }
+    .promo-subtitle { font-size: 0.75rem; color: rgba(0,0,0,0.7); }
+    .promo-arrow { color: var(--black); font-size: 1.25rem; }
+    
+    /* Join Button */
+    .join-waitlist-btn { display: block; width: calc(100% - 2rem); margin: 1rem auto; padding: 1rem; background: var(--green); color: white; font-size: 1rem; font-weight: 700; text-align: center; text-decoration: none; border-radius: 8px; text-transform: uppercase; letter-spacing: 1px; }
+    .join-waitlist-btn:active { background: #16a34a; }
+    
+    /* Notification Banners */
+    .notification-banner { background: var(--bg-card); border-left: 4px solid var(--green); padding: 0.75rem 1rem; margin: 0.5rem 1rem; border-radius: 0 8px 8px 0; display: none; }
+    .notification-banner.active { display: block; }
+    .notification-title { font-size: 0.9rem; font-weight: 700; color: var(--gold); }
+    .notification-text { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem; }
+    
+    .waitlist-banner { background: var(--green-bg); border: 1px solid var(--green); padding: 1rem; margin: 0.75rem 1rem; border-radius: 10px; display: none; cursor: pointer; }
+    .waitlist-banner.active { display: block; }
+    .waitlist-banner-content { display: flex; justify-content: space-between; align-items: center; }
+    .waitlist-banner-title { font-size: 1rem; font-weight: 700; color: var(--gold); }
+    .waitlist-banner-text { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem; }
+    .timer-circle { width: 55px; height: 55px; border-radius: 50%; border: 3px solid var(--green); display: flex; align-items: center; justify-content: center; font-size: 1rem; font-weight: 700; color: var(--green); }
+    
+    /* Tabs */
+    .tabs { display: flex; background: var(--bg-card); border-radius: 25px; margin: 0.75rem 1rem; padding: 4px; }
+    .tab { flex: 1; padding: 0.7rem 1rem; text-align: center; font-size: 0.85rem; font-weight: 600; color: var(--text-muted); text-decoration: none; border-radius: 20px; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.4rem; }
+    .tab.active { background: var(--tab-active); color: white; }
+    .sub-tabs { display: flex; border-bottom: 2px solid var(--border); margin: 0 1rem; }
+    .sub-tab { flex: 1; padding: 0.75rem; text-align: center; font-size: 0.8rem; font-weight: 500; color: var(--text-muted); text-decoration: none; border-bottom: 2px solid transparent; margin-bottom: -2px; text-transform: uppercase; }
+    .sub-tab.active { color: var(--green); border-bottom-color: var(--green); }
+    
+    /* Games Table */
+    .update-btn { display: block; width: fit-content; margin: 1rem auto; padding: 0.6rem 1.5rem; background: transparent; border: 2px solid var(--red); color: var(--red); font-size: 0.85rem; font-weight: 700; text-transform: uppercase; border-radius: 4px; cursor: pointer; }
+    .games-table { margin: 0 1rem 1rem; }
+    .games-header { display: grid; grid-template-columns: 1fr 70px 70px 50px; padding: 0.75rem 0; font-size: 0.7rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; border-bottom: 1px solid var(--border); }
+    .game-row { display: grid; grid-template-columns: 1fr 70px 70px 50px; padding: 1rem 0; border-bottom: 1px solid var(--green); align-items: center; }
+    .game-name { font-size: 0.95rem; font-weight: 700; }
+    .game-buyin { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.15rem; }
+    .game-tables, .game-waiting { text-align: center; font-size: 1rem; font-weight: 500; }
+    .join-icon { color: var(--blue); font-size: 1.25rem; cursor: pointer; text-align: center; }
+    .last-updated { text-align: center; font-size: 0.7rem; color: var(--text-muted); font-style: italic; padding: 0.75rem; }
+    .powered-by { text-align: center; font-size: 0.7rem; color: var(--text-muted); padding-bottom: 0.75rem; }
+    .powered-by a { color: var(--gold); text-decoration: none; }
+    
+    /* Tournament Section */
+    .tournament-section { display: none; padding: 1rem; }
+    .tournament-section.active { display: block; }
+    .calendar-strip { display: flex; gap: 0.5rem; margin-bottom: 1rem; overflow-x: auto; }
+    .calendar-day { min-width: 42px; padding: 0.4rem; text-align: center; border-radius: 8px; background: var(--bg-card); }
+    .calendar-day.today { background: var(--tab-active); }
+    .calendar-day-name { font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; }
+    .calendar-day.today .calendar-day-name { color: rgba(255,255,255,0.7); }
+    .calendar-day-num { font-size: 1rem; font-weight: 700; margin-top: 0.2rem; }
+    .day-label { background: var(--bg-card); padding: 0.5rem 1rem; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem; border-radius: 4px; }
+    .tournament-card { background: var(--bg-card); border-radius: 8px; overflow: hidden; margin-bottom: 1rem; }
+    .tournament-live-bar { background: var(--blue-bg); padding: 0.4rem 1rem; font-size: 0.7rem; color: white; display: flex; align-items: center; gap: 0.5rem; }
+    .live-dot { width: 8px; height: 8px; background: var(--green); border-radius: 50%; animation: pulse 1.5s infinite; }
+    .tournament-content { display: flex; padding: 1rem; gap: 1rem; }
+    .tournament-logo { width: 50px; height: 50px; background: var(--black); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .tournament-logo img { max-width: 40px; max-height: 40px; }
+    .tournament-details { flex: 1; }
+    .tournament-time { font-size: 0.95rem; font-weight: 700; }
+    .tournament-buyin { font-size: 0.95rem; font-weight: 700; color: var(--gold); }
+    .tournament-info { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.2rem; }
+    .tournament-name { font-size: 0.8rem; font-weight: 600; margin-top: 0.4rem; padding: 0.3rem 0.6rem; background: var(--bg-dark); border-radius: 4px; display: inline-block; }
+    
+    /* Order Section */
+    .order-section { display: none; padding: 1rem; }
+    .order-section.active { display: block; }
+    .order-header { text-align: center; margin-bottom: 1.5rem; }
+    .order-header h2 { font-size: 1.25rem; font-weight: 700; color: var(--gold); margin-bottom: 0.25rem; }
+    .order-header p { font-size: 0.85rem; color: var(--text-muted); }
+    .order-categories { display: flex; gap: 0.5rem; margin-bottom: 1rem; overflow-x: auto; padding-bottom: 0.5rem; }
+    .order-category { padding: 0.5rem 1rem; background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px; font-size: 0.8rem; color: var(--text-muted); white-space: nowrap; cursor: pointer; }
+    .order-category.active { background: var(--gold); border-color: var(--gold); color: var(--black); font-weight: 600; }
+    .order-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+    .order-item { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 1rem; text-align: center; cursor: pointer; transition: all 0.2s; }
+    .order-item:hover { border-color: var(--gold); }
+    .order-item.selected { border-color: var(--green); background: var(--green-bg); }
+    .order-item-icon { font-size: 2.5rem; margin-bottom: 0.5rem; }
+    .order-item-name { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.25rem; }
+    .order-item-price { font-size: 0.8rem; color: var(--gold); font-weight: 600; }
+    .order-item-price.free { color: var(--green); }
+    .order-cart { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 1rem; margin-top: 1.5rem; }
+    .order-cart-title { font-size: 0.9rem; font-weight: 700; margin-bottom: 0.75rem; }
+    .order-cart-items { border-top: 1px solid var(--border); padding-top: 0.75rem; }
+    .order-cart-item { display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; }
+    .order-cart-item-qty { display: flex; align-items: center; gap: 0.75rem; }
+    .qty-btn { width: 28px; height: 28px; border-radius: 50%; border: 1px solid var(--border); background: var(--bg-dark); color: var(--text); font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .order-table-select { margin-top: 1rem; }
+    .order-table-select label { font-size: 0.8rem; color: var(--text-muted); display: block; margin-bottom: 0.5rem; }
+    .order-table-select select { width: 100%; padding: 0.75rem; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 0.9rem; }
+    .order-submit-btn { width: 100%; padding: 1rem; background: var(--green); color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: 700; margin-top: 1rem; cursor: pointer; }
+    
+    /* Promos Section */
+    .promos-section { display: none; padding: 1rem; }
+    .promos-section.active { display: block; }
+    .promo-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; margin-bottom: 1rem; }
+    .promo-card-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 0.75rem; }
+    .promo-card-icon { font-size: 2.5rem; }
+    .promo-card-title { font-size: 1.1rem; font-weight: 700; color: var(--gold); }
+    .promo-card-subtitle { font-size: 0.8rem; color: var(--text-muted); }
+    .promo-card-body { font-size: 0.9rem; line-height: 1.5; }
+    .promo-card-badge { display: inline-block; background: var(--green-bg); color: var(--green); font-size: 0.7rem; font-weight: 700; padding: 0.25rem 0.5rem; border-radius: 4px; margin-top: 0.75rem; text-transform: uppercase; }
+    .promo-card-badge.limited { background: var(--orange-bg); color: var(--orange); }
+    
+    /* Settings Section */
+    .settings-section { display: none; padding: 1rem; }
+    .settings-section.active { display: block; }
+    .settings-group { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 1rem; overflow: hidden; }
+    .settings-group-title { font-size: 0.75rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; padding: 1rem 1rem 0.5rem; }
+    .settings-item { display: flex; justify-content: space-between; align-items: center; padding: 1rem; border-top: 1px solid var(--border); }
+    .settings-item:first-of-type { border-top: none; }
+    .settings-item-title { font-size: 0.9rem; font-weight: 500; }
+    .settings-item-desc { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.2rem; }
+    .toggle { width: 50px; height: 28px; background: var(--border); border-radius: 14px; position: relative; cursor: pointer; transition: background 0.2s; }
+    .toggle.active { background: var(--green); }
+    .toggle::after { content: ''; position: absolute; width: 22px; height: 22px; background: white; border-radius: 50%; top: 3px; left: 3px; transition: transform 0.2s; }
+    .toggle.active::after { transform: translateX(22px); }
+    
+    /* Status Page */
+    .status-page { display: none; padding: 1rem; }
+    .status-page.active { display: block; }
+    .status-card { background: white; color: #333; border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; }
+    .status-title { font-size: 1.4rem; font-weight: 700; color: #000; margin-bottom: 0.25rem; }
+    .status-subtitle { font-size: 0.85rem; color: #666; }
+    .status-timer-section { display: flex; justify-content: flex-end; margin-top: -3rem; }
+    .status-timer { width: 65px; height: 65px; border-radius: 50%; border: 4px solid var(--blue); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; font-weight: 700; color: var(--blue); }
+    .status-venue { display: flex; align-items: center; gap: 1rem; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #eee; }
+    .venue-logo { width: 70px; height: 45px; background: #000; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+    .venue-logo img { max-width: 60px; }
+    .venue-actions { display: flex; gap: 1rem; margin-left: auto; }
+    .venue-action-btn { display: flex; flex-direction: column; align-items: center; gap: 0.2rem; color: #666; text-decoration: none; font-size: 0.65rem; }
+    .venue-action-btn svg { width: 22px; height: 22px; }
+    .player-alias { background: #f5f5f5; padding: 1rem; border-radius: 8px; margin-top: 1rem; }
+    .alias-label { font-size: 0.75rem; color: #666; }
+    .alias-name { font-size: 1.4rem; font-weight: 700; color: #000; display: flex; align-items: center; gap: 0.5rem; }
+    .player-info { margin-top: 1rem; font-size: 0.85rem; color: #333; }
+    .player-info-row { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.4rem; }
+    .position-table { width: 100%; margin-top: 1rem; }
+    .position-header { display: grid; grid-template-columns: 1fr 1fr 40px; background: #666; color: white; padding: 0.7rem; font-size: 0.75rem; font-weight: 600; border-radius: 8px 8px 0 0; }
+    .position-row { display: grid; grid-template-columns: 1fr 1fr 40px; padding: 0.7rem; border-bottom: 1px solid #eee; font-size: 0.85rem; }
+    .leave-waitlist { text-align: center; padding: 1rem; }
+    .leave-waitlist a { color: var(--red); text-decoration: none; font-size: 0.85rem; }
+    .status-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem; }
+    .status-btn { padding: 1rem; border-radius: 8px; font-size: 0.95rem; font-weight: 700; text-align: center; text-decoration: none; text-transform: uppercase; }
+    .status-btn.view { background: var(--tab-active); color: white; }
+    .status-btn.here { background: var(--green); color: white; }
+    .status-order-btn { width: 100%; padding: 0.85rem; background: var(--purple-bg); border: 1px solid var(--purple); color: var(--purple); border-radius: 8px; font-size: 0.9rem; font-weight: 600; margin-top: 0.75rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+    
+    /* Break Alert */
+    .break-alert { display: none; position: fixed; top: 0; left: 0; right: 0; background: linear-gradient(135deg, var(--orange) 0%, var(--red) 100%); padding: 1rem; z-index: 900; text-align: center; }
+    .break-alert.active { display: block; animation: slideDown 0.3s ease; }
+    @keyframes slideDown { from { transform: translateY(-100%); } to { transform: translateY(0); } }
+    .break-alert-title { font-size: 1rem; font-weight: 700; margin-bottom: 0.25rem; }
+    .break-alert-time { font-size: 1.5rem; font-weight: 700; }
+    .break-alert-text { font-size: 0.8rem; opacity: 0.9; }
+    .break-dismiss { background: rgba(255,255,255,0.2); border: none; color: white; padding: 0.5rem 1rem; border-radius: 4px; margin-top: 0.5rem; cursor: pointer; font-size: 0.8rem; }
+    
+    /* Bottom Nav */
+    .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg-header); border-top: 1px solid var(--border); display: flex; padding: 0.4rem 0; padding-bottom: calc(0.4rem + env(safe-area-inset-bottom)); }
+    .bottom-nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 0.2rem; color: var(--text-muted); text-decoration: none; font-size: 0.65rem; padding: 0.4rem; position: relative; }
+    .bottom-nav-item.active { color: var(--gold); }
+    .bottom-nav-item svg { width: 22px; height: 22px; }
+    .nav-badge { position: absolute; top: 0; right: 50%; transform: translateX(12px); background: var(--red); color: white; font-size: 0.55rem; font-weight: 700; padding: 0.15rem 0.35rem; border-radius: 8px; min-width: 16px; text-align: center; }
+    .content-wrapper { padding-bottom: 75px; }
+    
+    /* Modal */
+    .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); z-index: 1000; align-items: center; justify-content: center; padding: 1rem; }
+    .modal-overlay.active { display: flex; }
+    .modal { background: var(--bg-card); border-radius: 16px; width: 100%; max-width: 400px; max-height: 90vh; overflow-y: auto; }
+    .modal-header { padding: 1.25rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    .modal-title { font-size: 1.1rem; font-weight: 700; color: var(--gold); }
+    .modal-close { background: none; border: none; color: var(--text-muted); font-size: 1.5rem; cursor: pointer; }
+    .modal-body { padding: 1.25rem; }
+    .modal-footer { padding: 1.25rem; border-top: 1px solid var(--border); }
+    .modal-input { width: 100%; padding: 0.75rem; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 0.9rem; margin-bottom: 1rem; }
+    .modal-label { font-size: 0.8rem; color: var(--text-muted); display: block; margin-bottom: 0.5rem; }
+    .modal-checkbox { display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem; background: var(--bg-dark); border-radius: 8px; cursor: pointer; margin-bottom: 0.5rem; }
+    
+    @media (min-width: 480px) { .order-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (min-width: 768px) { 
+      .order-grid { grid-template-columns: repeat(4, 1fr); } 
+      .bottom-nav { display: none; } 
+      .content-wrapper { padding-bottom: 2rem; } 
+      .main-tabs { max-width: 700px; margin: 1rem auto; }
+      .main-tabs .tab { font-size: 0.8rem; padding: 0.6rem 0.5rem; }
+      .tab-content { max-width: 100%; margin: 0 auto; }
+      .location-banner, .promo-banner, .waitlist-banner { max-width: calc(100% - 2rem); margin-left: auto; margin-right: auto; }
+      .desktop-only-tab { display: flex; }
+      .order-section, .promos-section, .points-section { padding: 1rem !important; }
+    }
+    @media (max-width: 767px) {
+      .desktop-only-tab { display: none; }
+      .main-tabs { margin: 0.75rem 1rem; }
+      .main-tabs .tab { font-size: 0.75rem; padding: 0.6rem 0.4rem; }
+    }
+    
+    /* Live Tables Grid (Desktop feature) */
+    .live-tables-section { display: none; }
+    @media (min-width: 768px) {
+      .live-tables-section { display: block; background: var(--bg-card); border-radius: 12px; padding: 1rem 1.25rem; margin: 1rem; }
+      .live-tables-section h3 { font-size: 1rem; font-weight: 700; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+      .live-tables-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; }
+      .live-table-card { background: var(--bg-dark); border: 1px solid var(--border); border-radius: 8px; padding: 0.75rem; text-align: center; }
+      .live-table-game { font-weight: 600; font-size: 0.85rem; margin-bottom: 0.25rem; }
+      .live-table-status { font-size: 0.75rem; }
+      .live-table-status.open { color: var(--green); }
+      .live-table-status.full { color: var(--orange); }
+      .live-table-status.waiting { color: var(--blue); }
+    }
+    
+    /* Logout link */
+    .logout-link { color: var(--red); cursor: pointer; }
+    .logout-link:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+  <!-- Tournament Break Alert -->
+  <div class="break-alert" id="breakAlert">
+    <div class="break-alert-title">⏰ TOURNAMENT BREAK</div>
+    <div class="break-alert-time" id="breakTimer">14:58</div>
+    <div class="break-alert-text">Play resumes in 15 minutes</div>
+    <button class="break-dismiss" onclick="dismissBreak()">Dismiss</button>
+  </div>
+
+  <div class="app-container">
+  <div class="content-wrapper">
+    
+    <!-- Desktop Header (hidden on mobile) -->
+    <header class="desktop-header">
+      <a href="index.html">
+        <img src="logo.png" alt="Speaking Rock Poker" class="desktop-header-logo">
+      </a>
+      <nav class="desktop-header-nav">
+        <a href="index.html">Home</a>
+        <a href="#" class="active">My App</a>
+        <div class="desktop-user">
+          <div>
+            <div class="desktop-user-name player-name-display">Player</div>
+            <div class="desktop-user-card player-card-display">Card #-----</div>
+          </div>
+        </div>
+        <a href="#" class="logout-link" onclick="logout()">Logout</a>
+      </nav>
+    </header>
+
+    <!-- Welcome Banner (Desktop only) -->
+    <div class="welcome-banner">
+      <h1 class="player-name-display">Welcome back!</h1>
+      <p>Here's what's happening with your poker games today.</p>
+    </div>
+    
+    <!-- Hero (Mobile only) -->
+    <div class="hero">
+      <img src="logo.png" alt="Speaking Rock Poker" class="hero-logo">
+    </div>
+
+    <!-- Location Banner -->
+    <div class="location-banner" id="locationBanner">
+      <span class="location-icon">📍</span>
+      <div class="location-text">
+        <div class="location-title">You're at Speaking Rock!</div>
+        <div class="location-subtitle">Location features enabled</div>
+      </div>
+      <span class="location-badge">Live</span>
+    </div>
+
+    <!-- Join Waitlist Button -->
+    <a href="#" class="join-waitlist-btn" onclick="showJoinModal(); return false;">Join Waitlist</a>
+
+    <!-- Notification Banner -->
+    <div class="notification-banner active" id="notificationBanner">
+      <div class="notification-title">Wait List Registration</div>
+      <div class="notification-text">2:16PM :: DAVID, you're on the Waitlist for: $1/$3 NLH at Speaking Rock.</div>
+    </div>
+
+    <!-- Waitlist Status Banner -->
+    <div class="waitlist-banner active" id="waitlistBanner" onclick="showSection('status')">
+      <div class="waitlist-banner-content">
+        <div>
+          <div class="waitlist-banner-title">Speaking Rock Poker</div>
+          <div class="waitlist-banner-text">You're on the list! Tap to view status.</div>
+        </div>
+        <div class="timer-circle" id="mainTimer">29:58</div>
+      </div>
+    </div>
+
+    <!-- Main Tabs -->
+    <div class="tabs main-tabs">
+      <a href="#" class="tab active" onclick="showSection('cash'); return false;" id="cashTab">💰 Games</a>
+      <a href="#" class="tab" onclick="showSection('tourneys'); return false;" id="tourneyTab">🏆 Tourneys</a>
+      <a href="#" class="tab" onclick="showSection('points'); return false;" id="pointsTab">⭐ Points</a>
+      <a href="#" class="tab" onclick="showSection('promos'); return false;" id="promosTab">🎁 Promos</a>
+      <a href="#" class="tab desktop-only-tab" onclick="showSection('order'); return false;" id="orderTab">🍽️ Order</a>
+    </div>
+
+    <!-- Cash Games Section -->
+    <div id="cashSection">
+      <div class="sub-tabs">
+        <a href="#" class="sub-tab">Offered Games</a>
+        <a href="#" class="sub-tab active">Live Waitlist</a>
+      </div>
+      <button class="update-btn" onclick="showJoinModal()">Update Waitlist</button>
+      <div class="games-table">
+        <div class="games-header">
+          <div>Game</div>
+          <div style="text-align: center;">Tables</div>
+          <div style="text-align: center;">Waiting</div>
+          <div></div>
+        </div>
+        <div class="game-row">
+          <div><div class="game-name">$1/$3 NLH</div><div class="game-buyin">$60 min - No max</div></div>
+          <div class="game-tables">3</div>
+          <div class="game-waiting">5</div>
+          <div class="join-icon" onclick="joinGame('$1/$3 NLH')">👥</div>
+        </div>
+        <div class="game-row">
+          <div><div class="game-name">$1/$3 PLO</div><div class="game-buyin">$100 min - No max</div></div>
+          <div class="game-tables">0</div>
+          <div class="game-waiting">4</div>
+          <div class="join-icon" onclick="joinGame('$1/$3 PLO')">👥</div>
+        </div>
+      </div>
+      <div class="last-updated">Last updated: Jan 2, 2026 1:45 PM</div>
+      <div class="powered-by">Real-Time Action Powered by <a href="#">Speaking Rock Poker™</a></div>
+      
+      <!-- Live Tables (Desktop only) -->
+      <div class="live-tables-section">
+        <h3>🎰 Live Tables Now</h3>
+        <div class="live-tables-grid">
+          <div class="live-table-card">
+            <div class="live-table-game">Table 1</div>
+            <div class="live-table-game" style="font-size: 0.75rem; color: var(--text-muted);">$1/$3 NLH</div>
+            <div class="live-table-status open">2 Seats Open</div>
+          </div>
+          <div class="live-table-card">
+            <div class="live-table-game">Table 2</div>
+            <div class="live-table-game" style="font-size: 0.75rem; color: var(--text-muted);">$1/$3 NLH</div>
+            <div class="live-table-status full">Full - 5 Waiting</div>
+          </div>
+          <div class="live-table-card">
+            <div class="live-table-game">Table 3</div>
+            <div class="live-table-game" style="font-size: 0.75rem; color: var(--text-muted);">$1/$3 PLO</div>
+            <div class="live-table-status waiting">1 Seat - 4 Waiting</div>
+          </div>
+          <div class="live-table-card">
+            <div class="live-table-game">Table 4</div>
+            <div class="live-table-game" style="font-size: 0.75rem; color: var(--text-muted);">$2/$5 NLH</div>
+            <div class="live-table-status" style="color: var(--text-muted);">Not Running</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tournament Section -->
+    <div class="tournament-section" id="tourneySection">
+      <!-- Not at casino warning (hidden when at Speaking Rock) -->
+      <div class="location-required-notice" id="tourneyLocationNotice" style="background: rgba(249, 115, 22, 0.15); border: 1px solid var(--orange); border-radius: 10px; padding: 1rem; margin-bottom: 1rem; display: none;">
+        <div style="display: flex; align-items: flex-start; gap: 0.75rem;">
+          <span style="font-size: 1.5rem;">📍</span>
+          <div>
+            <div style="font-weight: 600; color: var(--orange); margin-bottom: 0.25rem;">On-Site Registration Only</div>
+            <div style="font-size: 0.85rem; color: var(--text-muted);">Tournament registration is available when you're at Speaking Rock. Same-day tournaments only.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- At casino message (shown when at Speaking Rock) -->
+      <div class="location-enabled-notice" id="tourneyLocationEnabled" style="background: rgba(34, 197, 94, 0.15); border: 1px solid var(--green); border-radius: 10px; padding: 0.75rem 1rem; margin-bottom: 1rem;">
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+          <span style="font-size: 1.25rem;">✓</span>
+          <div style="font-size: 0.85rem; color: var(--green);">You're at Speaking Rock — tap any tournament to register</div>
+        </div>
+      </div>
+
+      <div class="day-label">Today - Thursday, January 2, 2026</div>
+      <div class="tournament-card" onclick="registerTournament('Early Bird Hold\'em', true)">
+        <div class="tournament-live-bar"><span class="live-dot"></span> Registration Open</div>
+        <div class="tournament-content">
+          <div class="tournament-logo" style="background: linear-gradient(135deg, #D4A532 0%, #B8860B 100%);">
+            <span style="font-weight: 700; color: #000; font-size: 1.25rem;">♠</span>
+          </div>
+          <div class="tournament-details">
+            <div style="display: flex; justify-content: space-between;">
+              <span class="tournament-time">3:00 PM</span>
+              <span class="tournament-buyin">$10 NLH</span>
+            </div>
+            <div class="tournament-info">Buy-in $10 w/ one $20 rebuy • Add-on $20</div>
+            <div class="tournament-name">EARLY BIRD HOLD'EM</div>
+          </div>
+        </div>
+      </div>
+      <div class="tournament-card" onclick="registerTournament('7PM Hold\'em $3K GTD', true)">
+        <div class="tournament-live-bar"><span class="live-dot"></span> Registration Open</div>
+        <div class="tournament-content">
+          <div class="tournament-logo" style="background: linear-gradient(135deg, #D4A532 0%, #B8860B 100%);">
+            <span style="font-weight: 700; color: #000; font-size: 1.25rem;">♠</span>
+          </div>
+          <div class="tournament-details">
+            <div style="display: flex; justify-content: space-between;">
+              <span class="tournament-time">7:00 PM</span>
+              <span class="tournament-buyin">$10 NLH</span>
+            </div>
+            <div class="tournament-info">$3K Guarantee • Rebuy $20 • Add-on $20</div>
+            <div class="tournament-name">HOLD'EM $3K GTD</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="day-label" style="color: var(--text-muted); opacity: 0.6;">Friday, January 3, 2026</div>
+      <div class="tournament-card" style="opacity: 0.5; pointer-events: none;">
+        <div class="tournament-live-bar" style="background: var(--bg-card);"><span style="color: var(--text-muted);">📅 Future Event</span></div>
+        <div class="tournament-content">
+          <div class="tournament-logo" style="background: var(--bg-card); border: 1px solid var(--border);">
+            <span style="font-weight: 700; color: var(--text-muted); font-size: 1.25rem;">♠</span>
+          </div>
+          <div class="tournament-details">
+            <div style="display: flex; justify-content: space-between;">
+              <span class="tournament-time" style="color: var(--text-muted);">7:00 PM</span>
+              <span class="tournament-buyin" style="color: var(--text-muted);">$20 NLH</span>
+            </div>
+            <div class="tournament-info">$20 rebuys til level 8 • $20 add-on</div>
+            <div class="tournament-name" style="background: var(--bg-card); color: var(--text-muted);">FRIDAY HOLD'EM</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="day-label" style="color: var(--text-muted); opacity: 0.6;">Saturday, January 4, 2026</div>
+      <div class="tournament-card" style="opacity: 0.5; pointer-events: none;">
+        <div class="tournament-live-bar" style="background: var(--bg-card);"><span style="color: var(--text-muted);">📅 Future Event</span></div>
+        <div class="tournament-content">
+          <div class="tournament-logo" style="background: var(--bg-card); border: 1px solid var(--border);">
+            <span style="font-weight: 700; color: var(--text-muted); font-size: 1.25rem;">♠</span>
+          </div>
+          <div class="tournament-details">
+            <div style="display: flex; justify-content: space-between;">
+              <span class="tournament-time" style="color: var(--text-muted);">7:00 PM</span>
+              <span class="tournament-buyin" style="color: var(--text-muted);">FREEROLL</span>
+            </div>
+            <div class="tournament-info">No Early Bird • $200/hr Splash Pots 3PM-12AM</div>
+            <div class="tournament-name" style="background: var(--bg-card); color: var(--text-muted);">SATURDAY FREEROLL</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="text-align: center; font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem;">
+        Future tournaments available for registration on event day
+      </div>
+    </div>
+
+    <!-- Order Section -->
+    <div class="order-section" id="orderSection">
+      <div class="order-header">
+        <h2>🍽️ Order to Your Table</h2>
+        <p>Select items and we'll bring them to you</p>
+      </div>
+      <div class="order-categories">
+        <span class="order-category active" onclick="filterOrder('all', this)">All</span>
+        <span class="order-category" onclick="filterOrder('drinks', this)">Drinks</span>
+        <span class="order-category" onclick="filterOrder('coffee', this)">Coffee</span>
+        <span class="order-category" onclick="filterOrder('food', this)">Food</span>
+        <span class="order-category" onclick="filterOrder('snacks', this)">Snacks</span>
+      </div>
+      <div class="order-grid" id="orderGrid">
+        <div class="order-item" data-category="drinks" onclick="addToCart('Water', 0)"><div class="order-item-icon">💧</div><div class="order-item-name">Water</div><div class="order-item-price free">FREE</div></div>
+        <div class="order-item" data-category="coffee" onclick="addToCart('Coffee', 0)"><div class="order-item-icon">☕</div><div class="order-item-name">Coffee</div><div class="order-item-price free">FREE</div></div>
+        <div class="order-item" data-category="drinks" onclick="addToCart('Soft Drink', 0)"><div class="order-item-icon">🥤</div><div class="order-item-name">Soft Drink</div><div class="order-item-price free">FREE</div></div>
+        <div class="order-item" data-category="drinks" onclick="addToCart('Red Bull', 4)"><div class="order-item-icon">⚡</div><div class="order-item-name">Red Bull</div><div class="order-item-price">$4</div></div>
+        <div class="order-item" data-category="drinks" onclick="addToCart('Beer', 5)"><div class="order-item-icon">🍺</div><div class="order-item-name">Beer</div><div class="order-item-price">$5</div></div>
+        <div class="order-item" data-category="drinks" onclick="addToCart('Mixed Drink', 8)"><div class="order-item-icon">🍹</div><div class="order-item-name">Mixed Drink</div><div class="order-item-price">$8</div></div>
+        <div class="order-item" data-category="food" onclick="addToCart('Burger', 12)"><div class="order-item-icon">🍔</div><div class="order-item-name">Burger</div><div class="order-item-price">$12</div></div>
+        <div class="order-item" data-category="food" onclick="addToCart('Sandwich', 10)"><div class="order-item-icon">🥪</div><div class="order-item-name">Sandwich</div><div class="order-item-price">$10</div></div>
+        <div class="order-item" data-category="food" onclick="addToCart('Wings', 14)"><div class="order-item-icon">🍗</div><div class="order-item-name">Wings</div><div class="order-item-price">$14</div></div>
+        <div class="order-item" data-category="snacks" onclick="addToCart('Chips', 0)"><div class="order-item-icon">🥨</div><div class="order-item-name">Chips</div><div class="order-item-price free">FREE</div></div>
+        <div class="order-item" data-category="snacks" onclick="addToCart('Nachos', 9)"><div class="order-item-icon">🧀</div><div class="order-item-name">Nachos</div><div class="order-item-price">$9</div></div>
+        <div class="order-item" data-category="food" onclick="addToCart('Pizza', 6)"><div class="order-item-icon">🍕</div><div class="order-item-name">Pizza Slice</div><div class="order-item-price">$6</div></div>
+      </div>
+      <div class="order-cart" id="orderCart" style="display: none;">
+        <div class="order-cart-title">🛒 Your Order</div>
+        <div class="order-cart-items" id="cartItems"></div>
+        <div class="order-table-select">
+          <label>Your Table Number</label>
+          <select id="tableSelect">
+            <option value="">Select your table...</option>
+            <option value="1">Table 1 - $1/$3 NLH</option>
+            <option value="2">Table 2 - $1/$3 NLH</option>
+            <option value="3">Table 3 - $1/$3 PLO</option>
+            <option value="4">Table 4 - $2/$5 NLH</option>
+          </select>
+        </div>
+        <button class="order-submit-btn" onclick="submitOrder()">Place Order</button>
+      </div>
+    </div>
+
+    <!-- Promos Section -->
+    <div class="promos-section" id="promosSection">
+      <div class="promo-card" style="border-left: 3px solid var(--green);">
+        <div class="promo-card-header">
+          <span class="promo-card-icon">🎡</span>
+          <div><div class="promo-card-title">HIGH HAND SPINS THE WHEEL</div><div class="promo-card-subtitle">Win $50 - $1,000!</div></div>
+        </div>
+        <div class="promo-card-body">
+          <div style="font-size: 1.5rem; font-weight: 700; color: var(--gold); margin-bottom: 0.5rem;">ANY QUADS</div>
+          <div>with pocket pair. Must use both hole cards, 4+ players, $50+ pot.</div>
+        </div>
+        <span class="promo-card-badge">Daily</span>
+      </div>
+      <div class="promo-card" style="border-left: 3px solid #3b82f6;">
+        <div class="promo-card-header">
+          <span class="promo-card-icon">☀️</span>
+          <div><div class="promo-card-title">FLUSH & SHINE</div><div class="promo-card-subtitle">2PM - 8PM Flush Attack</div></div>
+        </div>
+        <div class="promo-card-body">
+          <div style="font-size: 1.75rem; font-weight: 700; color: var(--green); margin-bottom: 0.25rem;">$3,000</div>
+          <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem;">Last winner: $3,750 on 12/19</div>
+          <div>Hit all 4 flushes to win! Grows $250/day if unclaimed.</div>
+        </div>
+        <span class="promo-card-badge">Daily 2PM-8PM</span>
+      </div>
+      <div class="promo-card" style="border-left: 3px solid #8b5cf6;">
+        <div class="promo-card-header">
+          <span class="promo-card-icon">🌙</span>
+          <div><div class="promo-card-title">LAST CALL FLUSHES</div><div class="promo-card-subtitle">8PM - 2AM Flush Attack</div></div>
+        </div>
+        <div class="promo-card-body">
+          <div style="font-size: 1.75rem; font-weight: 700; color: var(--green); margin-bottom: 0.25rem;">$1,150</div>
+          <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem;">Last winner: $250 on 12/12</div>
+          <div>Hit all 4 flushes to win! Grows $50/day if unclaimed.</div>
+        </div>
+        <span class="promo-card-badge">Daily 8PM-2AM</span>
+      </div>
+      <div class="promo-card">
+        <div class="promo-card-header">
+          <span class="promo-card-icon">💰</span>
+          <div><div class="promo-card-title">SATURDAY SPLASH POTS</div><div class="promo-card-subtitle">$200/Hour on Cash Tables</div></div>
+        </div>
+        <div class="promo-card-body">No Early Bird tournament on Saturdays. Instead, enjoy $200/hour splash pots on cash games from 3PM-12AM!</div>
+        <span class="promo-card-badge">Saturdays</span>
+      </div>
+      <div class="promo-card">
+        <div class="promo-card-header">
+          <span class="promo-card-icon">🏆</span>
+          <div><div class="promo-card-title">JANUARY POINTS RACE</div><div class="promo-card-subtitle">Play All Month & Win Big!</div></div>
+        </div>
+        <div class="promo-card-body">Earn points playing tournaments & cash games. Top 30 get FREE entry to Feb 7 tournament ($100 value). Points convert to raffle tickets for $500/hour drawings on Feb 12!</div>
+        <span class="promo-card-badge limited">All January</span>
+      </div>
+      <div class="promo-card">
+        <div class="promo-card-header">
+          <span class="promo-card-icon">👑</span>
+          <div><div class="promo-card-title">LADIES ONLY: QUEENS SHOWDOWN</div><div class="promo-card-subtitle">January 17 at 4PM</div></div>
+        </div>
+        <div class="promo-card-body">$50 buy-in for 25K chips. Unlimited rebuys $50. Top 5 win prizes: Pandora Bracelet, Jared's Earrings, Michael Kors bag & more! $200/hr splash pots on cash tables.</div>
+        <span class="promo-card-badge limited">Jan 17</span>
+      </div>
+    </div>
+
+    <!-- Points Section -->
+    <div class="points-section" id="pointsSection" style="display: none; padding: 1rem;">
+      <!-- Points Summary Card -->
+      <div style="background: linear-gradient(135deg, rgba(212, 165, 50, 0.2) 0%, rgba(212, 165, 50, 0.05) 100%); border: 1px solid rgba(212, 165, 50, 0.4); border-radius: 16px; padding: 1.5rem; margin-bottom: 1rem;">
+        <div style="text-align: center; margin-bottom: 1.25rem;">
+          <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.25rem;">January Points Race</div>
+          <div style="font-size: 3rem; font-weight: 700; color: var(--gold);">89</div>
+          <div style="font-size: 0.9rem; color: var(--text-muted);">Your Points</div>
+        </div>
+        <div style="display: flex; justify-content: space-around; text-align: center; padding-top: 1rem; border-top: 1px solid rgba(212, 165, 50, 0.2);">
+          <div>
+            <div style="font-size: 1.5rem; font-weight: 700; color: var(--green);">#4</div>
+            <div style="font-size: 0.75rem; color: var(--text-muted);">Your Rank</div>
+          </div>
+          <div>
+            <div style="font-size: 1.5rem; font-weight: 700;">45</div>
+            <div style="font-size: 0.75rem; color: var(--text-muted);">Top 30 Cutoff</div>
+          </div>
+          <div>
+            <div style="font-size: 1.5rem; font-weight: 700;">29</div>
+            <div style="font-size: 0.75rem; color: var(--text-muted);">Days Left</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Status Badge -->
+      <div style="background: rgba(34, 197, 94, 0.15); border: 1px solid var(--green); border-radius: 12px; padding: 1rem; margin-bottom: 1rem; text-align: center;">
+        <div style="font-size: 1.25rem; margin-bottom: 0.25rem;">🎉</div>
+        <div style="color: var(--green); font-weight: 600;">You're in the Top 30!</div>
+        <div style="font-size: 0.85rem; color: var(--text-muted);">FREE entry to Feb 7 tournament ($100 value)</div>
+      </div>
+
+      <!-- How Points Work -->
+      <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 1rem; margin-bottom: 1rem;">
+        <div style="font-weight: 600; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+          <span>📋</span> How to Earn Points
+        </div>
+        <div style="font-size: 0.85rem; line-height: 1.8;">
+          <div style="display: flex; justify-content: space-between; padding: 0.25rem 0; border-bottom: 1px solid var(--border);">
+            <span>Play Tournament</span><span style="color: var(--gold); font-weight: 600;">+5 pts</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding: 0.25rem 0; border-bottom: 1px solid var(--border);">
+            <span>Early Bird + Daily</span><span style="color: var(--gold); font-weight: 600;">+13 pts</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding: 0.25rem 0; border-bottom: 1px solid var(--border);">
+            <span>1st Place</span><span style="color: var(--gold); font-weight: 600;">+15 pts</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding: 0.25rem 0; border-bottom: 1px solid var(--border);">
+            <span>2nd / 3rd Place</span><span style="color: var(--gold); font-weight: 600;">+10 / +5 pts</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding: 0.25rem 0; border-bottom: 1px solid var(--border);">
+            <span>Cash Game (1 hr)</span><span style="color: var(--gold); font-weight: 600;">+10 pts</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding: 0.25rem 0;">
+            <span>Cash All Day (6+ hrs)</span><span style="color: var(--gold); font-weight: 600;">+30 pts</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Rewards -->
+      <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 1rem; margin-bottom: 1rem;">
+        <div style="font-weight: 600; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+          <span>🏆</span> Rewards
+        </div>
+        <div style="background: rgba(212, 165, 50, 0.1); border-radius: 8px; padding: 0.75rem; margin-bottom: 0.75rem;">
+          <div style="font-weight: 600; color: var(--gold);">Feb 7 @ 4PM - Tournament</div>
+          <div style="font-size: 0.85rem; color: var(--text-muted);">Top 30 point earners get FREE $100 buy-in entry!</div>
+        </div>
+        <div style="background: rgba(212, 165, 50, 0.1); border-radius: 8px; padding: 0.75rem;">
+          <div style="font-weight: 600; color: var(--gold);">Feb 12 @ 3PM - Cash Drawings</div>
+          <div style="font-size: 0.85rem; color: var(--text-muted);">Convert points to raffle tickets (20 pts = 1 ticket). $500/hour drawings from 4PM-11PM!</div>
+        </div>
+      </div>
+
+      <!-- Your Activity -->
+      <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 1rem;">
+        <div style="font-weight: 600; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+          <span>📜</span> Your Recent Activity
+        </div>
+        <div style="font-size: 0.85rem;">
+          <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid var(--border);">
+            <div><span style="color: var(--text-muted);">Jan 1</span> Tournament Played</div>
+            <span style="color: var(--green);">+5</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid var(--border);">
+            <div><span style="color: var(--text-muted);">Jan 1</span> 3rd Place</div>
+            <span style="color: var(--green);">+5</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid var(--border);">
+            <div><span style="color: var(--text-muted);">Dec 31</span> Cash All Day</div>
+            <span style="color: var(--green);">+30</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid var(--border);">
+            <div><span style="color: var(--text-muted);">Dec 30</span> Early Bird + Daily</div>
+            <span style="color: var(--green);">+13</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding: 0.5rem 0;">
+            <div><span style="color: var(--text-muted);">Dec 29</span> Cash 1 Hour</div>
+            <span style="color: var(--green);">+10</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Settings Section -->
+    <div class="settings-section" id="settingsSection">
+      <!-- Main Promo Toggle -->
+      <div style="background: linear-gradient(135deg, rgba(212, 165, 50, 0.2) 0%, rgba(212, 165, 50, 0.05) 100%); border: 1px solid rgba(212, 165, 50, 0.4); border-radius: 12px; padding: 1.25rem; margin-bottom: 1rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div style="flex: 1;">
+            <div style="font-weight: 700; font-size: 1.1rem; color: var(--gold); display: flex; align-items: center; gap: 0.5rem;">
+              🎁 Receive All Promos & Updates
+            </div>
+            <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.35rem;">
+              Splash pots, high hands, game alerts, tournaments & special events
+            </div>
+          </div>
+          <div class="toggle active" id="allPromosToggle" onclick="toggleAllPromos(this)" style="width: 60px; height: 34px; flex-shrink: 0;"></div>
+        </div>
+      </div>
+
+      <div class="settings-group">
+        <div class="settings-group-title">Essential Notifications</div>
+        <div class="settings-item">
+          <div><div class="settings-item-title">Waitlist Updates</div><div class="settings-item-desc">When your seat is ready</div></div>
+          <span style="color: var(--green); font-size: 0.75rem; font-weight: 600;">Always On</span>
+        </div>
+        <div class="settings-item">
+          <div><div class="settings-item-title">Tournament Alerts</div><div class="settings-item-desc">Breaks, seating, and updates</div></div>
+          <span style="color: var(--green); font-size: 0.75rem; font-weight: 600;">Always On</span>
+        </div>
+      </div>
+
+      <div class="settings-group">
+        <div class="settings-group-title">Location Services</div>
+        <div class="settings-item">
+          <div><div class="settings-item-title">Enable Location</div><div class="settings-item-desc">Enhanced features when at Speaking Rock</div></div>
+          <div class="toggle active" onclick="toggleSetting(this)"></div>
+        </div>
+      </div>
+
+      <div class="settings-group">
+        <div class="settings-group-title">Favorite Games</div>
+        <div style="padding: 0.75rem 1rem; font-size: 0.8rem; color: var(--text-muted);">
+          When promos are enabled, you'll also get alerts when these games open:
+        </div>
+        <div class="settings-item">
+          <div><div class="settings-item-title">$1/$3 NLH</div></div>
+          <div class="toggle active" onclick="toggleSetting(this)"></div>
+        </div>
+        <div class="settings-item">
+          <div><div class="settings-item-title">$1/$3 PLO</div></div>
+          <div class="toggle" onclick="toggleSetting(this)"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Status Page -->
+    <div class="status-page" id="statusPage">
+      <div class="status-card">
+        <div class="status-title">You're on the list!</div>
+        <div class="status-subtitle">You have 30 minutes to arrive.</div>
+        <div class="status-timer-section"><div class="status-timer" id="statusTimer">29:58</div></div>
+        <div class="status-venue">
+          <div class="venue-logo" style="background: linear-gradient(135deg, #D4A532 0%, #B8860B 100%);">
+            <span style="font-weight: 700; color: #000; font-size: 0.7rem;">SR</span>
+          </div>
+          <div class="venue-actions">
+            <a href="#" class="venue-action-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>Directions</a>
+            <a href="#" class="venue-action-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg>Share</a>
+          </div>
+        </div>
+        <div class="player-alias"><div class="alias-label">Your alias:</div><div class="alias-name"><span style="color: #D4A532;">♠</span> DAVID</div></div>
+        <div class="player-info">
+          <div class="player-info-row"><span style="color: #D4A532;">♠</span> 2 Games</div>
+          <div class="player-info-row">💳 Card #12345</div>
+          <div class="player-info-row">👤 (915) 200-3700</div>
+        </div>
+        <div class="position-table">
+          <div class="position-header"><div>Game</div><div>Position</div><div></div></div>
+          <div class="position-row"><div>$1/$3 NLH</div><div style="color: #D4A532; font-weight: 700;">3</div><div>🔄</div></div>
+          <div class="position-row"><div>$5 ROE</div><div style="color: #999;">Interest List</div><div></div></div>
+        </div>
+        <button class="status-order-btn" onclick="showSection('order')">🍽️ Order Food & Drinks</button>
+        <div class="leave-waitlist"><a href="#" onclick="leaveWaitlist(); return false;">Leave Waitlist</a></div>
+      </div>
+      <div class="status-buttons">
+        <a href="#" class="status-btn view" onclick="showSection('cash'); return false;">View Waitlist</a>
+        <a href="#" class="status-btn here" onclick="confirmArrival(); return false;">I'm Here</a>
+      </div>
+    </div>
+
+  </div>
+  </div> <!-- Close app-container -->
+
+  <!-- Bottom Nav -->
+  <nav class="bottom-nav">
+    <a href="#" class="bottom-nav-item" onclick="showSection('cash'); return false;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>Games</a>
+    <a href="#" class="bottom-nav-item" onclick="showSection('points'); return false;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>Points</a>
+    <a href="#" class="bottom-nav-item active" onclick="showSection('status'); return false;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>Status</a>
+    <a href="#" class="bottom-nav-item" onclick="showSection('promos'); return false;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 12 20 22 4 22 4 12"></polyline><rect x="2" y="7" width="20" height="5"></rect><line x1="12" y1="22" x2="12" y2="7"></line><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"></path><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"></path></svg>Promos</a>
+    <a href="#" class="bottom-nav-item" onclick="showSection('order'); return false;" style="position: relative;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line></svg>Order<span class="nav-badge" id="cartBadge" style="display: none;">0</span></a>
+  </nav>
+
+  <!-- Join Modal -->
+  <div class="modal-overlay" id="joinModal">
+    <div class="modal">
+      <div class="modal-header"><h3 class="modal-title">Join Waitlist</h3><button class="modal-close" onclick="closeModal('joinModal')">&times;</button></div>
+      <div class="modal-body">
+        <div style="background: rgba(212, 165, 50, 0.1); border: 1px solid rgba(212, 165, 50, 0.3); border-radius: 8px; padding: 1rem; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.75rem;">
+          <div style="width: 40px; height: 40px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #000; font-weight: 700;">D</div>
+          <div>
+            <div style="font-weight: 600;">David N</div>
+            <div style="font-size: 0.8rem; color: var(--text-muted);">Card #12345 • (915) 200-3700</div>
+          </div>
+        </div>
+        <label class="modal-label">Select Game(s)</label>
+        <label class="modal-checkbox"><input type="checkbox" checked> $1/$3 NLH ($60 min - No max)</label>
+        <label class="modal-checkbox"><input type="checkbox"> $1/$3 PLO ($100 min - No max)</label>
+      </div>
+      <div class="modal-footer"><button class="order-submit-btn" onclick="joinWaitlist()">Join Waitlist</button></div>
+    </div>
+  </div>
+
+  <!-- Order Confirm Modal -->
+  <div class="modal-overlay" id="orderConfirmModal">
+    <div class="modal">
+      <div class="modal-header"><h3 class="modal-title">Order Placed! ✓</h3><button class="modal-close" onclick="closeModal('orderConfirmModal')">&times;</button></div>
+      <div class="modal-body" style="text-align: center;">
+        <div style="font-size: 4rem; margin-bottom: 1rem;">🍽️</div>
+        <p style="font-size: 1rem; margin-bottom: 0.5rem;">Your order is on the way!</p>
+        <p style="font-size: 0.85rem; color: #999;">A server will bring your items to Table <span id="confirmTable">1</span></p>
+      </div>
+      <div class="modal-footer"><button class="order-submit-btn" onclick="closeModal('orderConfirmModal')">Done</button></div>
+    </div>
+  </div>
+
+  <script>
+    // API Configuration
+    const API_URL = window.location.origin + '/api';
+    
+    async function apiCall(endpoint, method = 'GET', body = null) {
+      const options = {
+        method,
+        headers: { 'Content-Type': 'application/json' }
+      };
+      const session = localStorage.getItem('playerSession');
+      if (session) {
+        const player = JSON.parse(session);
+        if (player.token) {
+          options.headers['Authorization'] = 'Bearer ' + player.token;
+        }
+      }
+      if (body) options.body = JSON.stringify(body);
+      
+      try {
+        const response = await fetch(`${API_URL}${endpoint}`, options);
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.detail || 'API Error');
+        return data;
+      } catch (error) {
+        console.error('API Error:', error);
+        throw error;
+      }
+    }
+    
+    let cart = [];
+    let timerSeconds = 29 * 60 + 58;
+    let breakTimerSeconds = 14 * 60 + 58;
+    
+    function updateTimer() {
+      const m = Math.floor(timerSeconds / 60), s = timerSeconds % 60;
+      const t = m + ':' + s.toString().padStart(2, '0');
+      document.getElementById('mainTimer').textContent = t;
+      document.getElementById('statusTimer').textContent = t;
+      if (timerSeconds > 0) timerSeconds--;
+    }
+    
+    function updateBreakTimer() {
+      const m = Math.floor(breakTimerSeconds / 60), s = breakTimerSeconds % 60;
+      document.getElementById('breakTimer').textContent = m + ':' + s.toString().padStart(2, '0');
+      if (breakTimerSeconds > 0) breakTimerSeconds--;
+    }
+    
+    setInterval(updateTimer, 1000);
+    setInterval(updateBreakTimer, 1000);
+    
+    function showSection(section) {
+      ['cashSection', 'tourneySection', 'orderSection', 'promosSection', 'settingsSection', 'pointsSection', 'statusPage'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) { el.style.display = 'none'; el.classList.remove('active'); }
+      });
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.bottom-nav-item').forEach(n => n.classList.remove('active'));
+      
+      switch(section) {
+        case 'cash': 
+          document.getElementById('cashSection').style.display = 'block'; 
+          document.getElementById('cashTab').classList.add('active'); 
+          break;
+        case 'tourneys': 
+          document.getElementById('tourneySection').style.display = 'block'; 
+          document.getElementById('tourneySection').classList.add('active'); 
+          document.getElementById('tourneyTab').classList.add('active'); 
+          break;
+        case 'order': 
+          document.getElementById('orderSection').style.display = 'block'; 
+          document.getElementById('orderSection').classList.add('active'); 
+          if (document.getElementById('orderTab')) document.getElementById('orderTab').classList.add('active');
+          break;
+        case 'promos': 
+          document.getElementById('promosSection').style.display = 'block'; 
+          document.getElementById('promosSection').classList.add('active'); 
+          if (document.getElementById('promosTab')) document.getElementById('promosTab').classList.add('active');
+          break;
+        case 'settings': 
+          document.getElementById('settingsSection').style.display = 'block'; 
+          document.getElementById('settingsSection').classList.add('active'); 
+          break;
+        case 'points': 
+          document.getElementById('pointsSection').style.display = 'block'; 
+          document.getElementById('pointsSection').classList.add('active'); 
+          if (document.getElementById('pointsTab')) document.getElementById('pointsTab').classList.add('active');
+          break;
+        case 'status': 
+          document.getElementById('statusPage').style.display = 'block'; 
+          document.getElementById('statusPage').classList.add('active'); 
+          break;
+      }
+    }
+    
+    async function joinGame(game) { 
+      if (!currentPlayer) {
+        window.location.href = 'login.html?redirect=app.html&action=join';
+        return;
+      }
+      try {
+        const result = await apiCall('/waitlist', 'POST', {
+          player_name: currentPlayer.name,
+          phone: currentPlayer.phone || '9155550000',
+          card_number: currentPlayer.cardNumber,
+          game_id: game === '$1/$3 No Limit Hold\'em' ? 'nlh-1-3' : game === '$1/$3 PLO' ? 'plo-1-3' : 'nlh-1-3',
+          num_players: 1,
+          planned_buyin: 300
+        });
+        alert('Added to waitlist for ' + game + '!\nYour position: #' + result.entry.position);
+      } catch (e) {
+        alert('Error joining waitlist: ' + e.message);
+      }
+    }
+    function showJoinModal() { document.getElementById('joinModal').classList.add('active'); }
+    function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+    function joinWaitlist() { closeModal('joinModal'); document.getElementById('waitlistBanner').classList.add('active'); document.getElementById('notificationBanner').classList.add('active'); alert("You've been added to the waitlist! We'll text you when your seat is ready."); }
+    function leaveWaitlist() { if (confirm('Are you sure you want to leave the waitlist?')) { document.getElementById('waitlistBanner').classList.remove('active'); document.getElementById('notificationBanner').classList.remove('active'); showSection('cash'); } }
+    function confirmArrival() { alert('Thanks! The floor has been notified. Please check in at the podium.'); }
+    function toggleSetting(el) { el.classList.toggle('active'); }
+    
+    function toggleAllPromos(el) { 
+      el.classList.toggle('active'); 
+      if (el.classList.contains('active')) {
+        alert('You will now receive all promo notifications including splash pots, high hands, game alerts, and special events!');
+      } else {
+        alert('Promo notifications turned off. You will still receive essential waitlist and tournament updates.');
+      }
+    }
+    
+    function dismissBreak() { document.getElementById('breakAlert').classList.remove('active'); }
+    
+    // Tournament registration - requires being at casino
+    let isAtCasino = true; // In production, this would check geolocation
+    
+    function checkTournamentAccess() {
+      if (isAtCasino) {
+        document.getElementById('tourneyLocationNotice').style.display = 'none';
+        document.getElementById('tourneyLocationEnabled').style.display = 'block';
+      } else {
+        document.getElementById('tourneyLocationNotice').style.display = 'block';
+        document.getElementById('tourneyLocationEnabled').style.display = 'none';
+      }
+    }
+    
+    function registerTournament(tournamentName, isToday) {
+      if (!isAtCasino) {
+        alert('Tournament registration is only available when you are at Speaking Rock. Please visit the poker room to register.');
+        return;
+      }
+      if (!isToday) {
+        alert('Registration for future tournaments opens on the day of the event.');
+        return;
+      }
+      if (confirm('Register for ' + tournamentName + '?\n\nYou will pay the buy-in at the poker room.')) {
+        alert('You are registered for ' + tournamentName + '!\n\nPlease check in at the poker room 15 minutes before start time.');
+      }
+    }
+    
+    // Check tournament access on load
+    checkTournamentAccess();
+    
+    function filterOrder(category, el) {
+      document.querySelectorAll('.order-category').forEach(c => c.classList.remove('active'));
+      if (el) el.classList.add('active');
+      document.querySelectorAll('.order-item').forEach(item => {
+        item.style.display = (category === 'all' || item.dataset.category === category) ? 'block' : 'none';
+      });
+    }
+    
+    function addToCart(name, price) {
+      const existing = cart.find(i => i.name === name);
+      if (existing) existing.qty++; else cart.push({ name, price, qty: 1 });
+      updateCartDisplay();
+    }
+    
+    function removeFromCart(name) {
+      const i = cart.findIndex(item => item.name === name);
+      if (i > -1) { if (cart[i].qty > 1) cart[i].qty--; else cart.splice(i, 1); }
+      updateCartDisplay();
+    }
+    
+    function updateCartDisplay() {
+      const cartEl = document.getElementById('orderCart'), cartItems = document.getElementById('cartItems'), badge = document.getElementById('cartBadge');
+      if (cart.length === 0) { cartEl.style.display = 'none'; badge.style.display = 'none'; return; }
+      cartEl.style.display = 'block'; badge.style.display = 'block';
+      badge.textContent = cart.reduce((s, i) => s + i.qty, 0);
+      cartItems.innerHTML = cart.map(i => '<div class="order-cart-item"><span>' + i.name + ' ' + (i.price > 0 ? '($' + i.price + ')' : '(Free)') + '</span><div class="order-cart-item-qty"><button class="qty-btn" onclick="removeFromCart(\'' + i.name + '\')">-</button><span>' + i.qty + '</span><button class="qty-btn" onclick="addToCart(\'' + i.name + '\',' + i.price + ')">+</button></div></div>').join('');
+    }
+    
+    async function submitOrder() {
+      const table = document.getElementById('tableSelect').value;
+      if (!table) { alert('Please select your table number'); return; }
+      
+      try {
+        await apiCall('/orders', 'POST', {
+          player_name: currentPlayer ? currentPlayer.name : 'Guest',
+          card_number: currentPlayer ? currentPlayer.cardNumber : null,
+          table_number: parseInt(table.replace('Table ', '')),
+          items: cart.map(i => ({ name: i.name, price: i.price, qty: i.qty }))
+        });
+        
+        document.getElementById('confirmTable').textContent = table;
+        document.getElementById('orderConfirmModal').classList.add('active');
+        cart = []; updateCartDisplay();
+      } catch (e) {
+        alert('Error placing order: ' + e.message);
+      }
+    }
+    
+    // ============================================
+    // LOGIN / SESSION MANAGEMENT
+    // ============================================
+    
+    let currentPlayer = null;
+    
+    // Check for existing session
+    function checkSession() {
+      const session = localStorage.getItem('playerSession');
+      if (session) {
+        currentPlayer = JSON.parse(session);
+        updatePlayerUI();
+        return true;
+      }
+      return false;
+    }
+    
+    // Update UI with player info
+    function updatePlayerUI() {
+      if (!currentPlayer) return;
+      
+      // Update player name displays
+      const nameDisplays = document.querySelectorAll('.player-name-display');
+      nameDisplays.forEach(el => {
+        if (el.tagName === 'H1') {
+          el.textContent = 'Welcome back, ' + currentPlayer.name.split(' ')[0] + '!';
+        } else {
+          el.textContent = currentPlayer.name;
+        }
+      });
+      
+      // Update card number displays
+      const cardDisplays = document.querySelectorAll('.player-card-display');
+      cardDisplays.forEach(el => {
+        el.textContent = 'Card #' + currentPlayer.cardNumber;
+      });
+      
+      // Update points displays
+      const pointsDisplays = document.querySelectorAll('.player-points-display');
+      pointsDisplays.forEach(el => {
+        el.textContent = currentPlayer.points || 0;
+      });
+      
+      // Update rank displays
+      if (currentPlayer.rank) {
+        const rankDisplays = document.querySelectorAll('.player-rank-display');
+        rankDisplays.forEach(el => {
+          el.textContent = '#' + currentPlayer.rank;
+        });
+      }
+    }
+    
+    // Require login for actions
+    function requireLogin(action) {
+      if (!checkSession()) {
+        // Redirect to login with return URL
+        window.location.href = 'login.html?redirect=app.html&action=' + encodeURIComponent(action);
+        return false;
+      }
+      return true;
+    }
+    
+    // Updated joinGame function to require login
+    const originalJoinGame = joinGame;
+    joinGame = function(game) {
+      if (!requireLogin('join_' + game)) return;
+      originalJoinGame(game);
+    };
+    
+    // Logout function
+    function logout() {
+      localStorage.removeItem('playerSession');
+      currentPlayer = null;
+      window.location.href = 'index.html';
+    }
+    
+    // Initialize on page load
+    checkSession();
+    
+    // Demo: show break alert after 10 seconds (uncomment to test)
+    // setTimeout(() => { document.getElementById('breakAlert').classList.add('active'); }, 10000);
+    
+    document.querySelectorAll('.modal-overlay').forEach(o => { o.addEventListener('click', function(e) { if (e.target === this) this.classList.remove('active'); }); });
+  </script>
+
+</body>
+</html>

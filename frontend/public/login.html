@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Member Login | Speaking Rock Poker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --gold: #D4A532;
+      --gold-light: #E8C45A;
+      --black: #000000;
+      --dark-bg: #0a0a0f;
+      --card-bg: #12121a;
+      --border: rgba(255,255,255,0.1);
+      --text: #ffffff;
+      --text-muted: rgba(255,255,255,0.6);
+      --green: #22c55e;
+      --red: #ef4444;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: var(--dark-bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header */
+    .header {
+      background: var(--black);
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .header-content {
+      max-width: 500px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .logo {
+      height: 50px;
+      width: auto;
+    }
+
+    /* Main Content */
+    .main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+    }
+
+    .login-container {
+      width: 100%;
+      max-width: 420px;
+    }
+
+    .login-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .login-header {
+      background: linear-gradient(135deg, rgba(212,165,50,0.15) 0%, rgba(212,165,50,0.05) 100%);
+      border-bottom: 1px solid rgba(212,165,50,0.2);
+      padding: 1.5rem;
+      text-align: center;
+    }
+
+    .login-header h1 {
+      font-family: 'Cinzel', serif;
+      font-size: 1.5rem;
+      color: var(--gold);
+      margin-bottom: 0.25rem;
+    }
+
+    .login-header p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .login-body {
+      padding: 1.5rem;
+    }
+
+    /* Tabs */
+    .login-tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .login-tab {
+      flex: 1;
+      padding: 0.75rem;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .login-tab:hover {
+      border-color: var(--gold);
+      color: var(--text);
+    }
+
+    .login-tab.active {
+      background: rgba(212,165,50,0.15);
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    /* Form */
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 0.875rem 1rem;
+      background: var(--dark-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 1rem;
+      font-family: 'Montserrat', sans-serif;
+      transition: border-color 0.2s;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--gold);
+    }
+
+    .form-group input::placeholder {
+      color: rgba(255,255,255,0.3);
+    }
+
+    .form-group .input-hint {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.35rem;
+    }
+
+    .form-row {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .form-row .form-group {
+      flex: 1;
+    }
+
+    /* Error message */
+    .error-message {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      margin-bottom: 1.25rem;
+      display: none;
+    }
+
+    .error-message.show {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .error-message span {
+      color: var(--red);
+      font-size: 0.85rem;
+    }
+
+    /* Submit Button */
+    .btn-login {
+      width: 100%;
+      padding: 1rem;
+      background: var(--gold);
+      border: none;
+      border-radius: 8px;
+      color: var(--black);
+      font-size: 1rem;
+      font-weight: 700;
+      font-family: 'Montserrat', sans-serif;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 0.5rem;
+    }
+
+    .btn-login:hover {
+      background: var(--gold-light);
+      transform: translateY(-1px);
+    }
+
+    .btn-login:active {
+      transform: translateY(0);
+    }
+
+    /* Divider */
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin: 1.5rem 0;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* New Member Section */
+    .new-member {
+      text-align: center;
+    }
+
+    .new-member p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+
+    .btn-register {
+      width: 100%;
+      padding: 0.875rem;
+      background: transparent;
+      border: 1px solid var(--gold);
+      border-radius: 8px;
+      color: var(--gold);
+      font-size: 0.9rem;
+      font-weight: 600;
+      font-family: 'Montserrat', sans-serif;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-register:hover {
+      background: rgba(212,165,50,0.1);
+    }
+
+    /* Registration Form (hidden by default) */
+    .register-form {
+      display: none;
+    }
+
+    .register-form.show {
+      display: block;
+    }
+
+    .login-form.hidden {
+      display: none;
+    }
+
+    /* Back link */
+    .back-link {
+      text-align: center;
+      margin-top: 1rem;
+    }
+
+    .back-link a {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .back-link a:hover {
+      color: var(--gold);
+    }
+
+    /* Footer */
+    .footer {
+      padding: 1.5rem;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.75rem;
+    }
+
+    .footer a {
+      color: var(--gold);
+      text-decoration: none;
+    }
+
+    /* Success State */
+    .success-message {
+      text-align: center;
+      padding: 2rem 1rem;
+      display: none;
+    }
+
+    .success-message.show {
+      display: block;
+    }
+
+    .success-icon {
+      width: 80px;
+      height: 80px;
+      background: rgba(34, 197, 94, 0.15);
+      border: 2px solid var(--green);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+      font-size: 2.5rem;
+    }
+
+    .success-message h2 {
+      font-family: 'Cinzel', serif;
+      font-size: 1.25rem;
+      color: var(--green);
+      margin-bottom: 0.5rem;
+    }
+
+    .success-message p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .btn-continue {
+      padding: 0.875rem 2rem;
+      background: var(--green);
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-size: 0.95rem;
+      font-weight: 600;
+      font-family: 'Montserrat', sans-serif;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-continue:hover {
+      background: #16a34a;
+    }
+
+    /* Loading state */
+    .btn-login.loading {
+      pointer-events: none;
+      opacity: 0.7;
+    }
+
+    /* Promo banner */
+    .promo-banner {
+      background: linear-gradient(90deg, rgba(34,197,94,0.15) 0%, rgba(212,165,50,0.15) 100%);
+      border: 1px solid rgba(34,197,94,0.3);
+      border-radius: 10px;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    .promo-banner .promo-title {
+      font-weight: 700;
+      color: var(--green);
+      font-size: 0.9rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .promo-banner .promo-text {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+      .login-header h1 {
+        font-size: 1.25rem;
+      }
+
+      .form-row {
+        flex-direction: column;
+        gap: 0;
+      }
+
+      .login-body {
+        padding: 1.25rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-content">
+      <a href="index.html">
+        <img src="logo.png" alt="Speaking Rock Poker" class="logo">
+      </a>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main">
+    <div class="login-container">
+      <div class="login-card">
+        <div class="login-header">
+          <h1>Member Login</h1>
+          <p>Access your poker room account</p>
+        </div>
+
+        <div class="login-body">
+          <!-- Login Form -->
+          <div class="login-form" id="loginForm">
+            <!-- Promo Banner -->
+            <div class="promo-banner">
+              <div class="promo-title">🎉 New Member Bonus!</div>
+              <div class="promo-text">Sign up today and get $30 Free Play</div>
+            </div>
+
+            <!-- Login Tabs -->
+            <div class="login-tabs">
+              <button class="login-tab active" onclick="switchLoginMethod('card')">Card + Phone</button>
+              <button class="login-tab" onclick="switchLoginMethod('pin')">Card + PIN</button>
+            </div>
+
+            <!-- Error Message -->
+            <div class="error-message" id="errorMessage">
+              <span>⚠️</span>
+              <span id="errorText">Invalid credentials. Please try again.</span>
+            </div>
+
+            <!-- Card + Phone Method -->
+            <form id="cardPhoneForm" onsubmit="handleLogin(event, 'cardPhone')">
+              <div class="form-group">
+                <label for="cardNumber">Player Card Number</label>
+                <input type="text" id="cardNumber" placeholder="Enter your card number" required>
+              </div>
+
+              <div class="form-group">
+                <label for="phoneNumber">Phone Number (Last 4 Digits)</label>
+                <input type="tel" id="phoneNumber" placeholder="1234" maxlength="4" pattern="[0-9]{4}" required>
+                <div class="input-hint">Enter the last 4 digits of your registered phone</div>
+              </div>
+
+              <button type="submit" class="btn-login" id="loginBtn">
+                Sign In
+              </button>
+            </form>
+
+            <!-- Card + PIN Method (hidden by default) -->
+            <form id="cardPinForm" style="display: none;" onsubmit="handleLogin(event, 'cardPin')">
+              <div class="form-group">
+                <label for="cardNumberPin">Player Card Number</label>
+                <input type="text" id="cardNumberPin" placeholder="Enter your card number" required>
+              </div>
+
+              <div class="form-group">
+                <label for="pinNumber">4-Digit PIN</label>
+                <input type="password" id="pinNumber" placeholder="••••" maxlength="4" pattern="[0-9]{4}" required>
+              </div>
+
+              <button type="submit" class="btn-login">
+                Sign In
+              </button>
+            </form>
+
+            <div class="divider">or</div>
+
+            <!-- New Member Section -->
+            <div class="new-member">
+              <p>Don't have an account yet?</p>
+              <button class="btn-register" onclick="showRegisterForm()">
+                Create New Account
+              </button>
+            </div>
+
+            <div class="back-link">
+              <a href="index.html">← Back to Home</a>
+            </div>
+          </div>
+
+          <!-- Registration Form -->
+          <div class="register-form" id="registerForm">
+            <form onsubmit="handleRegister(event)">
+              <div class="form-group">
+                <label for="regFirstName">First Name</label>
+                <input type="text" id="regFirstName" placeholder="John" required>
+              </div>
+
+              <div class="form-group">
+                <label for="regLastName">Last Name (Initial)</label>
+                <input type="text" id="regLastName" placeholder="D" maxlength="1" required>
+                <div class="input-hint">For privacy, we only display your last initial</div>
+              </div>
+
+              <div class="form-group">
+                <label for="regPhone">Phone Number</label>
+                <input type="tel" id="regPhone" placeholder="(915) 555-1234" required>
+              </div>
+
+              <div class="form-group">
+                <label for="regEmail">Email (Optional)</label>
+                <input type="email" id="regEmail" placeholder="john@email.com">
+              </div>
+
+              <div class="form-group">
+                <label for="regPin">Create 4-Digit PIN</label>
+                <input type="password" id="regPin" placeholder="••••" maxlength="4" pattern="[0-9]{4}" required>
+                <div class="input-hint">You'll use this PIN to log in</div>
+              </div>
+
+              <button type="submit" class="btn-login">
+                Create Account
+              </button>
+            </form>
+
+            <div class="back-link" style="margin-top: 1.5rem;">
+              <a href="#" onclick="showLoginForm(); return false;">← Back to Login</a>
+            </div>
+          </div>
+
+          <!-- Success Message -->
+          <div class="success-message" id="successMessage">
+            <div class="success-icon">✓</div>
+            <h2>Welcome Back!</h2>
+            <p id="welcomeText">You're now logged in.</p>
+            <button class="btn-continue" onclick="continueToDestination()">
+              Continue
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>Speaking Rock Entertainment Center • 122 S Old Pueblo Rd, El Paso, TX</p>
+    <p style="margin-top: 0.5rem;">Need help? Call <a href="tel:+19157779352">(915) 777-9352</a></p>
+  </footer>
+
+  <script>
+    // Get redirect destination from URL params
+    const urlParams = new URLSearchParams(window.location.search);
+    const redirectTo = urlParams.get('redirect') || 'app.html';
+    const action = urlParams.get('action') || '';
+
+    // Check if already logged in
+    function checkExistingSession() {
+      const session = localStorage.getItem('playerSession');
+      if (session) {
+        const player = JSON.parse(session);
+        // Session exists - redirect to destination
+        window.location.href = redirectTo + (action ? '?action=' + action : '');
+      }
+    }
+    checkExistingSession();
+
+    // Switch login method tabs
+    function switchLoginMethod(method) {
+      document.querySelectorAll('.login-tab').forEach(tab => tab.classList.remove('active'));
+      event.target.classList.add('active');
+
+      if (method === 'card') {
+        document.getElementById('cardPhoneForm').style.display = 'block';
+        document.getElementById('cardPinForm').style.display = 'none';
+      } else {
+        document.getElementById('cardPhoneForm').style.display = 'none';
+        document.getElementById('cardPinForm').style.display = 'block';
+      }
+
+      hideError();
+    }
+
+    // Show/hide forms
+    function showRegisterForm() {
+      document.getElementById('loginForm').classList.add('hidden');
+      document.getElementById('registerForm').classList.add('show');
+      document.getElementById('successMessage').classList.remove('show');
+    }
+
+    function showLoginForm() {
+      document.getElementById('loginForm').classList.remove('hidden');
+      document.getElementById('registerForm').classList.remove('show');
+      document.getElementById('successMessage').classList.remove('show');
+    }
+
+    function showSuccess(playerName, isNew = false) {
+      document.getElementById('loginForm').classList.add('hidden');
+      document.getElementById('registerForm').classList.remove('show');
+      document.getElementById('successMessage').classList.add('show');
+      
+      if (isNew) {
+        document.querySelector('.success-message h2').textContent = 'Account Created!';
+        document.getElementById('welcomeText').textContent = `Welcome to Speaking Rock Poker, ${playerName}! Your card number has been sent to your phone.`;
+      } else {
+        document.querySelector('.success-message h2').textContent = 'Welcome Back!';
+        document.getElementById('welcomeText').textContent = `Good to see you, ${playerName}!`;
+      }
+    }
+
+    // Error handling
+    function showError(message) {
+      document.getElementById('errorText').textContent = message;
+      document.getElementById('errorMessage').classList.add('show');
+    }
+
+    function hideError() {
+      document.getElementById('errorMessage').classList.remove('show');
+    }
+
+    // API Base URL
+    const API_URL = window.location.origin + '/api';
+
+    // Handle login
+    async function handleLogin(event, method) {
+      event.preventDefault();
+      hideError();
+
+      let cardNum, credential;
+
+      if (method === 'cardPhone') {
+        cardNum = document.getElementById('cardNumber').value.trim();
+        credential = document.getElementById('phoneNumber').value.trim();
+      } else {
+        cardNum = document.getElementById('cardNumberPin').value.trim();
+        credential = document.getElementById('pinNumber').value.trim();
+      }
+
+      try {
+        const response = await fetch(`${API_URL}/auth/player/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            card_number: cardNum,
+            credential: credential,
+            method: method === 'cardPhone' ? 'phone' : 'pin'
+          })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          showError(data.detail || 'Login failed. Please try again.');
+          return;
+        }
+
+        // Success - save session
+        const session = {
+          token: data.token,
+          cardNumber: data.player.card_number,
+          playerId: data.player.id,
+          name: data.player.name,
+          points: data.player.points,
+          rank: data.player.rank,
+          loginTime: new Date().toISOString()
+        };
+        localStorage.setItem('playerSession', JSON.stringify(session));
+
+        showSuccess(data.player.name.split(' ')[0]);
+      } catch (error) {
+        console.error('Login error:', error);
+        showError('Connection error. Please try again.');
+      }
+    }
+
+    // Handle registration
+    async function handleRegister(event) {
+      event.preventDefault();
+
+      const firstName = document.getElementById('regFirstName').value.trim();
+      const lastInitial = document.getElementById('regLastName').value.trim().toUpperCase();
+      const phone = document.getElementById('regPhone').value.trim();
+      const email = document.getElementById('regEmail').value.trim();
+      const pin = document.getElementById('regPin').value.trim();
+
+      try {
+        const response = await fetch(`${API_URL}/auth/player/register`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            first_name: firstName,
+            last_initial: lastInitial,
+            phone: phone,
+            email: email || null,
+            pin: pin
+          })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          showError(data.detail || 'Registration failed. Please try again.');
+          return;
+        }
+
+        // Create session
+        const session = {
+          token: data.token,
+          cardNumber: data.player.card_number,
+          playerId: data.player.id,
+          name: data.player.name,
+          points: 0,
+          rank: null,
+          loginTime: new Date().toISOString(),
+          isNew: true
+        };
+        localStorage.setItem('playerSession', JSON.stringify(session));
+
+        // Update success message with card number
+        document.getElementById('welcomeText').innerHTML = `Welcome to Speaking Rock Poker, ${firstName}!<br>Your card number is: <strong>${data.player.card_number}</strong>`;
+
+        showSuccess(firstName, true);
+      } catch (error) {
+        console.error('Registration error:', error);
+        showError('Connection error. Please try again.');
+      }
+    }
+
+    // Continue to destination
+    function continueToDestination() {
+      window.location.href = redirectTo + (action ? '?action=' + action : '');
+    }
+
+    // Allow pressing Enter to submit
+    document.querySelectorAll('input').forEach(input => {
+      input.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          const form = this.closest('form');
+          if (form) form.dispatchEvent(new Event('submit'));
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>
