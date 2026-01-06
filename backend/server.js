@@ -185,8 +185,9 @@ connectDB().then(() => {
   // Start cron jobs
   require('./services/cronService')(io);
   
-  server.listen(config.port, '0.0.0.0', () => {
-    console.log(`Server running on port ${config.port}`);
+  const actualPort = process.env.NODE_PORT || 8002;
+  server.listen(actualPort, '0.0.0.0', () => {
+    console.log(`Server running on port ${actualPort}`);
   });
 }).catch(err => {
   console.error('Failed to connect to MongoDB:', err);
