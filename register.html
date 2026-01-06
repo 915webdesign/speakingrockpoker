@@ -1009,33 +1009,152 @@
     });
 
     // Form Submissions
-    function submitWaitlist(e) {
+    const API_URL = window.location.origin + '/api';
+    
+    async function submitWaitlist(e) {
       e.preventDefault();
-      const form = document.getElementById('waitlistForm');
-      const success = document.getElementById('waitlist-success');
       
-      form.style.display = 'none';
-      document.querySelector('#waitlist .live-status').style.display = 'none';
-      success.classList.add('show');
+      const name = document.getElementById('wl-name').value;
+      const phone = document.getElementById('wl-phone').value;
+      const card = document.getElementById('wl-card').value;
+      const game = document.querySelector('.game-option.selected input').value;
+      const numPlayers = document.getElementById('wl-players').value;
+      const buyin = document.getElementById('wl-buyin').value;
+      
+      try {
+        const response = await fetch(`${API_URL}/waitlist`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            player_name: name,
+            phone: phone,
+            card_number: card || null,
+            game_id: game,
+            num_players: parseInt(numPlayers),
+            planned_buyin: parseInt(buyin)
+          })
+        });
+        
+        const data = await response.json();
+        
+        if (!response.ok) {
+          alert('Error: ' + (data.detail || 'Failed to join waitlist'));
+          return;
+        }
+        
+        // Update success message with position
+        document.querySelector('#waitlist-success .confirmation-code').textContent = '#' + data.entry.position;
+        
+        const form = document.getElementById('waitlistForm');
+        const success = document.getElementById('waitlist-success');
+        
+        form.style.display = 'none';
+        document.querySelector('#waitlist .live-status').style.display = 'none';
+        success.classList.add('show');
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Error joining waitlist. Please try again.');
+      }
     }
 
-    function submitTournament(e) {
+    async function submitTournament(e) {
       e.preventDefault();
-      const form = document.getElementById('tournamentForm');
-      const success = document.getElementById('tournament-success');
       
-      form.style.display = 'none';
-      success.classList.add('show');
+      const name = document.getElementById('t-name').value;
+      const phone = document.getElementById('t-phone').value;
+      const email = document.getElementById('t-email').value;
+      
+      try {
+        // In production, this would use the actual tournament ID
+        const response = await fetch(`${API_URL}/tournaments`);
+        const tournaments = await response.json();
+        const tournamentId = tournaments[0]?.id;
+        
+        if (tournamentId) {
+          const regResponse = await fetch(`${API_URL}/tournaments/${tournamentId}/register`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              player_name: name,
+              phone: phone,
+              email: email || null,
+              tournament_id: tournamentId
+            })
+          });
+          
+          const data = await regResponse.json();
+          
+          if (!regResponse.ok) {
+            alert('Error: ' + (data.detail || 'Failed to register'));
+            return;
+          }
+          
+          // Update confirmation code
+          document.querySelector('#tournament-success .confirmation-code').textContent = data.registration.confirmation;
+        }
+        
+        const form = document.getElementById('tournamentForm');
+        const success = document.getElementById('tournament-success');
+        
+        form.style.display = 'none';
+        success.classList.add('show');
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Error registering for tournament. Please try again.');
+      }
     }
 
-    function submitAccount(e) {
+    async function submitAccount(e) {
       e.preventDefault();
-      const form = document.getElementById('accountForm');
-      const success = document.getElementById('account-success');
       
-      form.style.display = 'none';
-      document.querySelector('#account p').style.display = 'none';
-      success.classList.add('show');
+      const firstName = document.getElementById('a-firstname').value;
+      const lastName = document.getElementById('a-lastname').value;
+      const email = document.getElementById('a-email').value;
+      const phone = document.getElementById('a-phone').value;
+      const password = document.getElementById('a-password').value;
+      
+      try {
+        const response = await fetch(`${API_URL}/auth/player/register`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            first_name: firstName,
+            last_initial: lastName.charAt(0).toUpperCase(),
+            phone: phone,
+            email: email,
+            pin: password.substring(0, 4) // Use first 4 chars as PIN
+          })
+        });
+        
+        const data = await response.json();
+        
+        if (!response.ok) {
+          alert('Error: ' + (data.detail || 'Failed to create account'));
+          return;
+        }
+        
+        // Update player ID display
+        document.querySelector('#account-success .confirmation-code').textContent = 'Card #' + data.player.card_number;
+        
+        // Save session
+        localStorage.setItem('playerSession', JSON.stringify({
+          token: data.token,
+          cardNumber: data.player.card_number,
+          playerId: data.player.id,
+          name: data.player.name,
+          points: 0
+        }));
+        
+        const form = document.getElementById('accountForm');
+        const success = document.getElementById('account-success');
+        
+        form.style.display = 'none';
+        document.querySelector('#account p').style.display = 'none';
+        success.classList.add('show');
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Error creating account. Please try again.');
+      }
     }
   </script>
 
