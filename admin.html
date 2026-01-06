@@ -3835,9 +3835,10 @@
     }
 
     // Add player from modal
-    function addPlayerFromModal() {
+    async function addPlayerFromModal() {
       const name = document.getElementById('modalPlayerName').value;
       const phone = document.getElementById('modalPlayerPhone').value;
+      const card = document.getElementById('modalPlayerCard').value;
       const game = document.getElementById('modalPlayerGame').value;
       
       if (!name || !phone || !game) {
@@ -3845,14 +3846,30 @@
         return;
       }
       
-      showToast(`${name} added to waitlist!`);
-      closeModal('addPlayerModal');
-      
-      // Clear form
-      document.getElementById('modalPlayerName').value = '';
-      document.getElementById('modalPlayerPhone').value = '';
-      document.getElementById('modalPlayerCard').value = '';
-      document.getElementById('modalPlayerGame').value = '';
+      try {
+        await apiCall('/waitlist', 'POST', {
+          player_name: name,
+          phone: phone,
+          card_number: card || null,
+          game_id: game,
+          num_players: 1,
+          planned_buyin: 300
+        });
+        
+        showToast(`${name} added to waitlist!`);
+        closeModal('addPlayerModal');
+        
+        // Clear form
+        document.getElementById('modalPlayerName').value = '';
+        document.getElementById('modalPlayerPhone').value = '';
+        document.getElementById('modalPlayerCard').value = '';
+        document.getElementById('modalPlayerGame').value = '';
+        
+        // Refresh live data
+        loadLiveData();
+      } catch (e) {
+        console.error('Error adding player:', e);
+      }
     }
 
     // Toast notification
