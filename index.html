@@ -584,41 +584,106 @@
       margin: 0 auto;
     }
 
-    .form-group {
-      margin-bottom: 1.5rem;
+    /* Waitlist CTA Box */
+    .waitlist-cta-box {
+      background: linear-gradient(145deg, rgba(20,20,20,0.95) 0%, rgba(10,10,10,0.98) 100%);
+      border: 1px solid rgba(212, 165, 50, 0.25);
+      border-radius: 16px;
+      padding: 3rem 2.5rem;
+      max-width: 480px;
+      margin: 2rem auto 0;
+      text-align: center;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
     }
 
-    .form-group label {
-      display: block;
+    .waitlist-cta-icon {
+      margin-bottom: 1.25rem;
+    }
+
+    .waitlist-cta-icon svg {
+      opacity: 0.9;
+    }
+
+    .waitlist-cta-content h3 {
+      font-family: 'Cinzel', serif;
       color: var(--gold);
-      font-size: 0.8rem;
-      font-weight: 500;
-      text-transform: uppercase;
+      font-size: 1.4rem;
+      margin-bottom: 1rem;
       letter-spacing: 1px;
-      margin-bottom: 0.5rem;
     }
 
-    .form-group input,
-    .form-group select {
+    .waitlist-cta-content > p {
+      color: rgba(255,255,255,0.75);
+      font-size: 0.95rem;
+      line-height: 1.7;
+      margin-bottom: 1.75rem;
+    }
+
+    .waitlist-cta-features {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.875rem 1.5rem;
+      text-align: left;
+      margin-bottom: 1.75rem;
+      padding: 0 0.5rem;
+    }
+
+    .waitlist-feature {
+      color: rgba(255,255,255,0.8);
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .feature-check {
+      color: var(--gold);
+      font-weight: 600;
+    }
+
+    .waitlist-cta-btn {
       width: 100%;
-      padding: 1rem;
-      background: var(--black);
-      border: 1px solid rgba(212, 165, 50, 0.3);
-      color: var(--light-gray);
-      font-family: 'Montserrat', sans-serif;
-      font-size: 1rem;
-      transition: border-color 0.3s ease;
-      border-radius: 2px;
+      padding: 1rem 2rem;
+      font-size: 0.9rem;
+      letter-spacing: 1px;
+      margin-bottom: 1.25rem;
+      display: block;
+      text-align: center;
     }
 
-    .form-group input:focus,
-    .form-group select:focus {
-      outline: none;
-      border-color: var(--gold);
+    .waitlist-new-member {
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.7);
+      margin: 0;
     }
 
-    .form-group select option {
-      background: var(--black);
+    .waitlist-new-member a {
+      color: var(--gold);
+      text-decoration: underline;
+      font-weight: 500;
+    }
+
+    .waitlist-new-member a:hover {
+      color: var(--gold-light);
+    }
+
+    .waitlist-new-member .free-play {
+      color: #22c55e;
+      font-weight: 700;
+    }
+
+    @media (max-width: 540px) {
+      .waitlist-cta-features {
+        grid-template-columns: 1fr;
+        gap: 0.625rem;
+      }
+      .waitlist-cta-box {
+        padding: 2rem 1.5rem;
+        margin: 1.5rem 1rem 0;
+      }
+      .waitlist-cta-content h3 {
+        font-size: 1.2rem;
+      }
     }
 
     /* Info Grid */
@@ -880,8 +945,8 @@
   </header>
 
   <div class="promo-banner">
-    <h3>🎄 12 Days of Giveaway Glory! 🎄</h3>
-    <p>December 12-23: Get a ticket every day you play tournaments or cash! All tickets valid for New Year's Eve Drawings!</p>
+    <h3>🏆 January Points Race - Win Big in February! 🏆</h3>
+    <p>Earn points all month playing tournaments & cash! Top 30 get FREE entry to Feb 7 tournament. Plus $500/hour drawings on Feb 12!</p>
   </div>
 
   <!-- Live Status Widget -->
@@ -913,7 +978,7 @@
           <span class="live-stat-label">Est. Wait</span>
         </div>
       </div>
-      <a href="register.html" class="live-cta">Join Now →</a>
+      <a href="login.html?redirect=app.html" class="live-cta">Join Now →</a>
     </div>
   </div>
 
@@ -921,7 +986,7 @@
     <div class="hero-content">
       <p class="tagline">El Paso's Premier Digital Poker Room</p>
       <div class="hero-buttons">
-        <a href="register.html" class="btn btn-primary">Join Wait List</a>
+        <a href="login.html?redirect=app.html" class="btn btn-primary">Join Wait List</a>
         <a href="#schedule" class="btn btn-secondary">View Schedule</a>
       </div>
     </div>
@@ -962,7 +1027,8 @@
         <div class="schedule-time">3:00 PM Daily</div>
         <div class="schedule-name">Early Bird Hold'em</div>
         <div class="schedule-details">
-          <strong>Buy-in:</strong> $10 w/ one $20 Rebuy
+          <strong>Buy-in:</strong> $10 w/ one $20 Rebuy<br>
+          <strong>Add-on:</strong> $10
         </div>
       </div>
 
@@ -970,23 +1036,14 @@
         <div class="schedule-time">3:00 PM Mondays</div>
         <div class="schedule-name">Early Bird PLO</div>
         <div class="schedule-details">
-          <strong>Buy-in:</strong> $10 w/ one $20 Rebuy
+          <strong>Buy-in:</strong> $10 w/ one $20 Rebuy<br>
+          <strong>Add-on:</strong> $10
         </div>
       </div>
 
       <div class="schedule-card featured">
-        <div class="schedule-time">7:00 PM Nightly</div>
-        <div class="schedule-name">No Limit Hold'em</div>
-        <div class="schedule-details">
-          <strong>Buy-in:</strong> $20<br>
-          <strong>Rebuy:</strong> $10 • <strong>Add-on:</strong> $10
-        </div>
-        <div class="guarantee-badge">Nightly Action</div>
-      </div>
-
-      <div class="schedule-card featured">
-        <div class="schedule-time">7:00 PM Mondays</div>
-        <div class="schedule-name">Pot Limit Omaha</div>
+        <div class="schedule-time">7:00 PM Mon</div>
+        <div class="schedule-name">PLO Night</div>
         <div class="schedule-details">
           <strong>Buy-in:</strong> $20<br>
           <strong>Rebuy:</strong> $10 • <strong>Add-on:</strong> $10
@@ -995,21 +1052,30 @@
       </div>
 
       <div class="schedule-card featured">
-        <div class="schedule-time">7:00 PM Fridays</div>
-        <div class="schedule-name">Friday Feature</div>
+        <div class="schedule-time">7:00 PM Fri</div>
+        <div class="schedule-name">Friday $3K</div>
         <div class="schedule-details">
-          <strong>Buy-in:</strong> $20<br>
+          <strong>Buy-in:</strong> $10<br>
           <strong>Rebuy:</strong> $20 • <strong>Add-on:</strong> $20
         </div>
         <div class="guarantee-badge">$3,000 GTD</div>
       </div>
 
       <div class="schedule-card">
-        <div class="schedule-time">7:00 PM Wednesdays</div>
+        <div class="schedule-time">7:00 PM Wed/Thu/Sat</div>
         <div class="schedule-name">Freeroll</div>
         <div class="schedule-details">
           <strong>Free Entry!</strong><br>
           <strong>Rebuy:</strong> $20 • <strong>Add-on:</strong> $10
+        </div>
+      </div>
+
+      <div class="schedule-card">
+        <div class="schedule-time">Saturdays</div>
+        <div class="schedule-name">No Early Bird</div>
+        <div class="schedule-details">
+          <strong style="color: var(--gold);">$200/hr Splash Pots</strong><br>
+          3PM - 12AM on cash tables
         </div>
       </div>
     </div>
@@ -1018,25 +1084,38 @@
   <section class="section section-dark" id="tournaments">
     <div class="section-inner">
       <h2 class="section-title">Special Events</h2>
-      <p class="section-subtitle">December 2025</p>
+      <p class="section-subtitle">January 2026</p>
 
       <div class="special-events">
         <div class="special-card">
-          <h3>🎅 Naughty or Nice</h3>
-          <div class="date">Saturday, December 13 @ 4PM</div>
+          <h3>👑 Ladies Only: Queens Showdown</h3>
+          <div class="date">Friday, January 17 @ 4PM</div>
           <div class="details">
-            <strong>Buy-in:</strong> $50 • <strong>Rebuy:</strong> $50 • <strong>Add-on:</strong> $50<br><br>
-            Hot Seat Giveaway Every Hour 5PM-2AM!
+            <strong>Buy-in:</strong> $50 for 25K chips<br>
+            <strong>Rebuys:</strong> Unlimited $50 for 45K chips<br>
+            <strong>Add-on:</strong> $20 for 65K chips<br><br>
+            <strong style="color: var(--gold);">Top 5 Prizes:</strong> Pandora Bracelet, Jared's Earrings, Michael Kors, Dinner for 2, Pottery Barn Blanket<br><br>
+            $200/hr Splash Pots on Cash Tables 5PM-12AM!
           </div>
         </div>
 
         <div class="special-card">
-          <h3>🎉 Bye Felicia, Hello Chips!</h3>
-          <div class="date">New Year's Eve - Dec 31 @ 4PM</div>
+          <h3>🏆 February 7 Points Tournament</h3>
+          <div class="date">Saturday, February 7 @ 4PM</div>
           <div class="details">
-            <strong>Buy-in:</strong> $50 • <strong>Add-on:</strong> $20<br><br>
-            <strong style="color: var(--gold);">$2,026 in Drawings!</strong><br>
-            8PM • 11PM • 1AM
+            <strong>Buy-in:</strong> $100<br><br>
+            <strong style="color: var(--gold);">Top 30 January Point Earners = FREE Entry!</strong><br><br>
+            Earn points all January playing tournaments & cash games.
+          </div>
+        </div>
+
+        <div class="special-card">
+          <h3>🎰 February 12 Cash Drawings</h3>
+          <div class="date">Thursday, February 12 @ 3PM</div>
+          <div class="details">
+            <strong style="color: var(--gold);">$500/Hour Drawings 4PM-11PM!</strong><br><br>
+            Convert January points to raffle tickets (20 pts = 1 ticket).<br><br>
+            All point earners qualify!
           </div>
         </div>
       </div>
@@ -1044,7 +1123,7 @@
   </section>
 
   <section class="section" id="cash">
-    <h2 class="section-title">Cash Games</h2>
+    <h2 class="section-title">Cash Games & Promos</h2>
     <p class="section-subtitle">Action starts at 2PM daily</p>
 
     <div class="cash-info">
@@ -1055,21 +1134,21 @@
       </div>
 
       <div class="cash-card">
-        <h3>Hourly Drawings</h3>
-        <div class="highlight">$100-$250</div>
-        <p>Every hour 3PM-12AM<br>Must be seated to win</p>
+        <h3>High Hand Wheel</h3>
+        <div class="highlight">$50-$1,000</div>
+        <p>Hit high hand of the day<br>Spin the wheel to win!</p>
       </div>
 
       <div class="cash-card">
-        <h3>Splashpots</h3>
-        <div class="highlight">$100</div>
-        <p>Sundays @ 2PM<br>Random pots all day</p>
+        <h3>Flush Madness</h3>
+        <div class="highlight">$250+</div>
+        <p>Hit all 4 flushes to win!<br>2PM-8PM & 8PM-2AM</p>
       </div>
 
       <div class="cash-card">
-        <h3>Hot Hand</h3>
-        <div class="highlight">Thursdays</div>
-        <p>Special promotions<br>Cash games @ 2PM</p>
+        <h3>Splash Pots</h3>
+        <div class="highlight">$200/hr</div>
+        <p>Saturdays 3PM-12AM<br>Special event days</p>
       </div>
     </div>
   </section>
@@ -1079,37 +1158,26 @@
       <h2 class="section-title">Join the Wait List</h2>
       <p class="section-subtitle">Get notified when your seat is ready</p>
 
-      <form class="waitlist-form">
-        <div class="form-group">
-          <label for="name">Full Name</label>
-          <input type="text" id="name" placeholder="Enter your name" required>
+      <div class="waitlist-cta-box">
+        <div class="waitlist-cta-content">
+          <div class="waitlist-cta-icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#D4A532" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+              <line x1="12" y1="18" x2="12.01" y2="18"></line>
+            </svg>
+          </div>
+          <h3>Join from Your Phone</h3>
+          <p>Sign in with your player card to join the waitlist, track your position, and get notified when your seat is ready.</p>
+          <div class="waitlist-cta-features">
+            <div class="waitlist-feature"><span class="feature-check">✓</span> Real-time position updates</div>
+            <div class="waitlist-feature"><span class="feature-check">✓</span> SMS notifications</div>
+            <div class="waitlist-feature"><span class="feature-check">✓</span> Track your points</div>
+            <div class="waitlist-feature"><span class="feature-check">✓</span> Order food from your seat</div>
+          </div>
+          <a href="login.html?redirect=app.html" class="btn btn-primary waitlist-cta-btn">Sign In & Join Waitlist</a>
+          <p class="waitlist-new-member">New player? <a href="login.html?redirect=app.html">Create an account</a> and get <span class="free-play">$30 Free Play!</span></p>
         </div>
-        <div class="form-group">
-          <label for="phone">Phone Number</label>
-          <input type="tel" id="phone" placeholder="(915) 555-0000" required>
-        </div>
-        <div class="form-group">
-          <label for="game">Game Selection</label>
-          <select id="game" required>
-            <option value="">Select a game...</option>
-            <option value="nlh-1-3">$1/$3 No Limit Hold'em</option>
-            <option value="early-bird">3PM Early Bird Tournament</option>
-            <option value="evening">7PM Evening Tournament</option>
-            <option value="plo-monday">Monday PLO</option>
-            <option value="friday-gtd">Friday $3K Guarantee</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="players">Number of Players</label>
-          <select id="players">
-            <option value="1">1 Player</option>
-            <option value="2">2 Players</option>
-            <option value="3">3 Players</option>
-            <option value="4">4+ Players</option>
-          </select>
-        </div>
-        <button type="submit" class="btn btn-primary" style="width: 100%;">Join Wait List</button>
-      </form>
+      </div>
     </div>
   </section>
 

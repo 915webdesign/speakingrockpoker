@@ -26,6 +26,10 @@
       --blue-bg: rgba(59, 130, 246, 0.15);
       --yellow: #eab308;
       --yellow-bg: rgba(234, 179, 8, 0.15);
+      --orange: #f97316;
+      --orange-bg: rgba(249, 115, 22, 0.15);
+      --purple: #a855f7;
+      --purple-bg: rgba(168, 85, 247, 0.15);
     }
 
     * {
@@ -720,6 +724,55 @@
       text-transform: uppercase;
     }
 
+    /* Table Selection Buttons */
+    .table-select-btn {
+      background: var(--bg-dark);
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      padding: 0.75rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      color: var(--text);
+    }
+    .table-select-btn:hover:not(.disabled) {
+      border-color: var(--gold);
+      background: var(--bg-card);
+    }
+    .table-select-btn.active {
+      border-color: var(--gold);
+      background: rgba(212, 165, 50, 0.15);
+    }
+
+    /* Seat Selection Buttons */
+    .seat-select-btn {
+      background: var(--gold);
+      border: 2px solid var(--gold);
+      border-radius: 8px;
+      padding: 0.75rem;
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      color: #000;
+    }
+    .seat-select-btn:hover:not(.occupied):not(.selected) {
+      background: var(--gold-light);
+      transform: scale(1.05);
+    }
+    .seat-select-btn.occupied {
+      background: var(--bg-card);
+      border-color: var(--border);
+      color: var(--text-muted);
+      cursor: not-allowed;
+    }
+    .seat-select-btn.selected {
+      background: var(--green);
+      border-color: var(--green);
+      color: white;
+      transform: scale(1.1);
+    }
+
     /* Modal */
     .modal-overlay {
       display: none;
@@ -918,9 +971,31 @@
           <span class="icon">👥</span>
           Players
         </a>
+        <a class="nav-item" onclick="showPage('points')">
+          <span class="icon">⭐</span>
+          January Points
+        </a>
+        <a class="nav-item" onclick="showPage('promoTracker')">
+          <span class="icon">♠️</span>
+          Promo Tracker
+          <span class="badge" style="background: var(--green);">Live</span>
+        </a>
+        <a class="nav-item" onclick="showPage('orders')">
+          <span class="icon">🍽️</span>
+          Food Orders
+          <span class="badge" style="background: var(--orange);">3</span>
+        </a>
+        <a class="nav-item" onclick="showPage('notifications')">
+          <span class="icon">🔔</span>
+          Notifications
+        </a>
         <a class="nav-item" onclick="showPage('promos')">
           <span class="icon">🎁</span>
           Promotions
+        </a>
+        <a class="nav-item" onclick="showPage('reports')">
+          <span class="icon">📊</span>
+          Activity Log
         </a>
         <a class="nav-item" onclick="showPage('settings')">
           <span class="icon">⚙️</span>
@@ -934,7 +1009,11 @@
           <span class="icon">📺</span>
           TV Display
         </a>
-        <a class="nav-item" href="waitlist.html" target="_blank">
+        <a class="nav-item" href="flush-display.html" target="_blank">
+          <span class="icon">♠️</span>
+          Flush Attack TV
+        </a>
+        <a class="nav-item" href="app.html" target="_blank">
           <span class="icon">📱</span>
           Player App
         </a>
@@ -976,6 +1055,134 @@
               <div class="stat-label">Tournament Signups</div>
               <div class="stat-value">24</div>
               <div class="stat-change up">Saturday $135 NLH</div>
+            </div>
+          </div>
+
+          <!-- Flush Attack Tracker -->
+          <div class="section-card" style="border-color: var(--blue);">
+            <div class="section-header">
+              <div class="section-title">
+                <span class="icon">♠️</span>
+                Flush Attack
+                <span class="badge" style="background: var(--green);">2PM-8PM Active</span>
+              </div>
+              <button class="btn btn-sm btn-secondary" onclick="showPage('promoTracker')">Full Tracker</button>
+            </div>
+            <div class="section-content">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <div>
+                  <div style="font-size: 0.85rem; color: var(--text-muted);">Flush & Shine Jackpot</div>
+                  <div style="font-size: 1.75rem; font-weight: 700; color: var(--green);">$3,000</div>
+                </div>
+                <div style="text-align: right;">
+                  <div style="font-size: 0.85rem; color: var(--text-muted);">Last Call (8PM-2AM)</div>
+                  <div style="font-size: 1.25rem; font-weight: 600; color: var(--text-muted);">$1,150</div>
+                </div>
+              </div>
+              
+              <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem;">Click suits to toggle (player needs all 4 to win):</div>
+              <div id="playerFlushList" style="max-height: 280px; overflow-y: auto;">
+                
+                <!-- Mike R - 3/4 -->
+                <div id="flush-row-mike" style="background: rgba(212, 165, 50, 0.15); border: 1px solid var(--gold); border-radius: 8px; padding: 0.75rem; margin-bottom: 0.5rem;">
+                  <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div style="display: flex; align-items: center; gap: 0.75rem;">
+                      <div style="width: 32px; height: 32px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #000; font-weight: 600; font-size: 0.75rem;">MR</div>
+                      <div>
+                        <div style="font-weight: 600;">Mike R <span id="mike-count" style="color: var(--gold);">⭐ 3/4</span></div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted);">#23456 • Table 1</div>
+                      </div>
+                    </div>
+                    <div style="display: flex; gap: 0.35rem;">
+                      <span id="mike-spade" onclick="toggleFlushSuit('mike', 'spade', 'Mike R')" class="flush-suit hit" style="cursor: pointer; font-size: 1.25rem; padding: 0.2rem 0.4rem; border-radius: 4px; background: rgba(34,197,94,0.25);">♠️</span>
+                      <span id="mike-heart" onclick="toggleFlushSuit('mike', 'heart', 'Mike R')" class="flush-suit hit" style="cursor: pointer; font-size: 1.25rem; padding: 0.2rem 0.4rem; border-radius: 4px; background: rgba(34,197,94,0.25);">♥️</span>
+                      <span id="mike-diamond" onclick="toggleFlushSuit('mike', 'diamond', 'Mike R')" class="flush-suit hit" style="cursor: pointer; font-size: 1.25rem; padding: 0.2rem 0.4rem; border-radius: 4px; background: rgba(34,197,94,0.25);">♦️</span>
+                      <span id="mike-club" onclick="toggleFlushSuit('mike', 'club', 'Mike R')" class="flush-suit" style="cursor: pointer; font-size: 1.25rem; padding: 0.2rem 0.4rem; border-radius: 4px; opacity: 0.3;">♣️</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Jennifer L - 2/4 -->
+                <div id="flush-row-jennifer" style="background: var(--bg-dark); border: 1px solid var(--border); border-radius: 8px; padding: 0.75rem; margin-bottom: 0.5rem;">
+                  <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div style="display: flex; align-items: center; gap: 0.75rem;">
+                      <div style="width: 32px; height: 32px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #000; font-weight: 600; font-size: 0.75rem;">JL</div>
+                      <div>
+                        <div style="font-weight: 600;">Jennifer L <span id="jennifer-count" style="color: var(--text-muted);">2/4</span></div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted);">#34567 • Table 2</div>
+                      </div>
+                    </div>
+                    <div style="display: flex; gap: 0.35rem;">
+                      <span id="jennifer-spade" onclick="toggleFlushSuit('jennifer', 'spade', 'Jennifer L')" class="flush-suit" style="cursor: pointer; font-size: 1.25rem; padding: 0.2rem 0.4rem; border-radius: 4px; opacity: 0.3;">♠️</span>
+                      <span id="jennifer-heart" onclick="toggleFlushSuit('jennifer', 'heart', 'Jennifer L')" class="flush-suit hit" style="cursor: pointer; font-size: 1.25rem; padding: 0.2rem 0.4rem; border-radius: 4px; background: rgba(34,197,94,0.25);">♥️</span>
+                      <span id="jennifer-diamond" onclick="toggleFlushSuit('jennifer', 'diamond', 'Jennifer L')" class="flush-suit hit" style="cursor: pointer; font-size: 1.25rem; padding: 0.2rem 0.4rem; border-radius: 4px; background: rgba(34,197,94,0.25);">♦️</span>
+                      <span id="jennifer-club" onclick="toggleFlushSuit('jennifer', 'club', 'Jennifer L')" class="flush-suit" style="cursor: pointer; font-size: 1.25rem; padding: 0.2rem 0.4rem; border-radius: 4px; opacity: 0.3;">♣️</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Carlos M - 1/4 -->
+                <div id="flush-row-carlos" style="background: var(--bg-dark); border: 1px solid var(--border); border-radius: 8px; padding: 0.75rem; margin-bottom: 0.5rem;">
+                  <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div style="display: flex; align-items: center; gap: 0.75rem;">
+                      <div style="width: 32px; height: 32px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #000; font-weight: 600; font-size: 0.75rem;">CM</div>
+                      <div>
+                        <div style="font-weight: 600;">Carlos M <span id="carlos-count" style="color: var(--text-muted);">1/4</span></div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted);">#45678 • Table 1</div>
+                      </div>
+                    </div>
+                    <div style="display: flex; gap: 0.35rem;">
+                      <span id="carlos-spade" onclick="toggleFlushSuit('carlos', 'spade', 'Carlos M')" class="flush-suit" style="cursor: pointer; font-size: 1.25rem; padding: 0.2rem 0.4rem; border-radius: 4px; opacity: 0.3;">♠️</span>
+                      <span id="carlos-heart" onclick="toggleFlushSuit('carlos', 'heart', 'Carlos M')" class="flush-suit" style="cursor: pointer; font-size: 1.25rem; padding: 0.2rem 0.4rem; border-radius: 4px; opacity: 0.3;">♥️</span>
+                      <span id="carlos-diamond" onclick="toggleFlushSuit('carlos', 'diamond', 'Carlos M')" class="flush-suit hit" style="cursor: pointer; font-size: 1.25rem; padding: 0.2rem 0.4rem; border-radius: 4px; background: rgba(34,197,94,0.25);">♦️</span>
+                      <span id="carlos-club" onclick="toggleFlushSuit('carlos', 'club', 'Carlos M')" class="flush-suit" style="cursor: pointer; font-size: 1.25rem; padding: 0.2rem 0.4rem; border-radius: 4px; opacity: 0.3;">♣️</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- David N - 1/4 -->
+                <div id="flush-row-david" style="background: var(--bg-dark); border: 1px solid var(--border); border-radius: 8px; padding: 0.75rem; margin-bottom: 0.5rem;">
+                  <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div style="display: flex; align-items: center; gap: 0.75rem;">
+                      <div style="width: 32px; height: 32px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #000; font-weight: 600; font-size: 0.75rem;">DN</div>
+                      <div>
+                        <div style="font-weight: 600;">David N <span id="david-count" style="color: var(--text-muted);">1/4</span></div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted);">#12345 • Table 3</div>
+                      </div>
+                    </div>
+                    <div style="display: flex; gap: 0.35rem;">
+                      <span id="david-spade" onclick="toggleFlushSuit('david', 'spade', 'David N')" class="flush-suit hit" style="cursor: pointer; font-size: 1.25rem; padding: 0.2rem 0.4rem; border-radius: 4px; background: rgba(34,197,94,0.25);">♠️</span>
+                      <span id="david-heart" onclick="toggleFlushSuit('david', 'heart', 'David N')" class="flush-suit" style="cursor: pointer; font-size: 1.25rem; padding: 0.2rem 0.4rem; border-radius: 4px; opacity: 0.3;">♥️</span>
+                      <span id="david-diamond" onclick="toggleFlushSuit('david', 'diamond', 'David N')" class="flush-suit" style="cursor: pointer; font-size: 1.25rem; padding: 0.2rem 0.4rem; border-radius: 4px; opacity: 0.3;">♦️</span>
+                      <span id="david-club" onclick="toggleFlushSuit('david', 'club', 'David N')" class="flush-suit" style="cursor: pointer; font-size: 1.25rem; padding: 0.2rem 0.4rem; border-radius: 4px; opacity: 0.3;">♣️</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Sarah K - 0/4 -->
+                <div id="flush-row-sarah" style="background: var(--bg-dark); border: 1px solid var(--border); border-radius: 8px; padding: 0.75rem; margin-bottom: 0.5rem;">
+                  <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div style="display: flex; align-items: center; gap: 0.75rem;">
+                      <div style="width: 32px; height: 32px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #000; font-weight: 600; font-size: 0.75rem;">SK</div>
+                      <div>
+                        <div style="font-weight: 600;">Sarah K <span id="sarah-count" style="color: var(--text-muted);">0/4</span></div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted);">#78901 • Table 1</div>
+                      </div>
+                    </div>
+                    <div style="display: flex; gap: 0.35rem;">
+                      <span id="sarah-spade" onclick="toggleFlushSuit('sarah', 'spade', 'Sarah K')" class="flush-suit" style="cursor: pointer; font-size: 1.25rem; padding: 0.2rem 0.4rem; border-radius: 4px; opacity: 0.3;">♠️</span>
+                      <span id="sarah-heart" onclick="toggleFlushSuit('sarah', 'heart', 'Sarah K')" class="flush-suit" style="cursor: pointer; font-size: 1.25rem; padding: 0.2rem 0.4rem; border-radius: 4px; opacity: 0.3;">♥️</span>
+                      <span id="sarah-diamond" onclick="toggleFlushSuit('sarah', 'diamond', 'Sarah K')" class="flush-suit" style="cursor: pointer; font-size: 1.25rem; padding: 0.2rem 0.4rem; border-radius: 4px; opacity: 0.3;">♦️</span>
+                      <span id="sarah-club" onclick="toggleFlushSuit('sarah', 'club', 'Sarah K')" class="flush-suit" style="cursor: pointer; font-size: 1.25rem; padding: 0.2rem 0.4rem; border-radius: 4px; opacity: 0.3;">♣️</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div style="margin-top: 0.75rem; display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 0.8rem; color: var(--text-muted);">5 active players</span>
+                <button class="btn btn-sm btn-secondary" onclick="resetAllPlayerFlushes()">Reset All</button>
+              </div>
             </div>
           </div>
 
@@ -1161,7 +1368,7 @@
                     <td><span class="status-badge called">Called</span></td>
                     <td>
                       <div class="action-buttons">
-                        <button class="action-btn seat" title="Seat Player">✓</button>
+                        <button class="action-btn seat" title="Seat Player" onclick="openSeatModal('Mike Rodriguez', '23456', '$1/$3 NLH')">✓</button>
                         <button class="action-btn remove" title="Remove">✕</button>
                       </div>
                     </td>
@@ -1183,7 +1390,7 @@
                     <td>
                       <div class="action-buttons">
                         <button class="action-btn call" title="Call Player">📢</button>
-                        <button class="action-btn seat" title="Seat Player">✓</button>
+                        <button class="action-btn seat" title="Seat Player" onclick="openSeatModal('Jennifer Lopez', '34567', '$1/$3 NLH')">✓</button>
                         <button class="action-btn remove" title="Remove">✕</button>
                       </div>
                     </td>
@@ -1205,7 +1412,7 @@
                     <td>
                       <div class="action-buttons">
                         <button class="action-btn call" title="Call Player">📢</button>
-                        <button class="action-btn seat" title="Seat Player">✓</button>
+                        <button class="action-btn seat" title="Seat Player" onclick="openSeatModal('David Negrete', '12345', '$1/$3 NLH')">✓</button>
                         <button class="action-btn remove" title="Remove">✕</button>
                       </div>
                     </td>
@@ -1227,7 +1434,7 @@
                     <td>
                       <div class="action-buttons">
                         <button class="action-btn call" title="Call Player">📢</button>
-                        <button class="action-btn seat" title="Seat Player">✓</button>
+                        <button class="action-btn seat" title="Seat Player" onclick="openSeatModal('Tony Chen', '56789', '$1/$3 PLO')">✓</button>
                         <button class="action-btn remove" title="Remove">✕</button>
                       </div>
                     </td>
@@ -1248,9 +1455,82 @@
                     <td><span class="status-badge called">Called</span></td>
                     <td>
                       <div class="action-buttons">
-                        <button class="action-btn seat" title="Seat Player">✓</button>
+                        <button class="action-btn seat" title="Seat Player" onclick="openSeatModal('Sarah Martinez', '67890', '$2/$5 NLH')">✓</button>
                         <button class="action-btn remove" title="Remove">✕</button>
                       </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Pending Food & Drink Orders -->
+          <div class="section-card" style="border-color: var(--orange);">
+            <div class="section-header">
+              <div class="section-title">
+                <span class="icon">🍽️</span>
+                Pending Orders
+                <span class="badge" style="background: var(--orange);">3 New</span>
+              </div>
+              <button class="btn btn-secondary btn-sm" onclick="showPage('orders')">View All</button>
+            </div>
+            <div class="section-content" style="padding: 0;">
+              <table class="waitlist-table">
+                <thead>
+                  <tr>
+                    <th>Time</th>
+                    <th>Table</th>
+                    <th>Player</th>
+                    <th>Items</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr style="background: rgba(249, 115, 22, 0.1);">
+                    <td><span style="color: var(--orange); font-weight: 600;">2 min ago</span></td>
+                    <td><span class="game-badge">Table 1</span></td>
+                    <td>
+                      <div class="player-cell">
+                        <div class="player-avatar" style="width: 28px; height: 28px; font-size: 0.7rem;">MR</div>
+                        <div><div class="player-name">Mike R</div></div>
+                      </div>
+                    </td>
+                    <td>☕ Coffee, 💧 Water</td>
+                    <td><span class="badge" style="background: var(--orange-bg); color: var(--orange);">New</span></td>
+                    <td>
+                      <button class="btn btn-sm btn-gold" onclick="startOrder(1)">Start</button>
+                    </td>
+                  </tr>
+                  <tr style="background: rgba(249, 115, 22, 0.1);">
+                    <td><span style="color: var(--orange); font-weight: 600;">5 min ago</span></td>
+                    <td><span class="game-badge">Table 2</span></td>
+                    <td>
+                      <div class="player-cell">
+                        <div class="player-avatar" style="width: 28px; height: 28px; font-size: 0.7rem;">JL</div>
+                        <div><div class="player-name">Jennifer L</div></div>
+                      </div>
+                    </td>
+                    <td>🍺 Beer, 🍗 Wings</td>
+                    <td><span class="badge" style="background: var(--orange-bg); color: var(--orange);">New</span></td>
+                    <td>
+                      <button class="btn btn-sm btn-gold" onclick="startOrder(2)">Start</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>8 min ago</td>
+                    <td><span class="game-badge">Table 3</span></td>
+                    <td>
+                      <div class="player-cell">
+                        <div class="player-avatar" style="width: 28px; height: 28px; font-size: 0.7rem;">DN</div>
+                        <div><div class="player-name">David N</div></div>
+                      </div>
+                    </td>
+                    <td>🍔 Burger, 🥤 Coke</td>
+                    <td><span class="badge" style="background: var(--blue-bg); color: var(--blue);">In Progress</span></td>
+                    <td>
+                      <button class="btn btn-sm btn-secondary" onclick="completeOrder(3)">✓ Done</button>
                     </td>
                   </tr>
                 </tbody>
@@ -1302,9 +1582,216 @@
               </div>
             </div>
           </div>
-        </div>
 
-        <!-- Waitlist Page -->
+          <!-- All Active Players Today -->
+          <div class="section-card">
+            <div class="section-header">
+              <div class="section-title">
+                <span class="icon">🎮</span>
+                All Active Players Today
+                <span class="badge" style="background: var(--green);">12 Playing</span>
+              </div>
+              <div style="display: flex; gap: 0.5rem;">
+                <input type="text" placeholder="Search players..." style="padding: 0.5rem 1rem; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-size: 0.85rem;">
+                <button class="btn btn-secondary btn-sm" onclick="showPage('players')">Manage</button>
+              </div>
+            </div>
+            <div class="section-content" style="padding: 0;">
+              <table class="waitlist-table">
+                <thead>
+                  <tr>
+                    <th>Player</th>
+                    <th>Card #</th>
+                    <th>Table</th>
+                    <th>Check-In</th>
+                    <th>Time Playing</th>
+                    <th>Jan Points</th>
+                    <th>Today's Flushes</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <div class="player-cell">
+                        <div class="player-avatar">MR</div>
+                        <div><div class="player-name">Mike R</div></div>
+                      </div>
+                    </td>
+                    <td>#23456</td>
+                    <td><span class="game-badge">Table 1</span></td>
+                    <td>10:15 AM</td>
+                    <td><span style="color: var(--green); font-weight: 600;">5h 45m</span></td>
+                    <td><span style="color: var(--gold); font-weight: 600;">156 pts</span></td>
+                    <td>
+                      <span style="color: var(--green);">♠️</span>
+                      <span style="color: var(--text-muted);">♥️</span>
+                      <span style="color: var(--text-muted);">♦️</span>
+                      <span style="color: var(--text-muted);">♣️</span>
+                    </td>
+                    <td>
+                      <button class="btn btn-sm btn-gold" onclick="showPlayerPromoActions('23456', 'Mike R')">+ Award</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="player-cell">
+                        <div class="player-avatar">JL</div>
+                        <div><div class="player-name">Jennifer L</div></div>
+                      </div>
+                    </td>
+                    <td>#34567</td>
+                    <td><span class="game-badge">Table 2</span></td>
+                    <td>12:30 PM</td>
+                    <td><span style="color: var(--blue);">3h 30m</span></td>
+                    <td><span style="color: var(--gold); font-weight: 600;">132 pts</span></td>
+                    <td>
+                      <span style="color: var(--text-muted);">♠️</span>
+                      <span style="color: var(--green);">♥️</span>
+                      <span style="color: var(--green);">♦️</span>
+                      <span style="color: var(--text-muted);">♣️</span>
+                    </td>
+                    <td>
+                      <button class="btn btn-sm btn-gold" onclick="showPlayerPromoActions('34567', 'Jennifer L')">+ Award</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="player-cell">
+                        <div class="player-avatar">CM</div>
+                        <div><div class="player-name">Carlos M</div></div>
+                      </div>
+                    </td>
+                    <td>#45678</td>
+                    <td><span class="game-badge">Table 1</span></td>
+                    <td>2:00 PM</td>
+                    <td><span style="color: var(--text-muted);">2h 00m</span></td>
+                    <td><span style="color: var(--gold); font-weight: 600;">118 pts</span></td>
+                    <td>
+                      <span style="color: var(--text-muted);">♠️</span>
+                      <span style="color: var(--text-muted);">♥️</span>
+                      <span style="color: var(--green);">♦️</span>
+                      <span style="color: var(--text-muted);">♣️</span>
+                    </td>
+                    <td>
+                      <button class="btn btn-sm btn-gold" onclick="showPlayerPromoActions('45678', 'Carlos M')">+ Award</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="player-cell">
+                        <div class="player-avatar">TM</div>
+                        <div><div class="player-name">Tony M</div></div>
+                      </div>
+                    </td>
+                    <td>#56789</td>
+                    <td><span class="game-badge">Table 1</span></td>
+                    <td>1:00 PM</td>
+                    <td><span style="color: var(--blue);">3h 00m</span></td>
+                    <td><span style="color: var(--gold); font-weight: 600;">78 pts</span></td>
+                    <td>
+                      <span style="color: var(--text-muted);">♠️</span>
+                      <span style="color: var(--text-muted);">♥️</span>
+                      <span style="color: var(--text-muted);">♦️</span>
+                      <span style="color: var(--green);">♣️</span>
+                    </td>
+                    <td>
+                      <button class="btn btn-sm btn-gold" onclick="showPlayerPromoActions('56789', 'Tony M')">+ Award</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="player-cell">
+                        <div class="player-avatar">SK</div>
+                        <div><div class="player-name">Sarah K</div></div>
+                      </div>
+                    </td>
+                    <td>#78901</td>
+                    <td><span class="game-badge">Table 1</span></td>
+                    <td>11:30 AM</td>
+                    <td><span style="color: var(--green); font-weight: 600;">4h 30m</span></td>
+                    <td><span style="color: var(--gold); font-weight: 600;">45 pts</span></td>
+                    <td>
+                      <span style="color: var(--text-muted);">♠️</span>
+                      <span style="color: var(--text-muted);">♥️</span>
+                      <span style="color: var(--text-muted);">♦️</span>
+                      <span style="color: var(--text-muted);">♣️</span>
+                    </td>
+                    <td>
+                      <button class="btn btn-sm btn-gold" onclick="showPlayerPromoActions('78901', 'Sarah K')">+ Award</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="player-cell">
+                        <div class="player-avatar">DN</div>
+                        <div><div class="player-name">David N</div></div>
+                      </div>
+                    </td>
+                    <td>#12345</td>
+                    <td><span class="game-badge">Table 3</span></td>
+                    <td>3:15 PM</td>
+                    <td><span style="color: var(--text-muted);">45m</span></td>
+                    <td><span style="color: var(--gold); font-weight: 600;">89 pts</span></td>
+                    <td>
+                      <span style="color: var(--text-muted);">♠️</span>
+                      <span style="color: var(--text-muted);">♥️</span>
+                      <span style="color: var(--text-muted);">♦️</span>
+                      <span style="color: var(--text-muted);">♣️</span>
+                    </td>
+                    <td>
+                      <button class="btn btn-sm btn-gold" onclick="showPlayerPromoActions('12345', 'David N')">+ Award</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="player-cell">
+                        <div class="player-avatar">RG</div>
+                        <div><div class="player-name">Robert G</div></div>
+                      </div>
+                    </td>
+                    <td>#11223</td>
+                    <td><span class="game-badge">Table 2</span></td>
+                    <td>10:00 AM</td>
+                    <td><span style="color: var(--green); font-weight: 600;">6h 00m</span></td>
+                    <td><span style="color: var(--gold); font-weight: 600;">67 pts</span></td>
+                    <td>
+                      <span style="color: var(--green);">♠️</span>
+                      <span style="color: var(--green);">♥️</span>
+                      <span style="color: var(--text-muted);">♦️</span>
+                      <span style="color: var(--text-muted);">♣️</span>
+                    </td>
+                    <td>
+                      <button class="btn btn-sm btn-gold" onclick="showPlayerPromoActions('11223', 'Robert G')">+ Award</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="player-cell">
+                        <div class="player-avatar">AM</div>
+                        <div><div class="player-name">Anna M</div></div>
+                      </div>
+                    </td>
+                    <td>#33445</td>
+                    <td><span class="game-badge">Table 2</span></td>
+                    <td>11:00 AM</td>
+                    <td><span style="color: var(--green); font-weight: 600;">5h 00m</span></td>
+                    <td><span style="color: var(--gold); font-weight: 600;">52 pts</span></td>
+                    <td>
+                      <span style="color: var(--text-muted);">♠️</span>
+                      <span style="color: var(--text-muted);">♥️</span>
+                      <span style="color: var(--green);">♦️</span>
+                      <span style="color: var(--green);">♣️</span>
+                    </td>
+                    <td>
+                      <button class="btn btn-sm btn-gold" onclick="showPlayerPromoActions('33445', 'Anna M')">+ Award</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
         <div class="page" id="waitlistPage">
           <div class="section-card">
             <div class="section-header">
@@ -1342,17 +1829,555 @@
 
         <!-- Tables Page -->
         <div class="page" id="tablesPage">
-          <div class="section-card">
+          <!-- Table Overview Grid -->
+          <div class="section-card" id="tablesOverview">
             <div class="section-header">
               <div class="section-title">
                 <span class="icon">🎰</span>
-                Table Management
+                Active Tables
               </div>
-              <button class="btn btn-gold">+ Open New Table</button>
+              <button class="btn btn-gold" onclick="openNewTable()">+ Open New Table</button>
             </div>
             <div class="section-content">
-              <div class="tables-grid">
-                <!-- Tables would be rendered here -->
+              <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
+                <!-- Table 1 -->
+                <div class="table-card" onclick="showTableDetail(1)" style="background: var(--bg-dark); border: 2px solid var(--green); border-radius: 12px; padding: 1.25rem; cursor: pointer; transition: all 0.2s;">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                    <span style="font-weight: 700; font-size: 1.1rem;">Table 1</span>
+                    <span class="badge" style="background: var(--green);">Active</span>
+                  </div>
+                  <div style="color: var(--gold); font-weight: 600; margin-bottom: 0.5rem;">$1/$3 NLH</div>
+                  <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-muted);">
+                    <span>👥 6/8 seats</span>
+                    <span>⏱️ 4h 20m</span>
+                  </div>
+                  <div style="margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--border); font-size: 0.8rem;">
+                    <span style="color: var(--green);">♠️</span>
+                    <span style="color: var(--text-muted);">♥️</span>
+                    <span style="color: var(--green);">♦️</span>
+                    <span style="color: var(--text-muted);">♣️</span>
+                    <span style="margin-left: 0.5rem; color: var(--text-muted);">2/4 flushes</span>
+                  </div>
+                </div>
+                <!-- Table 2 -->
+                <div class="table-card" onclick="showTableDetail(2)" style="background: var(--bg-dark); border: 2px solid var(--green); border-radius: 12px; padding: 1.25rem; cursor: pointer; transition: all 0.2s;">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                    <span style="font-weight: 700; font-size: 1.1rem;">Table 2</span>
+                    <span class="badge" style="background: var(--green);">Active</span>
+                  </div>
+                  <div style="color: var(--gold); font-weight: 600; margin-bottom: 0.5rem;">$1/$3 NLH</div>
+                  <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-muted);">
+                    <span>👥 8/8 seats</span>
+                    <span>⏱️ 2h 15m</span>
+                  </div>
+                  <div style="margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--border); font-size: 0.8rem;">
+                    <span style="color: var(--green);">♠️</span>
+                    <span style="color: var(--green);">♥️</span>
+                    <span style="color: var(--green);">♦️</span>
+                    <span style="color: var(--text-muted);">♣️</span>
+                    <span style="margin-left: 0.5rem; color: var(--gold);">3/4 flushes!</span>
+                  </div>
+                </div>
+                <!-- Table 3 -->
+                <div class="table-card" onclick="showTableDetail(3)" style="background: var(--bg-dark); border: 2px solid var(--blue); border-radius: 12px; padding: 1.25rem; cursor: pointer; transition: all 0.2s;">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                    <span style="font-weight: 700; font-size: 1.1rem;">Table 3</span>
+                    <span class="badge" style="background: var(--blue);">Active</span>
+                  </div>
+                  <div style="color: var(--gold); font-weight: 600; margin-bottom: 0.5rem;">$1/$3 PLO</div>
+                  <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-muted);">
+                    <span>👥 5/8 seats</span>
+                    <span>⏱️ 1h 30m</span>
+                  </div>
+                  <div style="margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--border); font-size: 0.8rem;">
+                    <span style="color: var(--text-muted);">♠️</span>
+                    <span style="color: var(--text-muted);">♥️</span>
+                    <span style="color: var(--text-muted);">♦️</span>
+                    <span style="color: var(--text-muted);">♣️</span>
+                    <span style="margin-left: 0.5rem; color: var(--text-muted);">0/4 flushes</span>
+                  </div>
+                </div>
+                <!-- Closed Table -->
+                <div class="table-card" onclick="openNewTable(4)" style="background: var(--bg-card); border: 2px dashed var(--border); border-radius: 12px; padding: 1.25rem; cursor: pointer; transition: all 0.2s; opacity: 0.6;">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                    <span style="font-weight: 700; font-size: 1.1rem;">Table 4</span>
+                    <span class="badge" style="background: var(--bg-dark);">Closed</span>
+                  </div>
+                  <div style="color: var(--text-muted); margin-bottom: 0.5rem;">Click to open</div>
+                  <div style="font-size: 2rem; text-align: center; color: var(--text-muted);">+</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Table Detail View (hidden by default) -->
+          <div id="tableDetailView" style="display: none;">
+            <div class="section-card">
+              <div class="section-header">
+                <div class="section-title">
+                  <button class="btn btn-sm btn-secondary" onclick="hideTableDetail()" style="margin-right: 0.75rem;">← Back</button>
+                  <span class="icon">🎰</span>
+                  <span id="tableDetailTitle">Table 1 - $1/$3 NLH</span>
+                  <span class="badge" style="background: var(--green); margin-left: 0.5rem;">Active</span>
+                </div>
+                <div style="display: flex; gap: 0.5rem;">
+                  <button class="btn btn-secondary" onclick="addPlayerToTable()">+ Add Player</button>
+                  <button class="btn btn-gold" onclick="closeTable()">Close Table</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Table Stats -->
+            <div class="stats-grid" style="grid-template-columns: repeat(4, 1fr);">
+              <div class="stat-card">
+                <div class="stat-label">Players</div>
+                <div class="stat-value">6/8</div>
+                <div class="stat-change">2 seats open</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-label">Table Open</div>
+                <div class="stat-value" style="font-size: 1.5rem;">4h 20m</div>
+                <div class="stat-change">Since 10:00 AM</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-label">High Hands</div>
+                <div class="stat-value" style="color: var(--gold);">2</div>
+                <div class="stat-change">Today at this table</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-label">Splash Pots</div>
+                <div class="stat-value" style="color: var(--green);">3</div>
+                <div class="stat-change">Awarded today</div>
+              </div>
+            </div>
+
+            <!-- Table Flush Progress -->
+            <div class="section-card">
+              <div class="section-header">
+                <div class="section-title">
+                  <span class="icon">♠️</span>
+                  Table Flush Progress (Flush & Shine)
+                </div>
+                <span style="color: var(--gold); font-weight: 600;">2/4 Hit</span>
+              </div>
+              <div class="section-content">
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;">
+                  <div id="table-flush-spade" style="background: rgba(34, 197, 94, 0.2); border: 2px solid var(--green); border-radius: 10px; padding: 1rem; text-align: center;">
+                    <div style="font-size: 2rem;">♠️</div>
+                    <div style="font-weight: 600; color: var(--green);">HIT</div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted);">Mike R - 2:30 PM</div>
+                  </div>
+                  <div id="table-flush-heart" style="background: var(--bg-dark); border: 2px solid var(--border); border-radius: 10px; padding: 1rem; text-align: center;">
+                    <div style="font-size: 2rem;">♥️</div>
+                    <div style="font-weight: 600; color: var(--text-muted);">Not Hit</div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted);">-</div>
+                  </div>
+                  <div id="table-flush-diamond" style="background: rgba(34, 197, 94, 0.2); border: 2px solid var(--green); border-radius: 10px; padding: 1rem; text-align: center;">
+                    <div style="font-size: 2rem;">♦️</div>
+                    <div style="font-weight: 600; color: var(--green);">HIT</div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted);">Carlos M - 3:15 PM</div>
+                  </div>
+                  <div id="table-flush-club" style="background: var(--bg-dark); border: 2px solid var(--border); border-radius: 10px; padding: 1rem; text-align: center;">
+                    <div style="font-size: 2rem;">♣️</div>
+                    <div style="font-weight: 600; color: var(--text-muted);">Not Hit</div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted);">-</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Players at Table -->
+            <div class="section-card">
+              <div class="section-header">
+                <div class="section-title">
+                  <span class="icon">👥</span>
+                  Players at Table
+                </div>
+              </div>
+              <div class="section-content" style="padding: 0;">
+                <table class="waitlist-table">
+                  <thead>
+                    <tr>
+                      <th>Seat</th>
+                      <th>Player</th>
+                      <th>Card #</th>
+                      <th>Check-In</th>
+                      <th>Time</th>
+                      <th>Jan Points</th>
+                      <th>Today's Flushes</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><span style="background: var(--gold); color: #000; padding: 0.25rem 0.5rem; border-radius: 4px; font-weight: 600;">1</span></td>
+                      <td><strong>Mike R</strong></td>
+                      <td>#23456</td>
+                      <td>10:15 AM</td>
+                      <td><span style="color: var(--green); font-weight: 600;">5h 45m</span></td>
+                      <td><span style="color: var(--gold); font-weight: 600;">156 pts</span></td>
+                      <td>
+                        <span style="color: var(--green);">♠️</span>
+                        <span style="color: var(--text-muted);">♥️</span>
+                        <span style="color: var(--text-muted);">♦️</span>
+                        <span style="color: var(--text-muted);">♣️</span>
+                      </td>
+                      <td>
+                        <button class="btn btn-sm btn-gold" onclick="showPlayerPromoActions('23456', 'Mike R')">+ Award</button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><span style="background: var(--bg-dark); color: var(--text); padding: 0.25rem 0.5rem; border-radius: 4px; font-weight: 600;">2</span></td>
+                      <td><strong>Jennifer L</strong></td>
+                      <td>#34567</td>
+                      <td>12:30 PM</td>
+                      <td><span style="color: var(--blue);">3h 30m</span></td>
+                      <td><span style="color: var(--gold); font-weight: 600;">132 pts</span></td>
+                      <td>
+                        <span style="color: var(--text-muted);">♠️</span>
+                        <span style="color: var(--green);">♥️</span>
+                        <span style="color: var(--green);">♦️</span>
+                        <span style="color: var(--text-muted);">♣️</span>
+                      </td>
+                      <td>
+                        <button class="btn btn-sm btn-gold" onclick="showPlayerPromoActions('34567', 'Jennifer L')">+ Award</button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><span style="background: var(--bg-dark); color: var(--text); padding: 0.25rem 0.5rem; border-radius: 4px; font-weight: 600;">3</span></td>
+                      <td><strong>Carlos M</strong></td>
+                      <td>#45678</td>
+                      <td>2:00 PM</td>
+                      <td><span style="color: var(--text-muted);">2h 00m</span></td>
+                      <td><span style="color: var(--gold); font-weight: 600;">118 pts</span></td>
+                      <td>
+                        <span style="color: var(--text-muted);">♠️</span>
+                        <span style="color: var(--text-muted);">♥️</span>
+                        <span style="color: var(--green);">♦️</span>
+                        <span style="color: var(--text-muted);">♣️</span>
+                      </td>
+                      <td>
+                        <button class="btn btn-sm btn-gold" onclick="showPlayerPromoActions('45678', 'Carlos M')">+ Award</button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><span style="background: var(--bg-dark); color: var(--text); padding: 0.25rem 0.5rem; border-radius: 4px; font-weight: 600;">4</span></td>
+                      <td><strong>Tony M</strong></td>
+                      <td>#56789</td>
+                      <td>1:00 PM</td>
+                      <td><span style="color: var(--blue);">3h 00m</span></td>
+                      <td><span style="color: var(--gold); font-weight: 600;">78 pts</span></td>
+                      <td>
+                        <span style="color: var(--text-muted);">♠️</span>
+                        <span style="color: var(--text-muted);">♥️</span>
+                        <span style="color: var(--text-muted);">♦️</span>
+                        <span style="color: var(--green);">♣️</span>
+                      </td>
+                      <td>
+                        <button class="btn btn-sm btn-gold" onclick="showPlayerPromoActions('56789', 'Tony M')">+ Award</button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><span style="background: var(--bg-dark); color: var(--text); padding: 0.25rem 0.5rem; border-radius: 4px; font-weight: 600;">5</span></td>
+                      <td><strong>Sarah K</strong></td>
+                      <td>#78901</td>
+                      <td>11:30 AM</td>
+                      <td><span style="color: var(--green); font-weight: 600;">4h 30m</span></td>
+                      <td><span style="color: var(--gold); font-weight: 600;">45 pts</span></td>
+                      <td>
+                        <span style="color: var(--text-muted);">♠️</span>
+                        <span style="color: var(--text-muted);">♥️</span>
+                        <span style="color: var(--text-muted);">♦️</span>
+                        <span style="color: var(--text-muted);">♣️</span>
+                      </td>
+                      <td>
+                        <button class="btn btn-sm btn-gold" onclick="showPlayerPromoActions('78901', 'Sarah K')">+ Award</button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><span style="background: var(--bg-dark); color: var(--text); padding: 0.25rem 0.5rem; border-radius: 4px; font-weight: 600;">6</span></td>
+                      <td><strong>David N</strong></td>
+                      <td>#12345</td>
+                      <td>3:15 PM</td>
+                      <td><span style="color: var(--text-muted);">45m</span></td>
+                      <td><span style="color: var(--gold); font-weight: 600;">89 pts</span></td>
+                      <td>
+                        <span style="color: var(--text-muted);">♠️</span>
+                        <span style="color: var(--text-muted);">♥️</span>
+                        <span style="color: var(--text-muted);">♦️</span>
+                        <span style="color: var(--text-muted);">♣️</span>
+                      </td>
+                      <td>
+                        <button class="btn btn-sm btn-gold" onclick="showPlayerPromoActions('12345', 'David N')">+ Award</button>
+                      </td>
+                    </tr>
+                    <tr style="background: var(--bg-card);">
+                      <td><span style="background: var(--bg-dark); color: var(--text-muted); padding: 0.25rem 0.5rem; border-radius: 4px;">7</span></td>
+                      <td colspan="6" style="color: var(--text-muted);">Empty Seat</td>
+                      <td><button class="btn btn-sm btn-secondary" onclick="seatPlayer(7)">+ Seat</button></td>
+                    </tr>
+                    <tr style="background: var(--bg-card);">
+                      <td><span style="background: var(--bg-dark); color: var(--text-muted); padding: 0.25rem 0.5rem; border-radius: 4px;">8</span></td>
+                      <td colspan="6" style="color: var(--text-muted);">Empty Seat</td>
+                      <td><button class="btn btn-sm btn-secondary" onclick="seatPlayer(8)">+ Seat</button></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Recent Activity at Table -->
+            <div class="section-card">
+              <div class="section-header">
+                <div class="section-title">
+                  <span class="icon">📜</span>
+                  Recent Activity
+                </div>
+              </div>
+              <div class="section-content" style="padding: 0;">
+                <table class="waitlist-table">
+                  <thead>
+                    <tr>
+                      <th>Time</th>
+                      <th>Player</th>
+                      <th>Event</th>
+                      <th>Details</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>3:45 PM</td>
+                      <td>Mike R</td>
+                      <td><span class="badge" style="background: var(--gold-bg); color: var(--gold);">🎡 High Hand</span></td>
+                      <td>Quad 8s - Won $200 Cash</td>
+                    </tr>
+                    <tr>
+                      <td>3:30 PM</td>
+                      <td>Table</td>
+                      <td><span class="badge" style="background: var(--green-bg); color: var(--green);">💰 Splash Pot</span></td>
+                      <td>$100 added to pot</td>
+                    </tr>
+                    <tr>
+                      <td>3:15 PM</td>
+                      <td>Carlos M</td>
+                      <td><span class="badge" style="background: var(--blue-bg); color: var(--blue);">♦️ Flush</span></td>
+                      <td>Diamond flush recorded</td>
+                    </tr>
+                    <tr>
+                      <td>2:30 PM</td>
+                      <td>Mike R</td>
+                      <td><span class="badge" style="background: var(--blue-bg); color: var(--blue);">♠️ Flush</span></td>
+                      <td>Spade flush recorded</td>
+                    </tr>
+                    <tr>
+                      <td>2:00 PM</td>
+                      <td>Carlos M</td>
+                      <td><span class="badge" style="background: var(--purple-bg); color: var(--purple);">📥 Check In</span></td>
+                      <td>Seated at Table 1</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Award Modal -->
+        <div class="modal-overlay" id="awardModal" style="display: none;">
+          <div class="modal" style="max-width: 400px;">
+            <div class="modal-header">
+              <h3 class="modal-title">Award to <span id="awardPlayerName">Player</span></h3>
+              <button class="modal-close" onclick="closeAwardModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+              <div id="awardPlayerId" style="display: none;"></div>
+              <div style="display: grid; gap: 0.75rem;">
+                <button class="btn btn-secondary" style="padding: 1rem; text-align: left;" onclick="awardFlush()">
+                  <span style="font-size: 1.25rem; margin-right: 0.5rem;">♠️♥️♦️♣️</span>
+                  <strong>Flush Hit</strong>
+                  <div style="font-size: 0.8rem; color: var(--text-muted);">Record a flush for Flush Madness</div>
+                </button>
+                <button class="btn btn-secondary" style="padding: 1rem; text-align: left;" onclick="awardHighHand()">
+                  <span style="font-size: 1.25rem; margin-right: 0.5rem;">🎡</span>
+                  <strong>High Hand - Wheel Spin</strong>
+                  <div style="font-size: 0.8rem; color: var(--text-muted);">Quads with pocket pair</div>
+                </button>
+                <button class="btn btn-secondary" style="padding: 1rem; text-align: left;" onclick="awardSplashPot()">
+                  <span style="font-size: 1.25rem; margin-right: 0.5rem;">💰</span>
+                  <strong>Splash Pot Winner</strong>
+                  <div style="font-size: 0.8rem; color: var(--text-muted);">Won the splash pot</div>
+                </button>
+                <button class="btn btn-secondary" style="padding: 1rem; text-align: left;" onclick="awardCustomPoints()">
+                  <span style="font-size: 1.25rem; margin-right: 0.5rem;">⭐</span>
+                  <strong>Add Points</strong>
+                  <div style="font-size: 0.8rem; color: var(--text-muted);">Tournament, cash hours, placement</div>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Flush Select Modal -->
+        <div class="modal-overlay" id="flushSelectModal" style="display: none;">
+          <div class="modal" style="max-width: 350px;">
+            <div class="modal-header">
+              <h3 class="modal-title">Select Flush Suit</h3>
+              <button class="modal-close" onclick="closeFlushModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+              <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+                <button class="btn btn-secondary" style="padding: 1.5rem; font-size: 2rem;" onclick="recordFlush('spade')">♠️</button>
+                <button class="btn btn-secondary" style="padding: 1.5rem; font-size: 2rem;" onclick="recordFlush('heart')">♥️</button>
+                <button class="btn btn-secondary" style="padding: 1.5rem; font-size: 2rem;" onclick="recordFlush('diamond')">♦️</button>
+                <button class="btn btn-secondary" style="padding: 1.5rem; font-size: 2rem;" onclick="recordFlush('club')">♣️</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Record Flush Modal - Select Player then Suit -->
+        <div class="modal-overlay" id="addFlushModal" style="display: none;">
+          <div class="modal" style="max-width: 450px;">
+            <div class="modal-header">
+              <h3 class="modal-title">Record Flush</h3>
+              <button class="modal-close" onclick="closeAddFlushModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+              <!-- Step 1: Select Player -->
+              <div id="flushStep1">
+                <div style="margin-bottom: 1rem;">
+                  <input type="text" id="flushPlayerSearch" placeholder="Search player..." style="width: 100%; padding: 0.75rem; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 6px; color: var(--text);" onkeyup="filterFlushPlayers(this.value)">
+                </div>
+                <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem;">Select player who hit the flush:</div>
+                <div id="flushPlayerList" style="max-height: 280px; overflow-y: auto;">
+                  <div class="flush-player-option" onclick="selectPlayerForFlush('23456', 'Mike R', 'Table 1', '♠️♥️♦️')" style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: var(--bg-dark); border-radius: 8px; margin-bottom: 0.5rem; cursor: pointer;" onmouseover="this.style.background='rgba(212,165,50,0.2)'" onmouseout="this.style.background='var(--bg-dark)'">
+                    <div style="display: flex; align-items: center; gap: 0.75rem;">
+                      <div style="width: 36px; height: 36px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #000; font-weight: 600; font-size: 0.8rem;">MR</div>
+                      <div>
+                        <div style="font-weight: 600;">Mike R</div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted);">#23456 • Table 1</div>
+                      </div>
+                    </div>
+                    <div style="text-align: right;">
+                      <div style="font-size: 1rem;">♠️♥️♦️<span style="opacity: 0.3;">♣️</span></div>
+                      <div style="font-size: 0.7rem; color: var(--gold);">3/4</div>
+                    </div>
+                  </div>
+                  <div class="flush-player-option" onclick="selectPlayerForFlush('34567', 'Jennifer L', 'Table 2', '♥️♦️')" style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: var(--bg-dark); border-radius: 8px; margin-bottom: 0.5rem; cursor: pointer;" onmouseover="this.style.background='rgba(212,165,50,0.2)'" onmouseout="this.style.background='var(--bg-dark)'">
+                    <div style="display: flex; align-items: center; gap: 0.75rem;">
+                      <div style="width: 36px; height: 36px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #000; font-weight: 600; font-size: 0.8rem;">JL</div>
+                      <div>
+                        <div style="font-weight: 600;">Jennifer L</div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted);">#34567 • Table 2</div>
+                      </div>
+                    </div>
+                    <div style="text-align: right;">
+                      <div style="font-size: 1rem;"><span style="opacity: 0.3;">♠️</span>♥️♦️<span style="opacity: 0.3;">♣️</span></div>
+                      <div style="font-size: 0.7rem; color: var(--text-muted);">2/4</div>
+                    </div>
+                  </div>
+                  <div class="flush-player-option" onclick="selectPlayerForFlush('45678', 'Carlos M', 'Table 1', '♦️')" style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: var(--bg-dark); border-radius: 8px; margin-bottom: 0.5rem; cursor: pointer;" onmouseover="this.style.background='rgba(212,165,50,0.2)'" onmouseout="this.style.background='var(--bg-dark)'">
+                    <div style="display: flex; align-items: center; gap: 0.75rem;">
+                      <div style="width: 36px; height: 36px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #000; font-weight: 600; font-size: 0.8rem;">CM</div>
+                      <div>
+                        <div style="font-weight: 600;">Carlos M</div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted);">#45678 • Table 1</div>
+                      </div>
+                    </div>
+                    <div style="text-align: right;">
+                      <div style="font-size: 1rem;"><span style="opacity: 0.3;">♠️</span><span style="opacity: 0.3;">♥️</span>♦️<span style="opacity: 0.3;">♣️</span></div>
+                      <div style="font-size: 0.7rem; color: var(--text-muted);">1/4</div>
+                    </div>
+                  </div>
+                  <div class="flush-player-option" onclick="selectPlayerForFlush('56789', 'Tony M', 'Table 1', '')" style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: var(--bg-dark); border-radius: 8px; margin-bottom: 0.5rem; cursor: pointer;" onmouseover="this.style.background='rgba(212,165,50,0.2)'" onmouseout="this.style.background='var(--bg-dark)'">
+                    <div style="display: flex; align-items: center; gap: 0.75rem;">
+                      <div style="width: 36px; height: 36px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #000; font-weight: 600; font-size: 0.8rem;">TM</div>
+                      <div>
+                        <div style="font-weight: 600;">Tony M</div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted);">#56789 • Table 1</div>
+                      </div>
+                    </div>
+                    <div style="text-align: right;">
+                      <div style="font-size: 1rem;"><span style="opacity: 0.3;">♠️♥️♦️♣️</span></div>
+                      <div style="font-size: 0.7rem; color: var(--text-muted);">0/4</div>
+                    </div>
+                  </div>
+                  <div class="flush-player-option" onclick="selectPlayerForFlush('12345', 'David N', 'Table 3', '♠️')" style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: var(--bg-dark); border-radius: 8px; margin-bottom: 0.5rem; cursor: pointer;" onmouseover="this.style.background='rgba(212,165,50,0.2)'" onmouseout="this.style.background='var(--bg-dark)'">
+                    <div style="display: flex; align-items: center; gap: 0.75rem;">
+                      <div style="width: 36px; height: 36px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #000; font-weight: 600; font-size: 0.8rem;">DN</div>
+                      <div>
+                        <div style="font-weight: 600;">David N</div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted);">#12345 • Table 3</div>
+                      </div>
+                    </div>
+                    <div style="text-align: right;">
+                      <div style="font-size: 1rem;">♠️<span style="opacity: 0.3;">♥️♦️♣️</span></div>
+                      <div style="font-size: 0.7rem; color: var(--text-muted);">1/4</div>
+                    </div>
+                  </div>
+                  <div class="flush-player-option" onclick="selectPlayerForFlush('78901', 'Sarah K', 'Table 1', '')" style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: var(--bg-dark); border-radius: 8px; margin-bottom: 0.5rem; cursor: pointer;" onmouseover="this.style.background='rgba(212,165,50,0.2)'" onmouseout="this.style.background='var(--bg-dark)'">
+                    <div style="display: flex; align-items: center; gap: 0.75rem;">
+                      <div style="width: 36px; height: 36px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #000; font-weight: 600; font-size: 0.8rem;">SK</div>
+                      <div>
+                        <div style="font-weight: 600;">Sarah K</div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted);">#78901 • Table 1</div>
+                      </div>
+                    </div>
+                    <div style="text-align: right;">
+                      <div style="font-size: 1rem;"><span style="opacity: 0.3;">♠️♥️♦️♣️</span></div>
+                      <div style="font-size: 0.7rem; color: var(--text-muted);">0/4</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Step 2: Select Suit -->
+              <div id="flushStep2" style="display: none;">
+                <div style="text-align: center; margin-bottom: 1rem;">
+                  <div style="font-size: 0.85rem; color: var(--text-muted);">Recording flush for:</div>
+                  <div style="font-size: 1.25rem; font-weight: 600; margin-top: 0.25rem;" id="selectedFlushPlayer">Mike R</div>
+                  <div style="font-size: 0.85rem; color: var(--text-muted);" id="selectedFlushPlayerInfo">#23456 • Table 1</div>
+                  <div style="margin-top: 0.5rem;" id="selectedFlushPlayerProgress">Current: ♠️♥️♦️</div>
+                </div>
+                <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.75rem; text-align: center;">Select the suit they just hit:</div>
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem;">
+                  <button id="flushBtnSpade" class="btn btn-secondary" style="padding: 1rem; font-size: 1.75rem;" onclick="recordPlayerFlush('spade')">♠️</button>
+                  <button id="flushBtnHeart" class="btn btn-secondary" style="padding: 1rem; font-size: 1.75rem;" onclick="recordPlayerFlush('heart')">♥️</button>
+                  <button id="flushBtnDiamond" class="btn btn-secondary" style="padding: 1rem; font-size: 1.75rem;" onclick="recordPlayerFlush('diamond')">♦️</button>
+                  <button id="flushBtnClub" class="btn btn-secondary" style="padding: 1rem; font-size: 1.75rem;" onclick="recordPlayerFlush('club')">♣️</button>
+                </div>
+                <div style="text-align: center; margin-top: 1rem;">
+                  <button class="btn btn-secondary" onclick="backToPlayerSelect()">← Back to player list</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Flush Player Assignment Modal (legacy - keeping for table view) -->
+        <div class="modal-overlay" id="flushPlayerModal" style="display: none;">
+          <div class="modal" style="max-width: 400px;">
+            <div class="modal-header">
+              <h3 class="modal-title">
+                <span id="flushSuitSelect" style="font-size: 1.5rem; margin-right: 0.5rem;">♠️</span>
+                <span id="flushSuitName">Spades</span> Flush
+              </h3>
+              <button class="modal-close" onclick="closeFlushPlayerModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+              <input type="hidden" id="flushSuitHidden" value="">
+              <div style="margin-bottom: 1rem;">
+                <input type="text" placeholder="Search player..." style="width: 100%; padding: 0.75rem; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 6px; color: var(--text);">
+              </div>
+              <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.75rem;">Active Players:</div>
+              <div style="max-height: 300px; overflow-y: auto;">
+                <div onclick="selectFlushPlayer('23456', 'Mike R')" style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; background: var(--bg-dark); border-radius: 8px; margin-bottom: 0.5rem; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='rgba(212,165,50,0.2)'" onmouseout="this.style.background='var(--bg-dark)'">
+                  <div style="width: 36px; height: 36px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #000; font-weight: 600; font-size: 0.8rem;">MR</div>
+                  <div>
+                    <div style="font-weight: 600;">Mike R</div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted);">#23456 • Table 1</div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -1376,13 +2401,130 @@
 
         <!-- Players Page -->
         <div class="page" id="playersPage">
+          <!-- Active Players - Currently Playing -->
+          <div class="section-card" style="border-color: var(--green);">
+            <div class="section-header">
+              <div class="section-title">
+                <span class="icon">🎮</span>
+                Currently Playing
+                <span class="badge" style="background: var(--green);">8 Active</span>
+              </div>
+              <button class="btn btn-gold" onclick="showCheckInModal()">+ Check In Player</button>
+            </div>
+            <div class="section-content" style="padding: 0;">
+              <table class="waitlist-table">
+                <thead>
+                  <tr>
+                    <th>Player</th>
+                    <th>Card #</th>
+                    <th>Table</th>
+                    <th>Check-In</th>
+                    <th>Time Playing</th>
+                    <th>Points Earned</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Mike R</strong></td>
+                    <td>#23456</td>
+                    <td>Table 1 - $1/$3 NLH</td>
+                    <td>10:15 AM</td>
+                    <td><span style="color: var(--green); font-weight: 600;">5h 45m</span></td>
+                    <td><span class="badge" style="background: var(--gold-bg); color: var(--gold);">30 pts ready</span></td>
+                    <td>
+                      <button class="btn btn-sm btn-gold" onclick="awardCashPoints('23456', 'Mike R', 30)">Award 30</button>
+                      <button class="btn btn-sm btn-secondary" onclick="checkOutPlayer('23456')">Check Out</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><strong>Jennifer L</strong></td>
+                    <td>#34567</td>
+                    <td>Table 2 - $1/$3 NLH</td>
+                    <td>12:30 PM</td>
+                    <td><span style="color: var(--blue);">3h 30m</span></td>
+                    <td><span class="badge" style="background: var(--green-bg); color: var(--green);">10 pts earned</span></td>
+                    <td>
+                      <button class="btn btn-sm btn-secondary" onclick="checkOutPlayer('34567')">Check Out</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><strong>Carlos M</strong></td>
+                    <td>#45678</td>
+                    <td>Table 1 - $1/$3 NLH</td>
+                    <td>2:00 PM</td>
+                    <td><span style="color: var(--text-muted);">2h 00m</span></td>
+                    <td><span class="badge" style="background: var(--green-bg); color: var(--green);">10 pts earned</span></td>
+                    <td>
+                      <button class="btn btn-sm btn-secondary" onclick="checkOutPlayer('45678')">Check Out</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><strong>David N</strong></td>
+                    <td>#12345</td>
+                    <td>Table 3 - $1/$3 PLO</td>
+                    <td>3:15 PM</td>
+                    <td><span style="color: var(--text-muted);">45m</span></td>
+                    <td><span class="badge" style="background: var(--bg-dark); color: var(--text-muted);">< 1 hr</span></td>
+                    <td>
+                      <button class="btn btn-sm btn-secondary" onclick="checkOutPlayer('12345')">Check Out</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Quick Actions -->
+          <div class="stats-grid" style="grid-template-columns: repeat(4, 1fr);">
+            <div class="stat-card" style="cursor: pointer;" onclick="showCheckInModal()">
+              <div class="stat-value" style="font-size: 2rem;">➕</div>
+              <div class="stat-label">Check In Player</div>
+            </div>
+            <div class="stat-card" style="cursor: pointer;" onclick="showTournamentCheckIn()">
+              <div class="stat-value" style="font-size: 2rem;">🏆</div>
+              <div class="stat-label">Tournament Entry</div>
+            </div>
+            <div class="stat-card" style="cursor: pointer;" onclick="showAwardPlacement()">
+              <div class="stat-value" style="font-size: 2rem;">🥇</div>
+              <div class="stat-label">Award Placement</div>
+            </div>
+            <div class="stat-card" style="cursor: pointer;" onclick="showQuickPoints()">
+              <div class="stat-value" style="font-size: 2rem;">⭐</div>
+              <div class="stat-label">Quick Points</div>
+            </div>
+          </div>
+
+          <!-- Player Search -->
+          <div class="section-card">
+            <div class="section-header">
+              <div class="section-title">
+                <span class="icon">🔍</span>
+                Player Lookup
+              </div>
+            </div>
+            <div class="section-content">
+              <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+                <input type="text" id="playerSearch" placeholder="Search by name, card #, or phone..." style="flex: 1; padding: 0.75rem 1rem; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-size: 1rem;" onkeyup="searchPlayers(this.value)">
+                <button class="btn btn-gold" onclick="searchPlayers(document.getElementById('playerSearch').value)">Search</button>
+              </div>
+              <div id="playerSearchResults">
+                <!-- Search results appear here -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Player Database -->
           <div class="section-card">
             <div class="section-header">
               <div class="section-title">
                 <span class="icon">👥</span>
-                Player Database
+                All Players
               </div>
-              <input type="text" placeholder="Search players..." style="padding: 0.5rem 1rem; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 6px; color: var(--text);">
+              <div style="display: flex; gap: 0.5rem;">
+                <button class="btn btn-sm btn-secondary">Export CSV</button>
+                <button class="btn btn-sm btn-gold" onclick="showAddPlayerModal()">+ Add Player</button>
+              </div>
             </div>
             <div class="section-content" style="padding: 0;">
               <table class="waitlist-table">
@@ -1391,14 +2533,736 @@
                     <th>Player</th>
                     <th>Card #</th>
                     <th>Phone</th>
-                    <th>Email</th>
-                    <th>Visits</th>
+                    <th>Jan Points</th>
+                    <th>Total Hours</th>
                     <th>Last Visit</th>
                     <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <!-- Player data would be populated here -->
+                  <tr>
+                    <td><strong>Mike R</strong></td>
+                    <td>#23456</td>
+                    <td>(915) 555-0101</td>
+                    <td><span style="color: var(--gold); font-weight: 600;">156 pts</span></td>
+                    <td>45 hrs</td>
+                    <td>Today</td>
+                    <td>
+                      <button class="btn btn-sm btn-secondary" onclick="viewPlayerProfile('23456')">View</button>
+                      <button class="btn btn-sm btn-gold" onclick="showPlayerPointsModal('23456', 'Mike R')">+ Points</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><strong>Jennifer L</strong></td>
+                    <td>#34567</td>
+                    <td>(915) 555-0102</td>
+                    <td><span style="color: var(--gold); font-weight: 600;">132 pts</span></td>
+                    <td>38 hrs</td>
+                    <td>Today</td>
+                    <td>
+                      <button class="btn btn-sm btn-secondary" onclick="viewPlayerProfile('34567')">View</button>
+                      <button class="btn btn-sm btn-gold" onclick="showPlayerPointsModal('34567', 'Jennifer L')">+ Points</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><strong>Carlos M</strong></td>
+                    <td>#45678</td>
+                    <td>(915) 555-0103</td>
+                    <td><span style="color: var(--gold); font-weight: 600;">118 pts</span></td>
+                    <td>42 hrs</td>
+                    <td>Today</td>
+                    <td>
+                      <button class="btn btn-sm btn-secondary" onclick="viewPlayerProfile('45678')">View</button>
+                      <button class="btn btn-sm btn-gold" onclick="showPlayerPointsModal('45678', 'Carlos M')">+ Points</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><strong>David N</strong></td>
+                    <td>#12345</td>
+                    <td>(915) 200-3700</td>
+                    <td><span style="color: var(--gold); font-weight: 600;">89 pts</span></td>
+                    <td>28 hrs</td>
+                    <td>Today</td>
+                    <td>
+                      <button class="btn btn-sm btn-secondary" onclick="viewPlayerProfile('12345')">View</button>
+                      <button class="btn btn-sm btn-gold" onclick="showPlayerPointsModal('12345', 'David N')">+ Points</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- January Points Page -->
+        <div class="page" id="pointsPage">
+          <div class="stats-grid" style="grid-template-columns: repeat(4, 1fr);">
+            <div class="stat-card">
+              <div class="stat-label">Total Players</div>
+              <div class="stat-value">87</div>
+              <div class="stat-change">Earning points</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Points Awarded</div>
+              <div class="stat-value" style="color: var(--gold);">2,450</div>
+              <div class="stat-change up">This month</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Top 30 Cutoff</div>
+              <div class="stat-value" style="color: var(--green);">45</div>
+              <div class="stat-change">Points needed</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Days Left</div>
+              <div class="stat-value" style="color: var(--blue);">29</div>
+              <div class="stat-change">Until Feb 7</div>
+            </div>
+          </div>
+
+          <!-- Quick Add Points -->
+          <div class="section-card">
+            <div class="section-header">
+              <div class="section-title">
+                <span class="icon">⚡</span>
+                Quick Add Points
+              </div>
+            </div>
+            <div class="section-content">
+              <div style="display: grid; grid-template-columns: 1fr 1fr auto; gap: 1rem; align-items: end;">
+                <div class="form-group" style="margin: 0;">
+                  <label>Player</label>
+                  <select id="pointsPlayer" style="width: 100%; padding: 0.75rem; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 6px; color: var(--text);">
+                    <option value="">Select player...</option>
+                    <option value="12345">David N (#12345)</option>
+                    <option value="23456">Mike R (#23456)</option>
+                    <option value="34567">Jennifer L (#34567)</option>
+                    <option value="45678">Carlos M (#45678)</option>
+                  </select>
+                </div>
+                <div class="form-group" style="margin: 0;">
+                  <label>Points Type</label>
+                  <select id="pointsType" style="width: 100%; padding: 0.75rem; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 6px; color: var(--text);" onchange="updatePointsAmount()">
+                    <option value="5">Tournament Played (+5)</option>
+                    <option value="13">Early Bird + Daily (+13)</option>
+                    <option value="15">1st Place (+15)</option>
+                    <option value="10">2nd Place (+10)</option>
+                    <option value="5">3rd Place (+5)</option>
+                    <option value="3">4th Place (+3)</option>
+                    <option value="2">5th Place (+2)</option>
+                    <option value="10">Cash 1 Hour (+10)</option>
+                    <option value="30">Cash All Day 6+ hrs (+30)</option>
+                    <option value="custom">Custom Amount</option>
+                  </select>
+                </div>
+                <button class="btn btn-gold" onclick="addPoints()">+ Add Points</button>
+              </div>
+              <div id="customPointsRow" style="display: none; margin-top: 1rem;">
+                <div class="form-group" style="margin: 0; max-width: 200px;">
+                  <label>Custom Points</label>
+                  <input type="number" id="customPoints" placeholder="Enter amount" style="width: 100%; padding: 0.75rem; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 6px; color: var(--text);">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Points Rules Reference -->
+          <div class="section-card">
+            <div class="section-header">
+              <div class="section-title">
+                <span class="icon">📋</span>
+                Points Rules - January 2026
+              </div>
+            </div>
+            <div class="section-content">
+              <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;">
+                <div>
+                  <h4 style="color: var(--gold); margin-bottom: 0.75rem;">Tournament Points</h4>
+                  <div style="font-size: 0.85rem; line-height: 1.8;">
+                    Play Tournament = <strong>5 pts</strong><br>
+                    Early Bird + Daily = <strong>13 pts</strong><br>
+                    1st Place = <strong>15 pts</strong><br>
+                    2nd Place = <strong>10 pts</strong><br>
+                    3rd Place = <strong>5 pts</strong><br>
+                    4th Place = <strong>3 pts</strong><br>
+                    5th Place = <strong>2 pts</strong>
+                  </div>
+                </div>
+                <div>
+                  <h4 style="color: var(--gold); margin-bottom: 0.75rem;">Cash Game Points</h4>
+                  <div style="font-size: 0.85rem; line-height: 1.8;">
+                    Play 1 Hour = <strong>10 pts</strong><br>
+                    Play 6+ Hours = <strong>30 pts</strong><br>
+                  </div>
+                  <h4 style="color: var(--red); margin-top: 1rem; margin-bottom: 0.5rem;">Does NOT Earn Points</h4>
+                  <div style="font-size: 0.85rem; line-height: 1.8;">
+                    Chops<br>
+                    Early Bird placing (except 1st)
+                  </div>
+                </div>
+                <div>
+                  <h4 style="color: var(--gold); margin-bottom: 0.75rem;">Rewards</h4>
+                  <div style="font-size: 0.85rem; line-height: 1.8;">
+                    <strong style="color: var(--green);">Feb 7 @ 4PM:</strong><br>
+                    Top 30 = FREE $100 Tournament Entry<br><br>
+                    <strong style="color: var(--green);">Feb 12 @ 3PM:</strong><br>
+                    20 pts = 1 Raffle Ticket<br>
+                    $500/hour drawings 4PM-11PM
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Leaderboard -->
+          <div class="section-card">
+            <div class="section-header">
+              <div class="section-title">
+                <span class="icon">🏆</span>
+                Points Leaderboard
+              </div>
+              <div style="display: flex; gap: 0.5rem;">
+                <button class="btn btn-sm btn-secondary">Export CSV</button>
+                <button class="btn btn-sm btn-gold">+ Bulk Add</button>
+              </div>
+            </div>
+            <div class="section-content" style="padding: 0;">
+              <table class="waitlist-table">
+                <thead>
+                  <tr>
+                    <th>Rank</th>
+                    <th>Player</th>
+                    <th>Card #</th>
+                    <th>Tournaments</th>
+                    <th>Cash Hours</th>
+                    <th>Total Points</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr style="background: rgba(212, 165, 50, 0.1);">
+                    <td><span style="font-size: 1.25rem;">🥇</span> 1</td>
+                    <td><strong>Mike R</strong></td>
+                    <td>#23456</td>
+                    <td>12</td>
+                    <td>45 hrs</td>
+                    <td><strong style="color: var(--gold);">156</strong></td>
+                    <td><button class="btn btn-sm btn-secondary" onclick="editPlayerPoints('23456')">Edit</button></td>
+                  </tr>
+                  <tr style="background: rgba(192, 192, 192, 0.1);">
+                    <td><span style="font-size: 1.25rem;">🥈</span> 2</td>
+                    <td><strong>Jennifer L</strong></td>
+                    <td>#34567</td>
+                    <td>10</td>
+                    <td>38 hrs</td>
+                    <td><strong style="color: var(--gold);">132</strong></td>
+                    <td><button class="btn btn-sm btn-secondary" onclick="editPlayerPoints('34567')">Edit</button></td>
+                  </tr>
+                  <tr style="background: rgba(205, 127, 50, 0.1);">
+                    <td><span style="font-size: 1.25rem;">🥉</span> 3</td>
+                    <td><strong>Carlos M</strong></td>
+                    <td>#45678</td>
+                    <td>8</td>
+                    <td>42 hrs</td>
+                    <td><strong style="color: var(--gold);">118</strong></td>
+                    <td><button class="btn btn-sm btn-secondary" onclick="editPlayerPoints('45678')">Edit</button></td>
+                  </tr>
+                  <tr>
+                    <td>4</td>
+                    <td>David N</td>
+                    <td>#12345</td>
+                    <td>6</td>
+                    <td>28 hrs</td>
+                    <td><strong>89</strong></td>
+                    <td><button class="btn btn-sm btn-secondary" onclick="editPlayerPoints('12345')">Edit</button></td>
+                  </tr>
+                  <tr>
+                    <td>5</td>
+                    <td>Tony M</td>
+                    <td>#56789</td>
+                    <td>5</td>
+                    <td>32 hrs</td>
+                    <td><strong>78</strong></td>
+                    <td><button class="btn btn-sm btn-secondary" onclick="editPlayerPoints('56789')">Edit</button></td>
+                  </tr>
+                  <tr>
+                    <td>...</td>
+                    <td colspan="6" style="text-align: center; color: var(--text-muted);">82 more players</td>
+                  </tr>
+                  <tr style="border-top: 2px solid var(--green);">
+                    <td style="color: var(--green);">30</td>
+                    <td style="color: var(--green);">Sarah K</td>
+                    <td style="color: var(--green);">#78901</td>
+                    <td>3</td>
+                    <td>12 hrs</td>
+                    <td><strong style="color: var(--green);">45</strong> ← Cutoff</td>
+                    <td><button class="btn btn-sm btn-secondary" onclick="editPlayerPoints('78901')">Edit</button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Recent Points Activity -->
+          <div class="section-card">
+            <div class="section-header">
+              <div class="section-title">
+                <span class="icon">📜</span>
+                Recent Activity
+              </div>
+            </div>
+            <div class="section-content" style="padding: 0;">
+              <table class="waitlist-table">
+                <thead>
+                  <tr>
+                    <th>Time</th>
+                    <th>Player</th>
+                    <th>Type</th>
+                    <th>Points</th>
+                    <th>Added By</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>2:15 PM</td>
+                    <td>Mike R</td>
+                    <td>1st Place - 7PM Tournament</td>
+                    <td style="color: var(--green);">+15</td>
+                    <td>Candy</td>
+                  </tr>
+                  <tr>
+                    <td>2:15 PM</td>
+                    <td>Jennifer L</td>
+                    <td>2nd Place - 7PM Tournament</td>
+                    <td style="color: var(--green);">+10</td>
+                    <td>Candy</td>
+                  </tr>
+                  <tr>
+                    <td>2:00 PM</td>
+                    <td>David N</td>
+                    <td>Tournament Played</td>
+                    <td style="color: var(--green);">+5</td>
+                    <td>Candy</td>
+                  </tr>
+                  <tr>
+                    <td>1:30 PM</td>
+                    <td>Carlos M</td>
+                    <td>Cash All Day (6+ hrs)</td>
+                    <td style="color: var(--green);">+30</td>
+                    <td>System</td>
+                  </tr>
+                  <tr>
+                    <td>12:00 PM</td>
+                    <td>Tony M</td>
+                    <td>Early Bird + Daily</td>
+                    <td style="color: var(--green);">+13</td>
+                    <td>Candy</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Promo Tracker Page -->
+        <div class="page" id="promoTrackerPage">
+          <!-- Current Session Stats -->
+          <div class="stats-grid" style="grid-template-columns: repeat(4, 1fr);">
+            <div class="stat-card">
+              <div class="stat-label">Session Started</div>
+              <div class="stat-value" style="font-size: 1.25rem;">2:00 PM</div>
+              <div class="stat-change">Flush & Shine active</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">High Hands Today</div>
+              <div class="stat-value" style="color: var(--gold);">3</div>
+              <div class="stat-change">Wheel spins awarded</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Flush & Shine</div>
+              <div class="stat-value" style="color: var(--green);">$3,000</div>
+              <div class="stat-change">2PM - 8PM</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Last Call Flushes</div>
+              <div class="stat-value" style="color: var(--purple);">$1,150</div>
+              <div class="stat-change">8PM - 2AM</div>
+            </div>
+          </div>
+
+          <!-- Flush Madness Tracker -->
+          <div class="section-card">
+            <div class="section-header">
+              <div class="section-title">
+                <span class="icon">♠️</span>
+                Flush & Shine (2PM - 8PM)
+                <span class="badge" style="background: var(--green);">Active Now</span>
+              </div>
+              <div style="font-size: 1.5rem; font-weight: 700; color: var(--green);">$3,000</div>
+            </div>
+            <div class="section-content">
+              <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem;">
+                <div id="flush-shine-spade" class="flush-card" onclick="toggleFlush('shine', 'spade')" style="background: var(--bg-dark); border: 2px solid var(--border); border-radius: 12px; padding: 1.5rem; text-align: center; cursor: pointer; transition: all 0.2s;">
+                  <div style="font-size: 3rem;">♠️</div>
+                  <div style="font-weight: 600; margin-top: 0.5rem;">Spades</div>
+                  <div style="font-size: 0.8rem; color: var(--text-muted);">Not hit</div>
+                </div>
+                <div id="flush-shine-heart" class="flush-card" onclick="toggleFlush('shine', 'heart')" style="background: var(--bg-dark); border: 2px solid var(--border); border-radius: 12px; padding: 1.5rem; text-align: center; cursor: pointer; transition: all 0.2s;">
+                  <div style="font-size: 3rem;">♥️</div>
+                  <div style="font-weight: 600; margin-top: 0.5rem;">Hearts</div>
+                  <div style="font-size: 0.8rem; color: var(--text-muted);">Not hit</div>
+                </div>
+                <div id="flush-shine-diamond" class="flush-card" onclick="toggleFlush('shine', 'diamond')" style="background: var(--bg-dark); border: 2px solid var(--border); border-radius: 12px; padding: 1.5rem; text-align: center; cursor: pointer; transition: all 0.2s;">
+                  <div style="font-size: 3rem;">♦️</div>
+                  <div style="font-weight: 600; margin-top: 0.5rem;">Diamonds</div>
+                  <div style="font-size: 0.8rem; color: var(--text-muted);">Not hit</div>
+                </div>
+                <div id="flush-shine-club" class="flush-card" onclick="toggleFlush('shine', 'club')" style="background: var(--bg-dark); border: 2px solid var(--border); border-radius: 12px; padding: 1.5rem; text-align: center; cursor: pointer; transition: all 0.2s;">
+                  <div style="font-size: 3rem;">♣️</div>
+                  <div style="font-weight: 600; margin-top: 0.5rem;">Clubs</div>
+                  <div style="font-size: 0.8rem; color: var(--text-muted);">Not hit</div>
+                </div>
+              </div>
+              <div style="display: flex; gap: 1rem; justify-content: center;">
+                <button class="btn btn-secondary" onclick="resetFlushes('shine')">Reset All</button>
+                <button class="btn btn-gold" onclick="awardFlushJackpot('shine')">🎉 Award $3,000 Jackpot</button>
+              </div>
+              <div style="margin-top: 1rem; padding: 0.75rem; background: rgba(255,255,255,0.05); border-radius: 8px; font-size: 0.85rem; color: var(--text-muted);">
+                <strong>Rules:</strong> Player must call floor to verify • Cash games only • Must use both hole cards • Min $50 pot • Must be highest flush • 4+ players dealt in
+              </div>
+            </div>
+          </div>
+
+          <!-- Last Call Flushes -->
+          <div class="section-card" style="opacity: 0.6;">
+            <div class="section-header">
+              <div class="section-title">
+                <span class="icon">🌙</span>
+                Last Call Flushes (8PM - 2AM)
+                <span class="badge" style="background: var(--bg-dark);">Starts 8PM</span>
+              </div>
+              <div style="font-size: 1.5rem; font-weight: 700; color: var(--purple);">$1,150</div>
+            </div>
+            <div class="section-content">
+              <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem;">
+                <div style="background: var(--bg-dark); border: 2px solid var(--border); border-radius: 12px; padding: 1.5rem; text-align: center;">
+                  <div style="font-size: 3rem;">♠️</div>
+                  <div style="font-weight: 600; margin-top: 0.5rem;">Spades</div>
+                  <div style="font-size: 0.8rem; color: var(--text-muted);">Waiting</div>
+                </div>
+                <div style="background: var(--bg-dark); border: 2px solid var(--border); border-radius: 12px; padding: 1.5rem; text-align: center;">
+                  <div style="font-size: 3rem;">♥️</div>
+                  <div style="font-weight: 600; margin-top: 0.5rem;">Hearts</div>
+                  <div style="font-size: 0.8rem; color: var(--text-muted);">Waiting</div>
+                </div>
+                <div style="background: var(--bg-dark); border: 2px solid var(--border); border-radius: 12px; padding: 1.5rem; text-align: center;">
+                  <div style="font-size: 3rem;">♦️</div>
+                  <div style="font-weight: 600; margin-top: 0.5rem;">Diamonds</div>
+                  <div style="font-size: 0.8rem; color: var(--text-muted);">Waiting</div>
+                </div>
+                <div style="background: var(--bg-dark); border: 2px solid var(--border); border-radius: 12px; padding: 1.5rem; text-align: center;">
+                  <div style="font-size: 3rem;">♣️</div>
+                  <div style="font-weight: 600; margin-top: 0.5rem;">Clubs</div>
+                  <div style="font-size: 0.8rem; color: var(--text-muted);">Waiting</div>
+                </div>
+              </div>
+              <div style="text-align: center; color: var(--text-muted);">
+                Session starts at 8PM - Flushes from 2PM-8PM do not carry over
+              </div>
+            </div>
+          </div>
+
+          <!-- High Hand Wheel Tracker -->
+          <div class="section-card">
+            <div class="section-header">
+              <div class="section-title">
+                <span class="icon">🎡</span>
+                High Hand Spins the Wheel
+              </div>
+              <button class="btn btn-gold" onclick="showAwardHighHand()">+ Award High Hand</button>
+            </div>
+            <div class="section-content">
+              <div style="background: rgba(212, 165, 50, 0.1); border: 1px solid rgba(212, 165, 50, 0.3); border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+                <div style="font-weight: 600; color: var(--gold); margin-bottom: 0.5rem;">Qualifying Hand: ANY QUADS with Pocket Pair</div>
+                <div style="font-size: 0.85rem; color: var(--text-muted);">Must use both hole cards • 4+ players • $50+ pot</div>
+              </div>
+              <table class="waitlist-table">
+                <thead>
+                  <tr>
+                    <th>Time</th>
+                    <th>Player</th>
+                    <th>Hand</th>
+                    <th>Table</th>
+                    <th>Wheel Result</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>3:45 PM</td>
+                    <td><strong>Mike R</strong> #23456</td>
+                    <td>Quad 8s (pocket 88)</td>
+                    <td>Table 1</td>
+                    <td><span style="color: var(--gold); font-weight: 600;">$200 Cash</span></td>
+                    <td><button class="btn btn-sm btn-secondary">Edit</button></td>
+                  </tr>
+                  <tr>
+                    <td>1:20 PM</td>
+                    <td><strong>Sarah K</strong> #78901</td>
+                    <td>Quad Jacks (pocket JJ)</td>
+                    <td>Table 2</td>
+                    <td><span style="color: var(--gold); font-weight: 600;">$100 Freeplay</span></td>
+                    <td><button class="btn btn-sm btn-secondary">Edit</button></td>
+                  </tr>
+                  <tr>
+                    <td>11:05 AM</td>
+                    <td><strong>Tony M</strong> #56789</td>
+                    <td>Quad 5s (pocket 55)</td>
+                    <td>Table 1</td>
+                    <td><span style="color: var(--gold); font-weight: 600;">$50 Cash</span></td>
+                    <td><button class="btn btn-sm btn-secondary">Edit</button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Jackpot Management -->
+          <div class="section-card">
+            <div class="section-header">
+              <div class="section-title">
+                <span class="icon">💰</span>
+                Jackpot Management
+              </div>
+            </div>
+            <div class="section-content">
+              <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem;">
+                <div>
+                  <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Flush & Shine Jackpot</label>
+                  <div style="display: flex; gap: 0.5rem;">
+                    <input type="number" id="shineJackpot" value="3000" style="flex: 1; padding: 0.75rem; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-size: 1.25rem;">
+                    <button class="btn btn-secondary" onclick="updateJackpot('shine')">Update</button>
+                  </div>
+                  <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem;">+$250/day if unclaimed • Resets to $250 when won</div>
+                </div>
+                <div>
+                  <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Last Call Jackpot</label>
+                  <div style="display: flex; gap: 0.5rem;">
+                    <input type="number" id="lastCallJackpot" value="1150" style="flex: 1; padding: 0.75rem; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-size: 1.25rem;">
+                    <button class="btn btn-secondary" onclick="updateJackpot('lastCall')">Update</button>
+                  </div>
+                  <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem;">+$50/day if unclaimed • Resets to $250 when won</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Food Orders Page -->
+        <div class="page" id="ordersPage">
+          <div class="stats-grid" style="grid-template-columns: repeat(3, 1fr);">
+            <div class="stat-card">
+              <div class="stat-label">Pending Orders</div>
+              <div class="stat-value" style="color: var(--orange);">3</div>
+              <div class="stat-change">Waiting for pickup</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">In Progress</div>
+              <div class="stat-value" style="color: var(--blue);">2</div>
+              <div class="stat-change">Being prepared</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Completed Today</div>
+              <div class="stat-value" style="color: var(--green);">18</div>
+              <div class="stat-change up">↑ 5 from yesterday</div>
+            </div>
+          </div>
+
+          <div class="section-card">
+            <div class="section-header">
+              <div class="section-title">
+                <span class="icon">🍽️</span>
+                Incoming Orders
+              </div>
+              <div style="display: flex; gap: 0.5rem;">
+                <span class="badge" style="background: var(--orange-bg); color: var(--orange);">Pending: 3</span>
+                <span class="badge" style="background: var(--blue-bg); color: var(--blue);">In Progress: 2</span>
+              </div>
+            </div>
+            <div class="section-content" style="padding: 0;">
+              <table class="waitlist-table">
+                <thead>
+                  <tr>
+                    <th>Time</th>
+                    <th>Table</th>
+                    <th>Player</th>
+                    <th>Items</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>7:12 PM</strong><br><span style="color: var(--text-muted); font-size: 0.75rem;">2 min ago</span></td>
+                    <td><span class="badge" style="background: var(--gold); color: var(--black);">Table 3</span></td>
+                    <td>
+                      <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <div style="width: 32px; height: 32px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--black); font-weight: 700; font-size: 0.8rem;">D</div>
+                        <div>
+                          <div style="font-weight: 500;">David N</div>
+                          <div style="font-size: 0.75rem; color: var(--text-muted);">Card #12345</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div>☕ Coffee x1</div>
+                      <div>🍔 Burger x1</div>
+                      <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">$12.00</div>
+                    </td>
+                    <td><span class="status-badge waiting">⏳ Pending</span></td>
+                    <td>
+                      <button class="btn btn-sm btn-primary" onclick="markOrderInProgress(1)">Start</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><strong>7:08 PM</strong><br><span style="color: var(--text-muted); font-size: 0.75rem;">6 min ago</span></td>
+                    <td><span class="badge" style="background: var(--gold); color: var(--black);">Table 1</span></td>
+                    <td>
+                      <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <div style="width: 32px; height: 32px; background: var(--blue); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 0.8rem;">M</div>
+                        <div>
+                          <div style="font-weight: 500;">Mike R</div>
+                          <div style="font-size: 0.75rem; color: var(--text-muted);">Card #23456</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div>🍺 Beer x2</div>
+                      <div>🥨 Chips x1</div>
+                      <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">$10.00</div>
+                    </td>
+                    <td><span class="status-badge called">🔄 In Progress</span></td>
+                    <td>
+                      <button class="btn btn-sm btn-primary" onclick="markOrderComplete(2)">✓ Complete</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><strong>7:05 PM</strong><br><span style="color: var(--text-muted); font-size: 0.75rem;">9 min ago</span></td>
+                    <td><span class="badge" style="background: var(--gold); color: var(--black);">Table 2</span></td>
+                    <td>
+                      <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <div style="width: 32px; height: 32px; background: var(--green); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 0.8rem;">J</div>
+                        <div>
+                          <div style="font-weight: 500;">Jennifer L</div>
+                          <div style="font-size: 0.75rem; color: var(--text-muted);">Card #34567</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div>💧 Water x1</div>
+                      <div>🍕 Pizza Slice x2</div>
+                      <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">$12.00</div>
+                    </td>
+                    <td><span class="status-badge waiting">⏳ Pending</span></td>
+                    <td>
+                      <button class="btn btn-sm btn-primary" onclick="markOrderInProgress(3)">Start</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Notifications Page -->
+        <div class="page" id="notificationsPage">
+          <div class="section-card">
+            <div class="section-header">
+              <div class="section-title">
+                <span class="icon">📢</span>
+                Send Notification
+              </div>
+            </div>
+            <div class="section-content">
+              <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1.5rem;">
+                <button class="btn btn-secondary" style="padding: 1.5rem; flex-direction: column; height: auto;" onclick="sendBreakAlert()">
+                  <span style="font-size: 2rem; margin-bottom: 0.5rem;">⏰</span>
+                  <span style="font-weight: 700;">Tournament Break</span>
+                  <span style="font-size: 0.75rem; color: var(--text-muted);">Alert players break started</span>
+                </button>
+                <button class="btn btn-secondary" style="padding: 1.5rem; flex-direction: column; height: auto;" onclick="sendTableOpenAlert()">
+                  <span style="font-size: 2rem; margin-bottom: 0.5rem;">🎰</span>
+                  <span style="font-weight: 700;">Table Open</span>
+                  <span style="font-size: 0.75rem; color: var(--text-muted);">Notify waitlist for game</span>
+                </button>
+                <button class="btn btn-secondary" style="padding: 1.5rem; flex-direction: column; height: auto;" onclick="sendPromoAlert()">
+                  <span style="font-size: 2rem; margin-bottom: 0.5rem;">🎁</span>
+                  <span style="font-weight: 700;">Promo Alert</span>
+                  <span style="font-size: 0.75rem; color: var(--text-muted);">Announce special promo</span>
+                </button>
+              </div>
+
+              <div style="border-top: 1px solid var(--border); padding-top: 1.5rem;">
+                <h4 style="margin-bottom: 1rem; color: var(--gold);">Custom Notification</h4>
+                <div class="form-group">
+                  <label>Recipients</label>
+                  <select style="width: 100%; padding: 0.75rem; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 6px; color: var(--text);">
+                    <option>All Players on Waitlist (12)</option>
+                    <option>$1/$3 NLH Waitlist (5)</option>
+                    <option>$2/$5 NLH Waitlist (3)</option>
+                    <option>Tournament Players (24)</option>
+                    <option>All Players at Tables (28)</option>
+                    <option>All Registered Players</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Message</label>
+                  <textarea rows="3" placeholder="Enter your message..." style="width: 100%; padding: 0.75rem; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 6px; color: var(--text); resize: vertical;"></textarea>
+                </div>
+                <button class="btn btn-gold">📤 Send Notification</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-card">
+            <div class="section-header">
+              <div class="section-title">
+                <span class="icon">📋</span>
+                Recent Notifications
+              </div>
+            </div>
+            <div class="section-content" style="padding: 0;">
+              <table class="waitlist-table">
+                <thead>
+                  <tr>
+                    <th>Time</th>
+                    <th>Type</th>
+                    <th>Message</th>
+                    <th>Recipients</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>7:00 PM</td>
+                    <td><span class="badge" style="background: var(--orange-bg); color: var(--orange);">Break</span></td>
+                    <td>Tournament break - 15 minutes</td>
+                    <td>24 players</td>
+                    <td><span style="color: var(--green);">✓ Sent</span></td>
+                  </tr>
+                  <tr>
+                    <td>6:45 PM</td>
+                    <td><span class="badge" style="background: var(--green-bg); color: var(--green);">Table</span></td>
+                    <td>$1/$3 NLH table now open</td>
+                    <td>5 players</td>
+                    <td><span style="color: var(--green);">✓ Sent</span></td>
+                  </tr>
+                  <tr>
+                    <td>6:30 PM</td>
+                    <td><span class="badge" style="background: var(--gold); color: var(--black);">Promo</span></td>
+                    <td>$50 splash pot in 30 minutes!</td>
+                    <td>28 players</td>
+                    <td><span style="color: var(--green);">✓ Sent</span></td>
+                  </tr>
                 </tbody>
               </table>
             </div>
@@ -1436,8 +3300,362 @@
           </div>
         </div>
 
+        <!-- Reports/Activity Log Page -->
+        <div class="page" id="reportsPage">
+          <!-- Stats Summary -->
+          <div class="stats-grid" style="margin-bottom: 1.5rem;">
+            <div class="stat-card">
+              <div class="stat-label">Actions Today</div>
+              <div class="stat-value">127</div>
+              <div class="stat-change">Since 10:00 AM</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Players Seated</div>
+              <div class="stat-value">43</div>
+              <div class="stat-change up">↑ 12 from yesterday</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Points Awarded</div>
+              <div class="stat-value">385</div>
+              <div class="stat-change">To 18 players</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Promos Awarded</div>
+              <div class="stat-value">8</div>
+              <div class="stat-change">$1,250 total</div>
+            </div>
+          </div>
+
+          <!-- Filters -->
+          <div class="section-card" style="margin-bottom: 1.5rem;">
+            <div class="section-content" style="padding: 1rem 1.5rem;">
+              <div style="display: flex; flex-wrap: wrap; gap: 1rem; align-items: center;">
+                <div style="flex: 1; min-width: 150px;">
+                  <label style="font-size: 0.75rem; color: var(--text-muted); display: block; margin-bottom: 0.25rem;">Date Range</label>
+                  <select id="reportDateRange" onchange="filterActivityLog()" style="width: 100%; padding: 0.5rem; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 6px; color: var(--text);">
+                    <option value="today">Today</option>
+                    <option value="yesterday">Yesterday</option>
+                    <option value="week">Last 7 Days</option>
+                    <option value="month">Last 30 Days</option>
+                  </select>
+                </div>
+                <div style="flex: 1; min-width: 150px;">
+                  <label style="font-size: 0.75rem; color: var(--text-muted); display: block; margin-bottom: 0.25rem;">Action Type</label>
+                  <select id="reportActionType" onchange="filterActivityLog()" style="width: 100%; padding: 0.5rem; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 6px; color: var(--text);">
+                    <option value="all">All Actions</option>
+                    <option value="waitlist">Waitlist</option>
+                    <option value="seating">Seating</option>
+                    <option value="points">Points</option>
+                    <option value="promo">Promotions</option>
+                    <option value="orders">Food Orders</option>
+                    <option value="tournament">Tournaments</option>
+                  </select>
+                </div>
+                <div style="flex: 1; min-width: 150px;">
+                  <label style="font-size: 0.75rem; color: var(--text-muted); display: block; margin-bottom: 0.25rem;">Staff Member</label>
+                  <select id="reportStaffMember" onchange="filterActivityLog()" style="width: 100%; padding: 0.5rem; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 6px; color: var(--text);">
+                    <option value="all">All Staff</option>
+                    <option value="maria">Maria G</option>
+                    <option value="carlos">Carlos R</option>
+                    <option value="jennifer">Jennifer M</option>
+                  </select>
+                </div>
+                <div style="flex: 1; min-width: 200px;">
+                  <label style="font-size: 0.75rem; color: var(--text-muted); display: block; margin-bottom: 0.25rem;">Search</label>
+                  <input type="text" id="reportSearch" placeholder="Search player, action..." oninput="filterActivityLog()" style="width: 100%; padding: 0.5rem; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 6px; color: var(--text);">
+                </div>
+                <div style="display: flex; gap: 0.5rem; align-items: flex-end;">
+                  <button class="btn btn-secondary" onclick="exportActivityLog('csv')">📥 Export CSV</button>
+                  <button class="btn btn-secondary" onclick="exportActivityLog('pdf')">📄 Export PDF</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Activity Log Table -->
+          <div class="section-card">
+            <div class="section-header">
+              <div class="section-title">
+                <span class="icon">📊</span>
+                Activity Log
+                <span class="section-badge">127 actions</span>
+              </div>
+              <div style="display: flex; gap: 0.5rem;">
+                <button class="btn btn-sm btn-secondary" onclick="refreshActivityLog()">🔄 Refresh</button>
+              </div>
+            </div>
+            <div class="section-content" style="padding: 0;">
+              <table class="waitlist-table" id="activityLogTable">
+                <thead>
+                  <tr>
+                    <th style="width: 100px;">Time</th>
+                    <th style="width: 100px;">Staff</th>
+                    <th style="width: 120px;">Action</th>
+                    <th>Details</th>
+                    <th style="width: 120px;">Player</th>
+                    <th style="width: 80px;">Table</th>
+                  </tr>
+                </thead>
+                <tbody id="activityLogBody">
+                  <tr>
+                    <td style="font-weight: 600;">7:45 PM</td>
+                    <td>Maria G</td>
+                    <td><span class="badge" style="background: var(--green-bg); color: var(--green);">Seated</span></td>
+                    <td>Seated player from waitlist at Table 2, Seat 7</td>
+                    <td>Mike R</td>
+                    <td>Table 2</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight: 600;">7:42 PM</td>
+                    <td>Maria G</td>
+                    <td><span class="badge" style="background: var(--blue-bg); color: var(--blue);">Called</span></td>
+                    <td>Called player for $1/$3 NLH</td>
+                    <td>Mike R</td>
+                    <td>—</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight: 600;">7:38 PM</td>
+                    <td>Carlos R</td>
+                    <td><span class="badge" style="background: var(--gold); color: var(--black);">Flush ♠</span></td>
+                    <td>Awarded spade flush for Flush & Shine promo (now 3/4)</td>
+                    <td>Sarah M</td>
+                    <td>Table 1</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight: 600;">7:35 PM</td>
+                    <td>Jennifer M</td>
+                    <td><span class="badge" style="background: var(--purple-bg); color: var(--purple);">Points +10</span></td>
+                    <td>Awarded 10 points for 1-5 hour cash session</td>
+                    <td>John D</td>
+                    <td>Table 3</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight: 600;">7:30 PM</td>
+                    <td>Maria G</td>
+                    <td><span class="badge" style="background: var(--orange-bg); color: var(--orange);">Order Done</span></td>
+                    <td>Completed food order: Burger, Fries, Corona</td>
+                    <td>David N</td>
+                    <td>Table 2</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight: 600;">7:28 PM</td>
+                    <td>Carlos R</td>
+                    <td><span class="badge" style="background: var(--green-bg); color: var(--green);">Seated</span></td>
+                    <td>Seated player from waitlist at Table 1, Seat 3</td>
+                    <td>Jennifer C</td>
+                    <td>Table 1</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight: 600;">7:25 PM</td>
+                    <td>Jennifer M</td>
+                    <td><span class="badge" style="background: var(--gold); color: var(--black);">High Hand</span></td>
+                    <td>Awarded High Hand Wheel spin — won $200</td>
+                    <td>Carlos M</td>
+                    <td>Table 4</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight: 600;">7:22 PM</td>
+                    <td>Maria G</td>
+                    <td><span class="badge" style="background: var(--red-bg); color: var(--red);">Removed</span></td>
+                    <td>Removed from waitlist (no show after 3 calls)</td>
+                    <td>Tony W</td>
+                    <td>—</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight: 600;">7:18 PM</td>
+                    <td>Carlos R</td>
+                    <td><span class="badge" style="background: var(--purple-bg); color: var(--purple);">Points +15</span></td>
+                    <td>Awarded 15 points for 1st place tournament finish</td>
+                    <td>Sarah M</td>
+                    <td>—</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight: 600;">7:15 PM</td>
+                    <td>Jennifer M</td>
+                    <td><span class="badge" style="background: var(--green-bg); color: var(--green);">Check In</span></td>
+                    <td>Checked in player for cash game session</td>
+                    <td>Maria G</td>
+                    <td>Table 5</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight: 600;">7:10 PM</td>
+                    <td>Maria G</td>
+                    <td><span class="badge" style="background: var(--gold); color: var(--black);">Flush ♥</span></td>
+                    <td>Awarded heart flush for Flush & Shine promo (now 2/4)</td>
+                    <td>Mike R</td>
+                    <td>Table 2</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight: 600;">7:05 PM</td>
+                    <td>Carlos R</td>
+                    <td><span class="badge" style="background: var(--blue-bg); color: var(--blue);">Table Open</span></td>
+                    <td>Opened new $1/$3 NLH table</td>
+                    <td>—</td>
+                    <td>Table 5</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight: 600;">7:00 PM</td>
+                    <td>Jennifer M</td>
+                    <td><span class="badge" style="background: var(--orange-bg); color: var(--orange);">Order Start</span></td>
+                    <td>Started preparing food order</td>
+                    <td>David N</td>
+                    <td>Table 2</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight: 600;">6:55 PM</td>
+                    <td>Maria G</td>
+                    <td><span class="badge" style="background: var(--purple-bg); color: var(--purple);">Points +5</span></td>
+                    <td>Awarded 5 points for tournament entry</td>
+                    <td>John D</td>
+                    <td>—</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight: 600;">6:50 PM</td>
+                    <td>Carlos R</td>
+                    <td><span class="badge" style="background: var(--green-bg); color: var(--green);">Checkout</span></td>
+                    <td>Checked out player after 4.5 hours (+10 pts auto-awarded)</td>
+                    <td>Tony W</td>
+                    <td>Table 3</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div style="padding: 1rem; text-align: center; border-top: 1px solid var(--border);">
+              <button class="btn btn-secondary">Load More</button>
+            </div>
+          </div>
+
+          <!-- Shift Summary -->
+          <div class="section-card" style="margin-top: 1.5rem;">
+            <div class="section-header">
+              <div class="section-title">
+                <span class="icon">📋</span>
+                Shift Summary — Today
+              </div>
+              <button class="btn btn-sm btn-gold" onclick="generateShiftReport()">📄 Generate Report</button>
+            </div>
+            <div class="section-content">
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem;">
+                <div>
+                  <h4 style="color: var(--gold); margin-bottom: 0.75rem; font-size: 0.9rem;">Waitlist Activity</h4>
+                  <div style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.8;">
+                    Players joined: <strong style="color: var(--text);">47</strong><br>
+                    Players seated: <strong style="color: var(--text);">43</strong><br>
+                    Players removed: <strong style="color: var(--text);">4</strong><br>
+                    Avg wait time: <strong style="color: var(--text);">18 min</strong>
+                  </div>
+                </div>
+                <div>
+                  <h4 style="color: var(--gold); margin-bottom: 0.75rem; font-size: 0.9rem;">Tables</h4>
+                  <div style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.8;">
+                    Tables opened: <strong style="color: var(--text);">5</strong><br>
+                    Tables closed: <strong style="color: var(--text);">1</strong><br>
+                    Peak tables: <strong style="color: var(--text);">5 (7PM)</strong><br>
+                    Total hours played: <strong style="color: var(--text);">127 hrs</strong>
+                  </div>
+                </div>
+                <div>
+                  <h4 style="color: var(--gold); margin-bottom: 0.75rem; font-size: 0.9rem;">Points & Promos</h4>
+                  <div style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.8;">
+                    Points awarded: <strong style="color: var(--text);">385 pts</strong><br>
+                    High hands: <strong style="color: var(--text);">3 ($450)</strong><br>
+                    Flush progress: <strong style="color: var(--text);">7 players</strong><br>
+                    Splash pots: <strong style="color: var(--text);">2 ($100)</strong>
+                  </div>
+                </div>
+                <div>
+                  <h4 style="color: var(--gold); margin-bottom: 0.75rem; font-size: 0.9rem;">Staff Activity</h4>
+                  <div style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.8;">
+                    Maria G: <strong style="color: var(--text);">52 actions</strong><br>
+                    Carlos R: <strong style="color: var(--text);">41 actions</strong><br>
+                    Jennifer M: <strong style="color: var(--text);">34 actions</strong><br>
+                    Total actions: <strong style="color: var(--text);">127</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </main>
+  </div>
+
+  <!-- Seat Assignment Modal -->
+  <div class="modal-overlay" id="seatAssignModal" style="display: none;">
+    <div class="modal" style="max-width: 500px;">
+      <div class="modal-header">
+        <h3 class="modal-title">Seat Player</h3>
+        <button class="modal-close" onclick="closeSeatModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <!-- Player Info -->
+        <div style="background: var(--bg-dark); border-radius: 8px; padding: 1rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 1rem;">
+          <div style="width: 50px; height: 50px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #000; font-weight: 700; font-size: 1.1rem;" id="seatModalAvatar">MR</div>
+          <div>
+            <div style="font-weight: 700; font-size: 1.1rem;" id="seatModalName">Mike Rodriguez</div>
+            <div style="color: var(--text-muted); font-size: 0.85rem;">Card #<span id="seatModalCard">23456</span> • <span id="seatModalGame">$1/$3 NLH</span></div>
+          </div>
+        </div>
+
+        <!-- Table Selection -->
+        <div style="margin-bottom: 1rem;">
+          <label style="display: block; font-weight: 600; margin-bottom: 0.5rem;">Select Table</label>
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem;" id="seatTableOptions">
+            <button class="table-select-btn active" onclick="selectTableForSeat(1, '$1/$3 NLH')" data-table="1">
+              <div style="font-weight: 700;">Table 1</div>
+              <div style="font-size: 0.75rem; color: var(--text-muted);">$1/$3 NLH</div>
+              <div style="font-size: 0.75rem; color: var(--green);">2 seats open</div>
+            </button>
+            <button class="table-select-btn" onclick="selectTableForSeat(2, '$1/$3 NLH')" data-table="2">
+              <div style="font-weight: 700;">Table 2</div>
+              <div style="font-size: 0.75rem; color: var(--text-muted);">$1/$3 NLH</div>
+              <div style="font-size: 0.75rem; color: var(--green);">1 seat open</div>
+            </button>
+            <button class="table-select-btn" onclick="selectTableForSeat(3, '$1/$3 PLO')" data-table="3">
+              <div style="font-weight: 700;">Table 3</div>
+              <div style="font-size: 0.75rem; color: var(--text-muted);">$1/$3 PLO</div>
+              <div style="font-size: 0.75rem; color: var(--green);">3 seats open</div>
+            </button>
+            <button class="table-select-btn" onclick="selectTableForSeat(4, '$2/$5 NLH')" data-table="4">
+              <div style="font-weight: 700;">Table 4</div>
+              <div style="font-size: 0.75rem; color: var(--text-muted);">$2/$5 NLH</div>
+              <div style="font-size: 0.75rem; color: var(--green);">1 seat open</div>
+            </button>
+            <button class="table-select-btn disabled" data-table="5" style="opacity: 0.5; cursor: not-allowed;">
+              <div style="font-weight: 700;">Table 5</div>
+              <div style="font-size: 0.75rem; color: var(--text-muted);">$1/$3 NLH</div>
+              <div style="font-size: 0.75rem; color: var(--red);">FULL</div>
+            </button>
+          </div>
+        </div>
+
+        <!-- Seat Selection -->
+        <div style="margin-bottom: 1.5rem;">
+          <label style="display: block; font-weight: 600; margin-bottom: 0.5rem;">Select Seat at Table <span id="selectedTableNum">1</span></label>
+          <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.5rem;" id="seatOptions">
+            <button class="seat-select-btn occupied" disabled style="opacity: 0.4;">1</button>
+            <button class="seat-select-btn occupied" disabled style="opacity: 0.4;">2</button>
+            <button class="seat-select-btn occupied" disabled style="opacity: 0.4;">3</button>
+            <button class="seat-select-btn occupied" disabled style="opacity: 0.4;">4</button>
+            <button class="seat-select-btn occupied" disabled style="opacity: 0.4;">5</button>
+            <button class="seat-select-btn occupied" disabled style="opacity: 0.4;">6</button>
+            <button class="seat-select-btn" onclick="selectSeat(7)">7</button>
+            <button class="seat-select-btn" onclick="selectSeat(8)">8</button>
+            <button class="seat-select-btn occupied" disabled style="opacity: 0.4;">9</button>
+          </div>
+          <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.5rem;">
+            <span style="display: inline-block; width: 12px; height: 12px; background: var(--gold); border-radius: 3px; margin-right: 4px;"></span> Available
+            <span style="display: inline-block; width: 12px; height: 12px; background: var(--bg-card); border-radius: 3px; margin-left: 1rem; margin-right: 4px; opacity: 0.4;"></span> Occupied
+          </div>
+        </div>
+
+        <!-- Confirm Button -->
+        <button class="btn btn-gold" style="width: 100%; padding: 1rem;" onclick="confirmSeatAssignment()" id="confirmSeatBtn" disabled>
+          Select a Seat to Continue
+        </button>
+      </div>
+    </div>
   </div>
 
   <!-- Add Player Modal -->
@@ -1516,7 +3734,11 @@
         waitlist: 'Wait List',
         tables: 'Table Management',
         tournaments: 'Tournaments',
-        players: 'Player Database',
+        players: 'Player Management',
+        points: 'January Points',
+        promoTracker: 'Promo Tracker',
+        orders: 'Food Orders',
+        notifications: 'Notifications',
         promos: 'Promotions',
         settings: 'Settings'
       };
@@ -1585,6 +3807,567 @@
       }, 3000);
     }
 
+    // Food order functions
+    function markOrderInProgress(orderId) {
+      showToast('Order #' + orderId + ' marked as in progress');
+    }
+
+    function markOrderComplete(orderId) {
+      showToast('Order #' + orderId + ' completed and delivered!');
+    }
+
+    // Notification functions
+    function sendBreakAlert() {
+      const minutes = prompt('How many minutes is the break?', '15');
+      if (minutes) {
+        showToast('Tournament break alert sent! (' + minutes + ' min)');
+      }
+    }
+
+    function sendTableOpenAlert() {
+      const game = prompt('Which game opened?', '$1/$3 NLH');
+      if (game) {
+        showToast('Table open notification sent for ' + game);
+      }
+    }
+
+    function sendPromoAlert() {
+      const promo = prompt('What promo to announce?', '$50 splash pot in 30 minutes!');
+      if (promo) {
+        showToast('Promo alert sent to all players!');
+      }
+    }
+
+    // Points management functions
+    function updatePointsAmount() {
+      const select = document.getElementById('pointsType');
+      const customRow = document.getElementById('customPointsRow');
+      if (select.value === 'custom') {
+        customRow.style.display = 'block';
+      } else {
+        customRow.style.display = 'none';
+      }
+    }
+
+    function addPoints() {
+      const player = document.getElementById('pointsPlayer');
+      const pointsType = document.getElementById('pointsType');
+      
+      if (!player.value) {
+        showToast('Please select a player', true);
+        return;
+      }
+      
+      let points = pointsType.value;
+      if (points === 'custom') {
+        points = document.getElementById('customPoints').value;
+        if (!points) {
+          showToast('Please enter custom points amount', true);
+          return;
+        }
+      }
+      
+      const playerName = player.options[player.selectedIndex].text;
+      const pointsName = pointsType.options[pointsType.selectedIndex].text;
+      
+      showToast(`Added ${points} points to ${playerName}!`);
+      
+      // Reset form
+      player.value = '';
+      pointsType.value = '5';
+      document.getElementById('customPointsRow').style.display = 'none';
+    }
+
+    function editPlayerPoints(cardNumber) {
+      const points = prompt('Enter new total points for player #' + cardNumber + ':');
+      if (points !== null) {
+        showToast('Updated points for #' + cardNumber + ' to ' + points);
+      }
+    }
+
+    // Player Management Functions
+    function showCheckInModal() {
+      const cardNum = prompt('Enter player card number:');
+      if (cardNum) {
+        const table = prompt('Which table? (e.g., Table 1 - $1/$3 NLH)');
+        if (table) {
+          showToast('Player #' + cardNum + ' checked in at ' + table);
+        }
+      }
+    }
+
+    function checkOutPlayer(cardNum) {
+      if (confirm('Check out player #' + cardNum + '?\n\nTime will be calculated for points.')) {
+        showToast('Player #' + cardNum + ' checked out. Points calculated.');
+      }
+    }
+
+    function awardCashPoints(cardNum, name, points) {
+      if (confirm('Award ' + points + ' points to ' + name + ' for 6+ hours of cash play?')) {
+        showToast(points + ' points awarded to ' + name + '!');
+      }
+    }
+
+    function showTournamentCheckIn() {
+      const cardNum = prompt('Enter player card number for tournament entry:');
+      if (cardNum) {
+        const tourney = prompt('Which tournament?\n1. Early Bird 3PM (+5 pts)\n2. 7PM Tournament (+5 pts)\n3. Early Bird + 7PM (+13 pts)');
+        if (tourney) {
+          let pts = tourney === '3' ? 13 : 5;
+          showToast('Tournament entry recorded. +' + pts + ' points awarded.');
+        }
+      }
+    }
+
+    function showAwardPlacement() {
+      const cardNum = prompt('Enter winner card number:');
+      if (cardNum) {
+        const place = prompt('What place?\n1. 1st (+15 pts)\n2. 2nd (+10 pts)\n3. 3rd (+5 pts)\n4. 4th (+3 pts)\n5. 5th (+2 pts)');
+        if (place) {
+          const pts = [15, 10, 5, 3, 2][parseInt(place) - 1] || 0;
+          showToast('Placement recorded. +' + pts + ' points awarded.');
+        }
+      }
+    }
+
+    function showQuickPoints() {
+      const cardNum = prompt('Enter player card number:');
+      if (cardNum) {
+        const pts = prompt('Enter points to award:');
+        if (pts) {
+          const reason = prompt('Reason (optional):');
+          showToast(pts + ' points awarded to #' + cardNum);
+        }
+      }
+    }
+
+    function searchPlayers(query) {
+      if (!query) return;
+      document.getElementById('playerSearchResults').innerHTML = '<div style="padding: 1rem; color: var(--text-muted);">Searching for "' + query + '"...</div>';
+    }
+
+    function viewPlayerProfile(cardNum) {
+      alert('Player Profile #' + cardNum + '\n\nIn production, this would open a detailed player profile with:\n- Contact info\n- Points history\n- Visit history\n- Tournament results\n- Notes');
+    }
+
+    function showPlayerPointsModal(cardNum, name) {
+      const pointType = prompt(name + ' (#' + cardNum + ')\n\nSelect points type:\n1. Tournament Played (+5)\n2. Early Bird + Daily (+13)\n3. 1st Place (+15)\n4. 2nd Place (+10)\n5. 3rd Place (+5)\n6. 4th/5th Place (+3/+2)\n7. Cash 1 Hour (+10)\n8. Cash 6+ Hours (+30)\n9. Custom');
+      if (pointType) {
+        const pts = [5, 13, 15, 10, 5, 3, 10, 30, 0][parseInt(pointType) - 1] || 0;
+        if (pointType === '9') {
+          const custom = prompt('Enter custom points:');
+          showToast(custom + ' points awarded to ' + name);
+        } else {
+          showToast(pts + ' points awarded to ' + name);
+        }
+      }
+    }
+
+    function showAddPlayerModal() {
+      alert('Add New Player\n\nIn production, this would open a form to add a new player with:\n- Name\n- Phone\n- Email\n- Player Card #');
+    }
+
+    // Promo Tracker Functions
+    const flushStatus = {
+      shine: { spade: false, heart: false, diamond: false, club: false },
+      lastCall: { spade: false, heart: false, diamond: false, club: false }
+    };
+
+    function toggleFlush(session, suit) {
+      flushStatus[session][suit] = !flushStatus[session][suit];
+      const el = document.getElementById('flush-' + session + '-' + suit);
+      if (flushStatus[session][suit]) {
+        el.style.background = 'rgba(34, 197, 94, 0.2)';
+        el.style.borderColor = 'var(--green)';
+        el.querySelector('div:last-child').textContent = '✓ HIT!';
+        el.querySelector('div:last-child').style.color = 'var(--green)';
+        showToast(suit.charAt(0).toUpperCase() + suit.slice(1) + ' flush recorded!');
+      } else {
+        el.style.background = 'var(--bg-dark)';
+        el.style.borderColor = 'var(--border)';
+        el.querySelector('div:last-child').textContent = 'Not hit';
+        el.querySelector('div:last-child').style.color = 'var(--text-muted)';
+      }
+      
+      // Check if all 4 hit
+      const allHit = Object.values(flushStatus[session]).every(v => v);
+      if (allHit) {
+        setTimeout(() => {
+          alert('🎉 ALL 4 FLUSHES HIT!\n\nReady to award jackpot!');
+        }, 300);
+      }
+    }
+
+    function resetFlushes(session) {
+      if (confirm('Reset all flushes for this session?')) {
+        ['spade', 'heart', 'diamond', 'club'].forEach(suit => {
+          flushStatus[session][suit] = false;
+          const el = document.getElementById('flush-' + session + '-' + suit);
+          if (el) {
+            el.style.background = 'var(--bg-dark)';
+            el.style.borderColor = 'var(--border)';
+            el.querySelector('div:last-child').textContent = 'Not hit';
+            el.querySelector('div:last-child').style.color = 'var(--text-muted)';
+          }
+        });
+        showToast('Flushes reset for ' + (session === 'shine' ? 'Flush & Shine' : 'Last Call'));
+      }
+    }
+
+    function awardFlushJackpot(session) {
+      const jackpotName = session === 'shine' ? 'Flush & Shine' : 'Last Call';
+      const amount = session === 'shine' ? '$3,000' : '$1,150';
+      const cardNum = prompt('Enter winner card number for ' + jackpotName + ' (' + amount + '):');
+      if (cardNum) {
+        if (confirm('Award ' + amount + ' ' + jackpotName + ' jackpot to player #' + cardNum + '?')) {
+          showToast('🎉 ' + amount + ' jackpot awarded to #' + cardNum + '!');
+          resetFlushes(session);
+          // Reset jackpot to $250
+          document.getElementById(session === 'shine' ? 'shineJackpot' : 'lastCallJackpot').value = 250;
+        }
+      }
+    }
+
+    function updateJackpot(type) {
+      const input = document.getElementById(type === 'shine' ? 'shineJackpot' : 'lastCallJackpot');
+      showToast('Jackpot updated to $' + input.value);
+    }
+
+    function showAwardHighHand() {
+      const cardNum = prompt('Enter player card number:');
+      if (cardNum) {
+        const hand = prompt('What hand? (e.g., Quad 8s with pocket 88)');
+        if (hand) {
+          const table = prompt('Which table?');
+          const result = prompt('Wheel result? (e.g., $200 Cash, $100 Freeplay)');
+          if (result) {
+            showToast('High hand recorded for #' + cardNum + ': ' + result);
+          }
+        }
+      }
+    }
+
+    // Table Management Functions
+    let currentTableId = null;
+    let currentAwardPlayer = { id: null, name: null };
+
+    function showTableDetail(tableId) {
+      currentTableId = tableId;
+      document.getElementById('tablesOverview').style.display = 'none';
+      document.getElementById('tableDetailView').style.display = 'block';
+      
+      // Update title based on table
+      const tableNames = {
+        1: 'Table 1 - $1/$3 NLH',
+        2: 'Table 2 - $1/$3 NLH', 
+        3: 'Table 3 - $1/$3 PLO'
+      };
+      document.getElementById('tableDetailTitle').textContent = tableNames[tableId] || 'Table ' + tableId;
+    }
+
+    function hideTableDetail() {
+      document.getElementById('tablesOverview').style.display = 'block';
+      document.getElementById('tableDetailView').style.display = 'none';
+      currentTableId = null;
+    }
+
+    function openNewTable(tableNum) {
+      const game = prompt('Select game type:\n1. $1/$3 NLH\n2. $1/$3 PLO');
+      if (game) {
+        const gameName = game === '1' ? '$1/$3 NLH' : '$1/$3 PLO';
+        showToast('Table ' + (tableNum || 'New') + ' opened - ' + gameName);
+      }
+    }
+
+    function closeTable() {
+      if (confirm('Close Table ' + currentTableId + '?\n\nAll players will be checked out and points calculated.')) {
+        showToast('Table ' + currentTableId + ' closed. All players checked out.');
+        hideTableDetail();
+      }
+    }
+
+    function addPlayerToTable() {
+      const cardNum = prompt('Enter player card number:');
+      if (cardNum) {
+        const seat = prompt('Which seat? (1-8)');
+        if (seat) {
+          showToast('Player #' + cardNum + ' seated at Seat ' + seat);
+        }
+      }
+    }
+
+    function seatPlayer(seatNum) {
+      const cardNum = prompt('Enter player card number for Seat ' + seatNum + ':');
+      if (cardNum) {
+        showToast('Player #' + cardNum + ' seated at Seat ' + seatNum);
+      }
+    }
+
+    // Award Modal Functions
+    function showPlayerPromoActions(playerId, playerName) {
+      currentAwardPlayer = { id: playerId, name: playerName };
+      document.getElementById('awardPlayerName').textContent = playerName;
+      document.getElementById('awardPlayerId').textContent = playerId;
+      document.getElementById('awardModal').style.display = 'flex';
+    }
+
+    function closeAwardModal() {
+      document.getElementById('awardModal').style.display = 'none';
+    }
+
+    function awardFlush() {
+      closeAwardModal();
+      document.getElementById('flushSelectModal').style.display = 'flex';
+    }
+
+    function closeFlushModal() {
+      document.getElementById('flushSelectModal').style.display = 'none';
+    }
+
+    function recordFlush(suit) {
+      const suitNames = { spade: '♠️ Spades', heart: '♥️ Hearts', diamond: '♦️ Diamonds', club: '♣️ Clubs' };
+      showToast(suitNames[suit] + ' flush recorded for ' + currentAwardPlayer.name);
+      closeFlushModal();
+    }
+
+    function awardHighHand() {
+      closeAwardModal();
+      const hand = prompt('What hand did ' + currentAwardPlayer.name + ' have?\n(e.g., Quad 8s with pocket 88)');
+      if (hand) {
+        const result = prompt('Wheel spin result?\n(e.g., $200 Cash, $100 Freeplay, $50 Cash)');
+        if (result) {
+          showToast('High Hand recorded: ' + currentAwardPlayer.name + ' - ' + hand + ' - Won ' + result);
+        }
+      }
+    }
+
+    function awardSplashPot() {
+      closeAwardModal();
+      const amount = prompt('Splash pot amount?', '$100');
+      if (amount) {
+        showToast('Splash pot winner: ' + currentAwardPlayer.name + ' - ' + amount);
+      }
+    }
+
+    function awardCustomPoints() {
+      closeAwardModal();
+      const pointType = prompt(currentAwardPlayer.name + '\n\nSelect points type:\n1. Tournament Played (+5)\n2. Early Bird + Daily (+13)\n3. 1st Place (+15)\n4. 2nd Place (+10)\n5. 3rd Place (+5)\n6. 4th/5th Place (+3/+2)\n7. Cash 1 Hour (+10)\n8. Cash 6+ Hours (+30)\n9. Custom');
+      if (pointType) {
+        const pts = [5, 13, 15, 10, 5, 3, 10, 30, 0][parseInt(pointType) - 1] || 0;
+        if (pointType === '9') {
+          const custom = prompt('Enter custom points:');
+          if (custom) showToast(custom + ' points awarded to ' + currentAwardPlayer.name);
+        } else if (pts > 0) {
+          showToast(pts + ' points awarded to ' + currentAwardPlayer.name);
+        }
+      }
+    }
+
+    // Order Management Functions
+    function startOrder(orderId) {
+      showToast('Order #' + orderId + ' started - preparing now');
+    }
+
+    function completeOrder(orderId) {
+      if (confirm('Mark order #' + orderId + ' as complete and delivered?')) {
+        showToast('Order #' + orderId + ' completed!');
+      }
+    }
+
+    // Per-Player Flush Tracking - Each player needs all 4 suits to win
+    const playerFlushes = {
+      mike: { spade: true, heart: true, diamond: true, club: false },
+      jennifer: { spade: false, heart: true, diamond: true, club: false },
+      carlos: { spade: false, heart: false, diamond: true, club: false },
+      david: { spade: true, heart: false, diamond: false, club: false },
+      sarah: { spade: false, heart: false, diamond: false, club: false }
+    };
+
+    // Seat Assignment Modal
+    let seatModalData = {
+      playerName: '',
+      cardNum: '',
+      game: '',
+      selectedTable: 1,
+      selectedSeat: null
+    };
+
+    // Table data with open seats
+    const tableSeats = {
+      1: { game: '$1/$3 NLH', seats: [1,2,3,4,5,6,7,8,9], occupied: [1,2,3,4,5,6] },
+      2: { game: '$1/$3 NLH', seats: [1,2,3,4,5,6,7,8,9], occupied: [1,2,3,4,5,6,7,8] },
+      3: { game: '$1/$3 PLO', seats: [1,2,3,4,5,6,7,8,9], occupied: [2,4,5,6,8,9] },
+      4: { game: '$2/$5 NLH', seats: [1,2,3,4,5,6,7,8,9], occupied: [1,2,3,4,5,6,7,9] },
+      5: { game: '$1/$3 NLH', seats: [1,2,3,4,5,6,7,8,9], occupied: [1,2,3,4,5,6,7,8,9] }
+    };
+
+    function openSeatModal(playerName, cardNum, game) {
+      seatModalData.playerName = playerName;
+      seatModalData.cardNum = cardNum;
+      seatModalData.game = game;
+      seatModalData.selectedSeat = null;
+      
+      // Get initials
+      const initials = playerName.split(' ').map(n => n[0]).join('');
+      document.getElementById('seatModalAvatar').textContent = initials;
+      document.getElementById('seatModalName').textContent = playerName;
+      document.getElementById('seatModalCard').textContent = cardNum;
+      document.getElementById('seatModalGame').textContent = game;
+      
+      // Reset selections
+      document.querySelectorAll('.table-select-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelector('.table-select-btn[data-table="1"]').classList.add('active');
+      seatModalData.selectedTable = 1;
+      
+      // Update seat display for default table
+      updateSeatDisplay(1);
+      
+      // Reset confirm button
+      document.getElementById('confirmSeatBtn').disabled = true;
+      document.getElementById('confirmSeatBtn').textContent = 'Select a Seat to Continue';
+      
+      document.getElementById('seatAssignModal').style.display = 'flex';
+    }
+
+    function closeSeatModal() {
+      document.getElementById('seatAssignModal').style.display = 'none';
+    }
+
+    function selectTableForSeat(tableNum, game) {
+      if (tableSeats[tableNum].occupied.length >= tableSeats[tableNum].seats.length) {
+        return; // Table is full
+      }
+      
+      seatModalData.selectedTable = tableNum;
+      seatModalData.selectedSeat = null;
+      
+      // Update table button states
+      document.querySelectorAll('.table-select-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelector(`.table-select-btn[data-table="${tableNum}"]`).classList.add('active');
+      
+      // Update selected table number display
+      document.getElementById('selectedTableNum').textContent = tableNum;
+      
+      // Update seat display
+      updateSeatDisplay(tableNum);
+      
+      // Reset confirm button
+      document.getElementById('confirmSeatBtn').disabled = true;
+      document.getElementById('confirmSeatBtn').textContent = 'Select a Seat to Continue';
+    }
+
+    function updateSeatDisplay(tableNum) {
+      const table = tableSeats[tableNum];
+      const container = document.getElementById('seatOptions');
+      
+      container.innerHTML = table.seats.map(seat => {
+        const isOccupied = table.occupied.includes(seat);
+        if (isOccupied) {
+          return `<button class="seat-select-btn occupied" disabled style="opacity: 0.4;">${seat}</button>`;
+        } else {
+          return `<button class="seat-select-btn" onclick="selectSeat(${seat})">${seat}</button>`;
+        }
+      }).join('');
+    }
+
+    function selectSeat(seatNum) {
+      seatModalData.selectedSeat = seatNum;
+      
+      // Update seat button states
+      document.querySelectorAll('#seatOptions .seat-select-btn').forEach(btn => {
+        btn.classList.remove('selected');
+      });
+      event.target.classList.add('selected');
+      
+      // Enable confirm button
+      document.getElementById('confirmSeatBtn').disabled = false;
+      document.getElementById('confirmSeatBtn').innerHTML = `<span style="font-size: 1.1rem;">✓</span> Seat at Table ${seatModalData.selectedTable}, Seat ${seatNum}`;
+    }
+
+    function confirmSeatAssignment() {
+      const { playerName, cardNum, selectedTable, selectedSeat } = seatModalData;
+      
+      closeSeatModal();
+      showToast(`${playerName} seated at Table ${selectedTable}, Seat ${selectedSeat}`);
+      
+      // In production, this would:
+      // 1. Remove player from waitlist
+      // 2. Add player to table
+      // 3. Update table seat occupancy
+      // 4. Start player's time tracking for points
+    }
+    
+    function toggleFlushSuit(playerId, suit, playerName) {
+      playerFlushes[playerId][suit] = !playerFlushes[playerId][suit];
+      const el = document.getElementById(playerId + '-' + suit);
+      const isHit = playerFlushes[playerId][suit];
+      const suitSymbols = { spade: '♠️', heart: '♥️', diamond: '♦️', club: '♣️' };
+      
+      if (isHit) {
+        el.style.background = 'rgba(34,197,94,0.25)';
+        el.style.opacity = '1';
+        showToast(playerName + ' hit ' + suitSymbols[suit] + ' flush!');
+      } else {
+        el.style.background = 'transparent';
+        el.style.opacity = '0.3';
+      }
+      
+      updatePlayerFlushCount(playerId, playerName);
+    }
+    
+    function updatePlayerFlushCount(playerId, playerName) {
+      const flushes = playerFlushes[playerId];
+      const count = Object.values(flushes).filter(v => v).length;
+      const countEl = document.getElementById(playerId + '-count');
+      const rowEl = document.getElementById('flush-row-' + playerId);
+      
+      if (count === 4) {
+        countEl.innerHTML = '🎉 4/4 WINNER!';
+        countEl.style.color = 'var(--green)';
+        rowEl.style.background = 'rgba(34, 197, 94, 0.2)';
+        rowEl.style.borderColor = 'var(--green)';
+        setTimeout(() => {
+          alert('🎉 ' + playerName.toUpperCase() + ' WINS THE FLUSH ATTACK!\n\nThey hit all 4 suits: ♠️♥️♦️♣️\n\nFlush & Shine Jackpot: $3,000');
+        }, 300);
+      } else if (count === 3) {
+        countEl.innerHTML = '⭐ ' + count + '/4';
+        countEl.style.color = 'var(--gold)';
+        rowEl.style.background = 'rgba(212, 165, 50, 0.15)';
+        rowEl.style.borderColor = 'var(--gold)';
+      } else {
+        countEl.textContent = count + '/4';
+        countEl.style.color = 'var(--text-muted)';
+        rowEl.style.background = 'var(--bg-dark)';
+        rowEl.style.borderColor = 'var(--border)';
+      }
+    }
+    
+    function resetAllPlayerFlushes() {
+      if (confirm('Reset all player flush progress?\n\nThis will clear all suits for all players.')) {
+        Object.keys(playerFlushes).forEach(playerId => {
+          playerFlushes[playerId] = { spade: false, heart: false, diamond: false, club: false };
+          ['spade', 'heart', 'diamond', 'club'].forEach(suit => {
+            const el = document.getElementById(playerId + '-' + suit);
+            if (el) {
+              el.style.background = 'transparent';
+              el.style.opacity = '0.3';
+            }
+          });
+          const countEl = document.getElementById(playerId + '-count');
+          if (countEl) {
+            countEl.textContent = '0/4';
+            countEl.style.color = 'var(--text-muted)';
+          }
+          const rowEl = document.getElementById('flush-row-' + playerId);
+          if (rowEl) {
+            rowEl.style.background = 'var(--bg-dark)';
+            rowEl.style.borderColor = 'var(--border)';
+          }
+        });
+        showToast('All player flushes reset');
+      }
+    }
+
     // Game filter toggle
     document.querySelectorAll('.game-filter').forEach(filter => {
       filter.addEventListener('click', function() {
@@ -1601,6 +4384,166 @@
         }
       });
     });
+
+    // ============================================
+    // ACTIVITY LOG / REPORTING FUNCTIONS
+    // ============================================
+    
+    // Current staff member (in production, this would come from login)
+    const currentStaff = 'Maria G';
+    
+    // Activity log storage (in production, this would be a database)
+    let activityLog = [];
+    
+    // Log an action to the activity log
+    function logAction(actionType, details, playerName = '—', tableNum = '—') {
+      const entry = {
+        id: Date.now(),
+        timestamp: new Date(),
+        staff: currentStaff,
+        actionType: actionType,
+        details: details,
+        player: playerName,
+        table: tableNum
+      };
+      
+      activityLog.unshift(entry); // Add to beginning
+      
+      // In production, this would POST to an API
+      console.log('Activity logged:', entry);
+      
+      // Save to localStorage for demo persistence
+      try {
+        const stored = JSON.parse(localStorage.getItem('activityLog') || '[]');
+        stored.unshift(entry);
+        localStorage.setItem('activityLog', JSON.stringify(stored.slice(0, 500))); // Keep last 500
+      } catch(e) {}
+      
+      return entry;
+    }
+    
+    // Get badge HTML for action type
+    function getActionBadge(actionType) {
+      const badges = {
+        'seated': '<span class="badge" style="background: var(--green-bg); color: var(--green);">Seated</span>',
+        'called': '<span class="badge" style="background: var(--blue-bg); color: var(--blue);">Called</span>',
+        'removed': '<span class="badge" style="background: var(--red-bg); color: var(--red);">Removed</span>',
+        'checkin': '<span class="badge" style="background: var(--green-bg); color: var(--green);">Check In</span>',
+        'checkout': '<span class="badge" style="background: var(--green-bg); color: var(--green);">Checkout</span>',
+        'points': '<span class="badge" style="background: var(--purple-bg); color: var(--purple);">Points</span>',
+        'flush_spade': '<span class="badge" style="background: var(--gold); color: var(--black);">Flush ♠</span>',
+        'flush_heart': '<span class="badge" style="background: var(--gold); color: var(--black);">Flush ♥</span>',
+        'flush_diamond': '<span class="badge" style="background: var(--gold); color: var(--black);">Flush ♦</span>',
+        'flush_club': '<span class="badge" style="background: var(--gold); color: var(--black);">Flush ♣</span>',
+        'highhand': '<span class="badge" style="background: var(--gold); color: var(--black);">High Hand</span>',
+        'splash': '<span class="badge" style="background: var(--gold); color: var(--black);">Splash Pot</span>',
+        'order_start': '<span class="badge" style="background: var(--orange-bg); color: var(--orange);">Order Start</span>',
+        'order_done': '<span class="badge" style="background: var(--orange-bg); color: var(--orange);">Order Done</span>',
+        'table_open': '<span class="badge" style="background: var(--blue-bg); color: var(--blue);">Table Open</span>',
+        'table_close': '<span class="badge" style="background: var(--red-bg); color: var(--red);">Table Close</span>',
+        'tournament': '<span class="badge" style="background: var(--purple-bg); color: var(--purple);">Tournament</span>'
+      };
+      return badges[actionType] || '<span class="badge">' + actionType + '</span>';
+    }
+    
+    // Filter activity log based on current filter settings
+    function filterActivityLog() {
+      const dateRange = document.getElementById('reportDateRange')?.value || 'today';
+      const actionType = document.getElementById('reportActionType')?.value || 'all';
+      const staffMember = document.getElementById('reportStaffMember')?.value || 'all';
+      const searchTerm = document.getElementById('reportSearch')?.value?.toLowerCase() || '';
+      
+      // In production, this would filter from the database
+      // For demo, we'll just show a toast
+      showToast('Filters applied: ' + dateRange + ', ' + actionType + ', ' + staffMember);
+    }
+    
+    // Refresh activity log
+    function refreshActivityLog() {
+      showToast('Activity log refreshed');
+      // In production, this would re-fetch from API
+    }
+    
+    // Export activity log
+    function exportActivityLog(format) {
+      if (format === 'csv') {
+        showToast('Downloading activity log as CSV...');
+        // In production, generate and download CSV
+        const csvContent = 'Time,Staff,Action,Details,Player,Table\n' +
+          '7:45 PM,Maria G,Seated,Seated player from waitlist at Table 2 Seat 7,Mike R,Table 2\n' +
+          '7:42 PM,Maria G,Called,Called player for $1/$3 NLH,Mike R,—\n' +
+          '7:38 PM,Carlos R,Flush,Awarded spade flush (now 3/4),Sarah M,Table 1';
+        
+        const blob = new Blob([csvContent], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'activity-log-' + new Date().toISOString().split('T')[0] + '.csv';
+        a.click();
+        URL.revokeObjectURL(url);
+      } else if (format === 'pdf') {
+        showToast('Generating PDF report...');
+        // In production, generate PDF
+        alert('PDF report would be generated here.\n\nThis would include:\n- Activity summary\n- Detailed log\n- Staff breakdown\n- Charts');
+      }
+    }
+    
+    // Generate shift report
+    function generateShiftReport() {
+      showToast('Generating shift report...');
+      alert('Shift Report - ' + new Date().toLocaleDateString() + '\n\n' +
+        'Total Actions: 127\n' +
+        'Players Seated: 43\n' +
+        'Points Awarded: 385\n' +
+        'Promos Awarded: 8 ($1,250)\n\n' +
+        'Staff Breakdown:\n' +
+        '- Maria G: 52 actions\n' +
+        '- Carlos R: 41 actions\n' +
+        '- Jennifer M: 34 actions\n\n' +
+        'In production, this would generate a detailed PDF report.');
+    }
+    
+    // Helper function to format time
+    function formatLogTime(date) {
+      return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+    }
+    
+    // Add activity log entry to the table
+    function addLogEntryToTable(entry) {
+      const tbody = document.getElementById('activityLogBody');
+      if (!tbody) return;
+      
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td style="font-weight: 600;">${formatLogTime(new Date(entry.timestamp))}</td>
+        <td>${entry.staff}</td>
+        <td>${getActionBadge(entry.actionType)}</td>
+        <td>${entry.details}</td>
+        <td>${entry.player}</td>
+        <td>${entry.table}</td>
+      `;
+      tbody.insertBefore(row, tbody.firstChild);
+    }
+    
+    // ============================================
+    // WRAP EXISTING FUNCTIONS TO LOG ACTIONS
+    // ============================================
+    
+    // Store original functions
+    const originalConfirmSeatAssignment = confirmSeatAssignment;
+    
+    // Override confirmSeatAssignment to log the action
+    confirmSeatAssignment = function() {
+      const playerName = document.getElementById('seatModalName')?.textContent || 'Unknown';
+      const tableNum = selectedTable;
+      const seatNum = selectedSeat;
+      
+      // Log the action
+      logAction('seated', `Seated player from waitlist at Table ${tableNum}, Seat ${seatNum}`, playerName, `Table ${tableNum}`);
+      
+      // Call original function
+      originalConfirmSeatAssignment();
+    };
   </script>
 
 </body>
