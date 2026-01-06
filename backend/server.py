@@ -583,6 +583,7 @@ async def create_game(game: dict):
 async def get_all_waitlists():
     """Get all waitlist entries grouped by game"""
     entries = await db.waitlist.find({"status": {"$in": ["waiting", "called"]}}).sort("position", 1).to_list(100)
+    entries = serialize_doc(entries)
     
     # Group by game
     by_game = {}
@@ -601,7 +602,7 @@ async def get_game_waitlist(game_id: str):
     entries = await db.waitlist.find(
         {"game_id": game_id, "status": {"$in": ["waiting", "called"]}}
     ).sort("position", 1).to_list(50)
-    return entries
+    return serialize_doc(entries)
 
 
 @app.post("/api/waitlist")
