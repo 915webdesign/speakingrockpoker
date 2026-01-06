@@ -911,7 +911,7 @@ async def register_for_tournament(tournament_id: str, data: TournamentRegistrati
             f"<h2>Registration Confirmed!</h2><p>You are registered for <strong>{tournament['name']}</strong></p><p>Date: {tournament['date']} at {tournament['time']}</p><p>Confirmation: <strong>{registration['confirmation']}</strong></p><p>Please arrive 15 minutes early to check in.</p>"
         )
     
-    return {"message": "Registered successfully", "registration": registration}
+    return {"message": "Registered successfully", "registration": serialize_doc(registration)}
 
 
 # ==================== FLUSH ATTACK ENDPOINTS ====================
