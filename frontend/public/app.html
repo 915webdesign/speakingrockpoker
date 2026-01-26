@@ -876,7 +876,18 @@
     // API Configuration
     const API_URL = '/api';
     
-    async function apiCall(endpoint, method = 'GET', body = null) {
+    // Helper to update timestamp - Issue #3 Fix
+    function updateLastUpdated() {
+      const el = document.getElementById('lastUpdated');
+      if (el) {
+        const now = new Date();
+        const options = { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' };
+        el.textContent = 'Last updated: ' + now.toLocaleDateString('en-US', options);
+      }
+    }
+    
+    // API call with retry logic - Issue #2 Fix
+    async function apiCall(endpoint, method = 'GET', body = null, retries = 3) {
       const options = {
         method,
         headers: { 'Content-Type': 'application/json' }
@@ -890,14 +901,34 @@
       }
       if (body) options.body = JSON.stringify(body);
       
+      for (let attempt = 1; attempt <= retries; attempt++) {
+        try {
+          const response = await fetch(`${API_URL}${endpoint}`, options);
+          const data = await response.json();
+          if (!response.ok) throw new Error(data.detail || 'API Error');
+          
+          // Update timestamp on successful API call
+          updateLastUpdated();
+          return data;
+        } catch (error) {
+          console.error(`API Error (attempt ${attempt}/${retries}):`, error);
+          if (attempt === retries) {
+            throw error;
+          }
+          // Exponential backoff
+          await new Promise(resolve => setTimeout(resolve, Math.pow(2, attempt) * 500));
+        }
+      }
+    }
+    
+    // Load live data function
+    async function loadLiveData() {
       try {
-        const response = await fetch(`${API_URL}${endpoint}`, options);
-        const data = await response.json();
-        if (!response.ok) throw new Error(data.detail || 'API Error');
-        return data;
-      } catch (error) {
-        console.error('API Error:', error);
-        throw error;
+        const status = await apiCall('/live-status');
+        // Update any live status UI elements here
+        updateLastUpdated();
+      } catch (e) {
+        console.log('Could not load live data:', e.message);
       }
     }
     
