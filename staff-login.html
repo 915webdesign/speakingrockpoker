@@ -229,19 +229,18 @@
           return;
         }
         
-        // Save staff session
-        const session = {
-          token: data.token,
+        // Save staff token and session info
+        localStorage.setItem('staffToken', data.token);
+        localStorage.setItem('staffSession', JSON.stringify({
           staffId: data.staff.id,
           username: data.staff.username,
           name: data.staff.name,
           role: data.staff.role,
           loginTime: new Date().toISOString()
-        };
-        localStorage.setItem('staffSession', JSON.stringify(session));
+        }));
         
         // Redirect to admin dashboard
-        window.location.href = 'admin.html';
+        window.location.href = '/staff-login.html'.replace('staff-login.html', 'admin.html');
         
       } catch (error) {
         console.error('Login error:', error);
@@ -251,8 +250,8 @@
     }
     
     // Check if already logged in
-    const session = localStorage.getItem('staffSession');
-    if (session) {
+    const token = localStorage.getItem('staffToken');
+    if (token) {
       window.location.href = 'admin.html';
     }
   </script>
