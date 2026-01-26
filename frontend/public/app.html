@@ -1191,6 +1191,12 @@
     // Initialize on page load
     checkSession();
     
+    // Load live data on page load and refresh periodically - Issue #3 Fix
+    document.addEventListener('DOMContentLoaded', function() {
+      loadLiveData();
+      setInterval(loadLiveData, 30000); // Refresh every 30 seconds
+    });
+    
     // Demo: show break alert after 10 seconds (uncomment to test)
     // setTimeout(() => { document.getElementById('breakAlert').classList.add('active'); }, 10000);
     
