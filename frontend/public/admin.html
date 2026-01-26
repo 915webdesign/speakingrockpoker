@@ -3708,31 +3708,113 @@
     // API Configuration
     const API_URL = '/api';
     
-    // Helper function for API calls
-    async function apiCall(endpoint, method = 'GET', body = null) {
+    // ========================================
+    // AUTHENTICATION CHECK - Issue #1 Fix
+    // ========================================
+    function checkAuth() {
+      const sessionStr = localStorage.getItem('staffSession');
+      if (!sessionStr) {
+        window.location.href = 'staff-login.html';
+        return null;
+      }
+      
+      try {
+        const session = JSON.parse(sessionStr);
+        if (!session.token) {
+          localStorage.removeItem('staffSession');
+          window.location.href = 'staff-login.html';
+          return null;
+        }
+        return session;
+      } catch (e) {
+        localStorage.removeItem('staffSession');
+        window.location.href = 'staff-login.html';
+        return null;
+      }
+    }
+    
+    // Run auth check immediately
+    const staffSession = checkAuth();
+    if (!staffSession) {
+      throw new Error('Not authenticated');
+    }
+    
+    // Update user display with actual staff info
+    function updateUserDisplay() {
+      if (staffSession) {
+        const nameEl = document.querySelector('.user-name');
+        const roleEl = document.querySelector('.user-role');
+        const avatarEl = document.querySelector('.user-avatar');
+        
+        if (nameEl) nameEl.textContent = staffSession.name || 'Staff';
+        if (roleEl) roleEl.textContent = staffSession.role === 'admin' ? 'Administrator' : 
+                                          staffSession.role === 'manager' ? 'Poker Room Manager' : 'Floor Staff';
+        if (avatarEl) avatarEl.textContent = (staffSession.name || 'S')[0].toUpperCase();
+      }
+    }
+    
+    // Logout function
+    function logout() {
+      localStorage.removeItem('staffSession');
+      window.location.href = 'staff-login.html';
+    }
+    
+    // ========================================
+    // API CALLS WITH AUTH & RETRY - Issue #2 Fix
+    // ========================================
+    async function apiCall(endpoint, method = 'GET', body = null, retries = 3) {
       const options = {
         method,
         headers: { 'Content-Type': 'application/json' }
       };
+      
+      // Add auth token to all requests
+      if (staffSession && staffSession.token) {
+        options.headers['Authorization'] = `Bearer ${staffSession.token}`;
+      }
+      
       if (body) options.body = JSON.stringify(body);
       
-      try {
-        const response = await fetch(`${API_URL}${endpoint}`, options);
-        const data = await response.json();
-        if (!response.ok) throw new Error(data.detail || 'API Error');
-        return data;
-      } catch (error) {
-        console.error('API Error:', error);
-        showToast(error.message, true);
-        throw error;
+      for (let attempt = 1; attempt <= retries; attempt++) {
+        try {
+          const response = await fetch(`${API_URL}${endpoint}`, options);
+          
+          // Handle 401 unauthorized - redirect to login
+          if (response.status === 401) {
+            localStorage.removeItem('staffSession');
+            window.location.href = 'staff-login.html';
+            return null;
+          }
+          
+          const data = await response.json();
+          if (!response.ok) throw new Error(data.detail || 'API Error');
+          return data;
+        } catch (error) {
+          console.error(`API Error (attempt ${attempt}/${retries}):`, error);
+          
+          // If this was the last retry, show error
+          if (attempt === retries) {
+            if (error.message !== 'Failed to fetch') {
+              showToast(error.message, true);
+            }
+            throw error;
+          }
+          
+          // Exponential backoff before retry
+          await new Promise(resolve => setTimeout(resolve, Math.pow(2, attempt) * 500));
+        }
       }
     }
 
-    // Load live data from API
+    // ========================================
+    // LOAD LIVE DATA WITH ERROR HANDLING
+    // ========================================
     async function loadLiveData() {
       try {
         // Load live status
         const status = await apiCall('/live-status');
+        if (!status) return; // Auth redirect happened
+        
         const tablesEl = document.getElementById('live-tables');
         const seatsEl = document.getElementById('live-seats');
         const waitlistEl = document.getElementById('live-waitlist');
@@ -3741,13 +3823,21 @@
         if (seatsEl) seatsEl.textContent = status.seats_available;
         if (waitlistEl) waitlistEl.textContent = status.waitlist_count;
       } catch (e) {
-        console.log('Could not load live data');
+        // Silently fail for live data refresh - don't spam errors
+        console.log('Could not load live data:', e.message);
       }
     }
 
     // Initialize on load
     document.addEventListener('DOMContentLoaded', function() {
-      loadLiveData();
+      // Update user display first
+      updateUserDisplay();
+      
+      // Then load data after a small delay to ensure page is ready
+      setTimeout(() => {
+        loadLiveData();
+      }, 100);
+      
       // Refresh every 30 seconds
       setInterval(loadLiveData, 30000);
     });
