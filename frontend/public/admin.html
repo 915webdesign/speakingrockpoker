@@ -3706,39 +3706,29 @@
   </div>
 
   <script>
-    // API Configuration
-    const API_URL = '/api';
-    
-    // ========================================
-    // AUTHENTICATION CHECK - Issue #1 Fix
-    // ========================================
-    function checkAuth() {
-      const sessionStr = localStorage.getItem('staffSession');
-      if (!sessionStr) {
-        window.location.href = 'staff-login.html';
-        return null;
-      }
-      
-      try {
-        const session = JSON.parse(sessionStr);
-        if (!session.token) {
-          localStorage.removeItem('staffSession');
-          window.location.href = 'staff-login.html';
-          return null;
+    // ============================================
+    // AUTHENTICATION CHECK - MUST BE FIRST
+    // ============================================
+    (function() {
+        const token = localStorage.getItem('staffToken');
+        if (!token) {
+            window.location.href = '/staff-login.html';
+            return;
         }
-        return session;
+    })();
+
+    // API Configuration
+    const API_URL = window.location.origin + '/api';
+    
+    // Get staff session info for display
+    const staffSession = (function() {
+      try {
+        const session = localStorage.getItem('staffSession');
+        return session ? JSON.parse(session) : null;
       } catch (e) {
-        localStorage.removeItem('staffSession');
-        window.location.href = 'staff-login.html';
         return null;
       }
-    }
-    
-    // Run auth check immediately
-    const staffSession = checkAuth();
-    if (!staffSession) {
-      throw new Error('Not authenticated');
-    }
+    })();
     
     // Update user display with actual staff info
     function updateUserDisplay() {
@@ -3756,23 +3746,24 @@
     
     // Logout function
     function logout() {
+      localStorage.removeItem('staffToken');
       localStorage.removeItem('staffSession');
-      window.location.href = 'staff-login.html';
+      window.location.href = '/staff-login.html';
     }
     
     // ========================================
-    // API CALLS WITH AUTH & RETRY - Issue #2 Fix
+    // API CALLS WITH AUTH & RETRY
     // ========================================
     async function apiCall(endpoint, method = 'GET', body = null, retries = 3) {
+      const token = localStorage.getItem('staffToken');
+      
       const options = {
         method,
-        headers: { 'Content-Type': 'application/json' }
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
       };
-      
-      // Add auth token to all requests
-      if (staffSession && staffSession.token) {
-        options.headers['Authorization'] = `Bearer ${staffSession.token}`;
-      }
       
       if (body) options.body = JSON.stringify(body);
       
@@ -3782,8 +3773,9 @@
           
           // Handle 401 unauthorized - redirect to login
           if (response.status === 401) {
+            localStorage.removeItem('staffToken');
             localStorage.removeItem('staffSession');
-            window.location.href = 'staff-login.html';
+            window.location.href = '/staff-login.html';
             return null;
           }
           
